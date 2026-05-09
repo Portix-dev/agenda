@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.2.1</title>
+<title>Agenda v1.2.2</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -105,7 +105,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
 /* ── Compact widget ───────────────────────────────────── */
 #widget{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:transparent;cursor:pointer;user-select:none}
-.compact-mode #widget{position:static;display:flex;justify-content:center;padding:10px 0 0}
 #widget-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
 #widget-disc{position:relative;width:120px;height:120px}
 #widget-disc svg{display:block}
@@ -117,13 +116,17 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #widget-pin{font-size:13px;background:none;border:none;cursor:pointer;color:var(--nf3);padding:2px;line-height:1;transition:color .15s}
 #widget-pin.on{color:var(--active-acc)}
 #widget-go{font-family:var(--ff);font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;border:none;background:var(--active-acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
-#widget-toggle{position:fixed;bottom:24px;right:24px;z-index:9998;width:44px;height:44px;border-radius:50%;background:var(--active-acc);border:none;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22);display:none;align-items:center;justify-content:center}
-.compact-mode #widget{display:block}
-.compact-mode #widget-toggle{display:none}
+#widget-toggle{display:none}
+
+/* compact mode — janela vira só o widget */
 .compact-mode #root{display:none}
 .compact-mode #install-banner{display:none!important}
-.compact-mode body{min-height:unset;padding:0;overflow:hidden}
-.compact-mode #widget{position:static;display:flex;justify-content:center;padding:40px 0 0}
+.compact-mode body{margin:0;padding:0;min-height:unset;background:#1a1a1a!important;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
+.compact-mode html{background:#1a1a1a!important}
+.compact-mode #widget{display:flex;position:static;background:transparent;flex-direction:column;align-items:center}
+.compact-mode #widget-task{color:#ccc}
+.compact-mode #widget-pin{color:#888}
+.compact-mode #widget-disc-bg{background:#2a2a2a;border-color:rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(prefers-color-scheme:dark){#widget{box-shadow:0 4px 16px rgba(0,0,0,.45)}}
 </style>
 </head>
@@ -139,7 +142,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 <div class="card card-sm">
   <div class="hdr-row">
     <div>
-      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.2.1</span></div>
+      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.2.2</span></div>
       <div class="hdr-sub" id="hd-date"></div>
     </div>
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -325,7 +328,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.2.1';
+const VERSION = 'v1.2.2';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
