@@ -104,15 +104,18 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .print-btn:active{background:var(--nb3)}
 
 /* ── Compact widget ───────────────────────────────────── */
-#widget{display:none;position:fixed;bottom:24px;right:24px;z-index:9999;width:172px;background:var(--nb1);border:.5px solid var(--brd2);border-radius:50%;box-shadow:0 4px 16px rgba(0,0,0,.18);cursor:pointer;user-select:none;transition:border-radius .25s}
-#widget.pinned{border-radius:var(--r12);width:172px}
-#widget-inner{display:flex;flex-direction:column;align-items:center;padding:14px 12px 10px;gap:6px}
-#widget-task{font-size:10px;font-weight:600;color:var(--nf2);text-align:center;line-height:1.3;max-width:148px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#widget-time{font-size:18px;font-weight:600;color:var(--nf1);font-variant-numeric:tabular-nums;line-height:1}
-#widget-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 4px}
-#widget-pin{font-size:14px;background:none;border:none;cursor:pointer;color:var(--nf3);padding:2px;line-height:1;transition:color .15s}
+#widget{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:transparent;cursor:pointer;user-select:none}
+#widget-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
+#widget-disc{position:relative;width:120px;height:120px}
+#widget-disc svg{display:block}
+#widget-disc-bg{background:var(--nb1);border:.5px solid var(--brd2);border-radius:50%;box-shadow:0 4px 16px rgba(0,0,0,.18);width:120px;height:120px;position:absolute;top:0;left:0;z-index:0}
+#widget-disc svg{position:relative;z-index:1}
+#widget-task{font-size:9px;font-weight:600;color:var(--nf2);text-align:center;line-height:1.3;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#widget-time{display:none}
+#widget-bar{display:flex;align-items:center;justify-content:space-between;width:100px;padding:0 2px}
+#widget-pin{font-size:13px;background:none;border:none;cursor:pointer;color:var(--nf3);padding:2px;line-height:1;transition:color .15s}
 #widget-pin.on{color:var(--active-acc)}
-#widget-go{font-family:var(--ff);font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;border:none;background:var(--active-acc);color:#fff;cursor:pointer}
+#widget-go{font-family:var(--ff);font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;border:none;background:var(--active-acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #widget-toggle{position:fixed;bottom:24px;right:24px;z-index:9998;width:44px;height:44px;border-radius:50%;background:var(--active-acc);border:none;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.22);display:none;align-items:center;justify-content:center}
 .compact-mode #widget{display:block}
 .compact-mode #widget-toggle{display:none}
@@ -302,19 +305,21 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 <!-- COMPACT WIDGET -->
 <div id="widget" ondblclick="toggleCompact()" title="Duplo clique para modo completo">
   <div id="widget-inner">
-    <svg width="100" height="100" viewBox="0 0 100 100" role="img" aria-label="Timer compacto">
-      <circle cx="50" cy="50" r="46" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
-      <path id="warc" d="" opacity=".9"/>
-      <circle cx="50" cy="50" r="30" fill="var(--nb1)"/>
-      <text x="50" y="46" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="w-min">40</text>
-      <text x="50" y="57" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">min</text>
-    </svg>
+    <div id="widget-disc">
+      <div id="widget-disc-bg"></div>
+      <svg width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Timer compacto">
+        <circle cx="60" cy="60" r="55" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
+        <path id="warc" d="" opacity=".9"/>
+        <circle cx="60" cy="60" r="37" fill="var(--nb1)"/>
+        <text x="60" y="55" text-anchor="middle" font-family="var(--ff)" font-size="15" font-weight="700" fill="var(--nf1)" id="w-min">40</text>
+        <text x="60" y="67" text-anchor="middle" font-family="var(--ff)" font-size="8" fill="var(--nf3)">min</text>
+      </svg>
+    </div>
     <div id="widget-time">40:00</div>
     <div id="widget-task">—</div>
     <div id="widget-bar">
       <button id="widget-pin" onclick="togglePin(event)" title="Sempre visível">📌</button>
       <button id="widget-go" onclick="toggleTimer()">▶</button>
-      <button id="widget-pin" style="visibility:hidden;font-size:14px;background:none;border:none">📌</button>
     </div>
   </div>
 </div>
@@ -857,7 +862,7 @@ function updateWidget(){
   // sync arc
   const bPct = timerLeft / timerTotal;
   const warc = document.getElementById('warc');
-  if(warc){ warc.setAttribute('d', ap(50,50,46,bPct*360)); warc.setAttribute('fill',acc); }
+  if(warc){ warc.setAttribute('d', ap(60,60,55,bPct*360)); warc.setAttribute('fill',acc); }
   const wmin = document.getElementById('w-min');
   if(wmin) wmin.textContent = Math.ceil(timerLeft/60);
   const wtime = document.getElementById('widget-time');
