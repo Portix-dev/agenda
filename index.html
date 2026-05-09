@@ -122,8 +122,8 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .compact-mode #widget-toggle{display:none}
 .compact-mode #root{display:none}
 .compact-mode #install-banner{display:none!important}
-.compact-mode body{background:var(--nb1)!important;min-height:unset;padding:0;width:160px;height:200px;overflow:hidden}
-.compact-mode html{background:var(--nb1)!important}
+.compact-mode body{min-height:unset;padding:0;overflow:hidden}
+.compact-mode #widget{position:static;display:flex;justify-content:center;padding:40px 0 0}
 @media(prefers-color-scheme:dark){#widget{box-shadow:0 4px 16px rgba(0,0,0,.45)}}
 </style>
 </head>
@@ -839,7 +839,21 @@ let pinned = false;
 function toggleCompact(){
   compactMode = !compactMode;
   document.body.classList.toggle('compact-mode', compactMode);
-  if(!compactMode){
+  if(compactMode){
+    // save current size and position, then shrink
+    try{
+      window._prevW = window.outerWidth;
+      window._prevH = window.outerHeight;
+      window._prevX = window.screenX;
+      window._prevY = window.screenY;
+      window.resizeTo(200, 280);
+      window.moveTo(window.screen.availWidth - 220, window.screen.availHeight - 300);
+    }catch(e){}
+  } else {
+    try{
+      window.resizeTo(window._prevW||800, window._prevH||600);
+      window.moveTo(window._prevX||0, window._prevY||0);
+    }catch(e){}
     document.getElementById('root').style.display='';
     showScreen('agenda');
   }
