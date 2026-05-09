@@ -105,6 +105,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
 /* ── Compact widget ───────────────────────────────────── */
 #widget{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:transparent;cursor:pointer;user-select:none}
+.compact-mode #widget{position:static;display:flex;justify-content:center;padding:10px 0 0}
 #widget-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
 #widget-disc{position:relative;width:120px;height:120px}
 #widget-disc svg{display:block}
@@ -121,7 +122,8 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .compact-mode #widget-toggle{display:none}
 .compact-mode #root{display:none}
 .compact-mode #install-banner{display:none!important}
-.compact-mode body{background:transparent;min-height:unset}
+.compact-mode body{background:var(--nb1)!important;min-height:unset;padding:0;width:160px;height:200px;overflow:hidden}
+.compact-mode html{background:var(--nb1)!important}
 @media(prefers-color-scheme:dark){#widget{box-shadow:0 4px 16px rgba(0,0,0,.45)}}
 </style>
 </head>
