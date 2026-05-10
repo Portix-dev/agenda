@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.3.0</title>
+<title>Agenda v1.5.0</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -40,9 +40,9 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .leg-row{display:flex;gap:10px;flex-wrap:wrap;padding-top:9px;border-top:.5px solid var(--brd)}
 .leg-i{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--nf3)}
 .leg-d{width:8px;height:8px;border-radius:50%}
-.timer-grid{display:grid;grid-template-columns:100px 1fr;gap:14px;align-items:center}
-.t-num{font-size:32px;font-weight:600;color:var(--nf1);font-variant-numeric:tabular-nums;line-height:1}
-.t-task{font-size:12px;color:var(--nf2);margin:4px 0 9px}
+.timer-grid{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.t-num{font-size:18px;font-weight:600;color:var(--nf3);font-variant-numeric:tabular-nums;line-height:1}
+.t-task{font-size:12px;color:var(--nf2);margin:4px 0 6px}
 .preset-row{display:flex;gap:4px;margin-bottom:7px;flex-wrap:wrap}
 .pbtn{font-family:var(--ff);font-size:11px;font-weight:600;padding:3px 10px;border-radius:3px;border:.5px solid var(--brd2);background:var(--nb3);color:var(--nf2);cursor:pointer}
 .pbtn.sel{background:var(--active-bg);color:var(--active-fg);border-color:var(--active-acc)}
@@ -142,7 +142,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 <div class="card card-sm">
   <div class="hdr-row">
     <div>
-      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.3.0</span></div>
+      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.5.0</span></div>
       <div class="hdr-sub" id="hd-date"></div>
     </div>
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -211,16 +211,24 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
   <div class="card">
     <div class="sec-lbl">Time timer · <span id="timer-lbl">40 min / bloco</span></div>
     <div class="timer-grid">
-      <svg width="100" height="100" viewBox="0 0 100 100" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Timer">
-        <circle cx="50" cy="50" r="46" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
-        <path id="tarc" d="" opacity=".9"/>
-        <circle cx="50" cy="50" r="30" fill="var(--nb1)"/>
-        <text x="50" y="47" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="svg-m">40</text>
-        <text x="50" y="58" text-anchor="middle" font-family="var(--ff)" font-size="7.5" fill="var(--nf3)">min</text>
+      <svg width="150" height="150" viewBox="0 0 150 150" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Timer">
+        <!-- background disc -->
+        <circle cx="75" cy="75" r="70" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
+        <!-- minute labels on rim -->
+        <g id="timer-labels"></g>
+        <!-- tick marks -->
+        <g id="timer-ticks"></g>
+        <!-- solid wedge -->
+        <path id="tarc" d="" opacity=".92"/>
+        <!-- center hole -->
+        <circle cx="75" cy="75" r="22" fill="var(--nb1)"/>
+        <!-- center pin -->
+        <circle cx="75" cy="75" r="3.5" fill="var(--nf3)" opacity=".6"/>
       </svg>
       <div>
         <div class="t-num" id="t-display">40:00</div>
         <div class="t-task" id="t-task">—</div>
+        <div class="t-next" id="t-next" style="font-size:10px;color:var(--nf3);margin:-2px 0 7px;display:none"></div>
         <div class="preset-row">
           <button class="pbtn sel" id="p40" onclick="setMins(40)">40 min</button>
           <button class="pbtn" id="p60" onclick="setMins(60)">60 min</button>
@@ -334,7 +342,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.3.0';
+const VERSION = 'v1.5.0';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -520,15 +528,76 @@ function ap(cx,cy,r,deg){
 }
 function getAcc(){ return getComputedStyle(document.documentElement).getPropertyValue('--active-acc').trim()||'#185FA5'; }
 
+function getTimerColor(){
+  const secsLeft = timerLeft;
+  if(secsLeft <= 120) return '#c4314b';      // últimos 2 min — vermelho
+  if(secsLeft <= 300) return '#f7a800';      // últimos 5 min — amarelo
+  return getAcc();                            // normal — cor da categoria
+}
+
+function drawTicks(){
+  const ticks = document.getElementById('timer-ticks');
+  const labels = document.getElementById('timer-labels');
+  if(!ticks || ticks.childNodes.length > 0) return;
+  const cx=75, cy=75, rOuter=70, rMajor=62, rMinor=65, rLabel=54;
+  let tickHtml='', labelHtml='';
+  for(let i=0;i<60;i++){
+    const angle = (i/60)*360 - 90;
+    const rad = angle * Math.PI/180;
+    const isMajor = i%5===0;
+    const ri = isMajor ? rMajor : rMinor;
+    const x1 = cx + rOuter*Math.cos(rad), y1 = cy + rOuter*Math.sin(rad);
+    const x2 = cx + ri*Math.cos(rad),     y2 = cy + ri*Math.sin(rad);
+    tickHtml+=`<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="var(--nb1)" stroke-width="${isMajor?1.8:.7}" opacity="${isMajor?.8:.4}"/>`;
+    if(isMajor){
+      const lx = cx + rLabel*Math.cos(rad), ly = cy + rLabel*Math.sin(rad);
+      labelHtml+=`<text x="${lx.toFixed(2)}" y="${(ly+3).toFixed(2)}" text-anchor="middle" font-family="var(--ff)" font-size="7.5" font-weight="600" fill="var(--nf3)" opacity=".7">${i}</text>`;
+    }
+  }
+  ticks.innerHTML = tickHtml;
+  if(labels) labels.innerHTML = labelHtml;
+}
+
+function updateNextTaskWarning(){
+  const el = document.getElementById('t-next');
+  if(!el) return;
+  if(timerRunning && timerLeft <= 300 && timerLeft > 0){
+    const dow = state.viewDow;
+    const tasks = state.sched[dow]||[];
+    // find next undone task after the first undone
+    let foundFirst = false;
+    const next = tasks.find((_,i)=>{
+      if(!state.doneTasks[dow+'_'+i]){
+        if(foundFirst) return true;
+        foundFirst = true;
+      }
+      return false;
+    });
+    if(next){
+      el.style.display='block';
+      el.textContent='→ '+next.t;
+    } else {
+      el.style.display='none';
+    }
+  } else {
+    el.style.display='none';
+  }
+}
+
 function updateDiscs(){
-  const acc=getAcc();
+  drawTicks();
+  const timerColor = getTimerColor();
+  const acc = getAcc();
   const bPct=timerLeft/timerTotal;
   document.getElementById('arc-bloco').setAttribute('d',ap(34,34,31,bPct*360));
-  document.getElementById('arc-bloco').setAttribute('fill',acc);
-  document.getElementById('tarc').setAttribute('d',ap(50,50,46,bPct*360));
-  document.getElementById('tarc').setAttribute('fill',acc);
+  document.getElementById('arc-bloco').setAttribute('fill',timerColor);
+  document.getElementById('tarc').setAttribute('d',ap(75,75,70,bPct*360));
+  document.getElementById('tarc').setAttribute('fill',timerColor);
   document.getElementById('lbl-bloco').textContent=Math.ceil(timerLeft/60);
-  document.getElementById('svg-m').textContent=Math.ceil(timerLeft/60);
+
+  // pulse t-display color
+  const disp = document.getElementById('t-display');
+  if(disp) disp.style.color = timerLeft<=120 ? '#c4314b' : timerLeft<=300 ? '#f7a800' : 'var(--nf1)';
 
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
@@ -549,6 +618,9 @@ function updateDiscs(){
   const el=now.getHours()*60+now.getMinutes();
   document.getElementById('arc-dia').setAttribute('d',ap(80,80,75,(el/1440)*360));
   document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
+
+  updateNextTaskWarning();
+  updateWidget();
 }
 
 function setMins(m){
@@ -903,22 +975,11 @@ function toggleCompact(){
   if(compactMode){
     window._prevW = window.outerWidth;
     window._prevH = window.outerHeight;
-    window._prevX = window.screenX;
-    window._prevY = window.screenY;
-    setTimeout(()=>{
-      window.resizeTo(240, 320);
-      window.moveTo(
-        window.screen.availWidth - 260,
-        window.screen.availHeight - 340
-      );
-    }, 50);
+    setTimeout(()=>{ window.resizeTo(240, 320); }, 50);
   } else {
     document.getElementById('root').style.display='';
     showScreen('agenda');
-    setTimeout(()=>{
-      window.resizeTo(window._prevW||900, window._prevH||650);
-      window.moveTo(window._prevX||100, window._prevY||100);
-    }, 50);
+    setTimeout(()=>{ window.resizeTo(window._prevW||900, window._prevH||650); }, 50);
   }
   updateWidget();
 }
@@ -935,20 +996,18 @@ function togglePin(e){
 }
 
 function updateWidget(){
-  const acc = getAcc();
-  // sync arc
+  const timerColor = getTimerColor();
   const bPct = timerLeft / timerTotal;
   const warc = document.getElementById('warc');
-  if(warc){ warc.setAttribute('d', ap(60,60,55,bPct*360)); warc.setAttribute('fill',acc); }
+  if(warc){ warc.setAttribute('d', ap(60,60,55,bPct*360)); warc.setAttribute('fill',timerColor); }
   const wmin = document.getElementById('w-min');
-  if(wmin) wmin.textContent = Math.ceil(timerLeft/60);
+  if(wmin) wmin.textContent = '';  // sem número no widget também
   const wtime = document.getElementById('widget-time');
   if(wtime){ const mm=Math.floor(timerLeft/60),ss=timerLeft%60; wtime.textContent=String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0'); }
   const wtask = document.getElementById('widget-task');
   if(wtask) wtask.textContent = nextTask();
   const wgo = document.getElementById('widget-go');
-  if(wgo){ wgo.textContent = timerRunning ? '⏸' : '▶'; wgo.style.background = acc; }
-  // add compact toggle button to nav when in full mode
+  if(wgo){ wgo.textContent = timerRunning ? '⏸' : '▶'; wgo.style.background = timerColor; }
   renderCompactBtn();
 }
 
