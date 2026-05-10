@@ -118,15 +118,15 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #widget-go{font-family:var(--ff);font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;border:none;background:var(--active-acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #widget-toggle{display:none}
 
-/* compact mode — janela vira só o widget */
-.compact-mode #root{display:none}
+/* compact mode — só o widget, fundo escuro */
+.compact-mode #root{display:none!important}
 .compact-mode #install-banner{display:none!important}
-.compact-mode body{margin:0;padding:0;min-height:unset;background:#1a1a1a!important;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
-.compact-mode html{background:#1a1a1a!important}
-.compact-mode #widget{display:flex;position:static;background:transparent;flex-direction:column;align-items:center}
-.compact-mode #widget-task{color:#ccc}
-.compact-mode #widget-pin{color:#888}
-.compact-mode #widget-disc-bg{background:#2a2a2a;border-color:rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.compact-mode body{margin:0;padding:0;min-height:100vh;background:#111!important;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.compact-mode html{background:#111!important}
+.compact-mode #widget{display:flex!important;position:static!important;flex-direction:column;align-items:center;gap:8px}
+.compact-mode #widget-disc-bg{background:#222;border-color:rgba(255,255,255,.12);box-shadow:0 4px 24px rgba(0,0,0,.6)}
+.compact-mode #widget-task{color:#aaa;font-size:10px}
+.compact-mode #widget-pin{color:#666}
 @media(prefers-color-scheme:dark){#widget{box-shadow:0 4px 16px rgba(0,0,0,.45)}}
 </style>
 </head>
@@ -974,14 +974,9 @@ function toggleCompact(){
   state.compactMode = compactMode;
   saveState();
   document.body.classList.toggle('compact-mode', compactMode);
-  if(compactMode){
-    window._prevW = window.outerWidth;
-    window._prevH = window.outerHeight;
-    setTimeout(()=>{ window.resizeTo(400, 500); }, 50);
-  } else {
+  if(!compactMode){
     document.getElementById('root').style.display='';
     showScreen('agenda');
-    setTimeout(()=>{ window.resizeTo(window._prevW||900, window._prevH||650); }, 50);
   }
   updateWidget();
 }
