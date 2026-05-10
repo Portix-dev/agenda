@@ -971,6 +971,8 @@ let pinned = false;
 
 function toggleCompact(){
   compactMode = !compactMode;
+  state.compactMode = compactMode;
+  saveState();
   document.body.classList.toggle('compact-mode', compactMode);
   if(compactMode){
     window._prevW = window.outerWidth;
@@ -1037,7 +1039,13 @@ setTimeout(renderCompactBtn, 100);
  navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
 setInterval(()=>updateDiscs(),60000);
-loadState(); render(); updateTimerDisplay(); updateDiscs();
+loadState();
+// restore compact mode if was active
+if(state.compactMode){
+  compactMode = true;
+  document.body.classList.add('compact-mode');
+}
+render(); updateTimerDisplay(); updateDiscs(); updateWidget();
 </script>
 </body>
 </html>
