@@ -1,5 +1,5 @@
 {
-  "name": "Agenda · Engrenagens de Tempo",
+  "name": "Agenda",
   "short_name": "Agenda",
   "description": "Painel de tarefas com Time Timer visual adaptado para time blindness",
   "start_url": "./index.html",
