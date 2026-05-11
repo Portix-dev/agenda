@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.3.7</title>
+<title>Agenda v1.3.8</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -169,9 +169,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
         <svg width="90" height="90" viewBox="0 0 90 90" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Disco do bloco">
           <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-bloco" d=""/>
-          <circle cx="45" cy="45" r="26" fill="var(--nb1)"/>
-          <text x="45" y="42" text-anchor="middle" font-family="var(--ff)" font-size="12" font-weight="600" fill="var(--nf1)" id="lbl-bloco">40</text>
-          <text x="45" y="52" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">min</text>
+          <line x1="45" y1="45" x2="45" y2="5" stroke="var(--nb2)" stroke-width="1.5" stroke-linecap="round" id="hand-bloco"/>
         </svg>
         <div class="gear-bot" id="bot-bloco">40 min</div>
       </div>
@@ -180,9 +178,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
         <svg width="90" height="90" viewBox="0 0 90 90" role="img" aria-label="Foco do dia">
           <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-foco" d="" fill="#0F6E56" opacity=".85"/>
-          <circle cx="45" cy="45" r="26" fill="var(--nb1)"/>
-          <text x="45" y="42" text-anchor="middle" font-family="var(--ff)" font-size="11" font-weight="600" fill="var(--nf1)" id="lbl-foco">--</text>
-          <text x="45" y="52" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)" id="lbl-foco-sub">restam</text>
         </svg>
         <div class="gear-bot" id="bot-foco">--</div>
       </div>
@@ -191,9 +186,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
         <svg width="90" height="90" viewBox="0 0 90 90" role="img" aria-label="Dia completo">
           <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-dia" d="" fill="#534AB7" opacity=".75"/>
-          <circle cx="45" cy="45" r="26" fill="var(--nb1)"/>
-          <text x="45" y="42" text-anchor="middle" font-family="var(--ff)" font-size="11" font-weight="600" fill="var(--nf1)" id="lbl-dia">0h00</text>
-          <text x="45" y="52" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">de 24h</text>
         </svg>
         <div class="gear-bot" id="bot-dia">1440 min</div>
       </div>
@@ -212,9 +204,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       <svg width="100" height="100" viewBox="0 0 100 100" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Timer">
         <circle cx="50" cy="50" r="46" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
         <path id="tarc" d="" opacity=".9"/>
-        <circle cx="50" cy="50" r="30" fill="var(--nb1)"/>
-        <text x="50" y="47" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="svg-m">40</text>
-        <text x="50" y="58" text-anchor="middle" font-family="var(--ff)" font-size="7.5" fill="var(--nf3)">min</text>
+        <line x1="50" y1="50" x2="50" y2="6" stroke="var(--nb2)" stroke-width="2" stroke-linecap="round" id="hand-timer"/>
       </svg>
       <div>
         <div class="t-num" id="t-display">40:00</div>
@@ -332,7 +322,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.3.7';
+const VERSION = 'v1.3.8';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -522,6 +512,15 @@ function getAcc(){ return getComputedStyle(document.documentElement).getProperty
 
 function fmtH(mins){ return mins>=60?(mins/60).toFixed(1).replace('.0','')+'h':mins+'min'; }
 
+// Ponteiro do Time Timer: linha do centro até a borda, na posição do ângulo atual
+function setHand(id, cx, cy, r, deg){
+  const el=document.getElementById(id); if(!el) return;
+  const rad=(deg-90)*Math.PI/180;
+  const x2=cx+r*Math.cos(rad), y2=cy+r*Math.sin(rad);
+  el.setAttribute('x1',cx); el.setAttribute('y1',cy);
+  el.setAttribute('x2',x2.toFixed(2)); el.setAttribute('y2',y2.toFixed(2));
+}
+
 function updateDiscs(){
   const acc=getAcc();
   const dow=state.viewDow;
@@ -545,7 +544,7 @@ function updateDiscs(){
   const bDeg = Math.min(timerLeft / 2400, 1) * 360;
   document.getElementById('arc-bloco').setAttribute('d',ap(45,45,42,bDeg));
   document.getElementById('arc-bloco').setAttribute('fill',acc);
-  document.getElementById('lbl-bloco').textContent=Math.ceil(timerLeft/60);
+  setHand('hand-bloco',45,45,40,bDeg);
   const bLabel=fmtH(Math.round(timerTotal/60));
   document.getElementById('bot-bloco').textContent=bLabel+' / bloco';
   document.getElementById('timer-lbl').textContent=bLabel+' / bloco';
@@ -557,15 +556,13 @@ function updateDiscs(){
   const tDeg = Math.min(timerLeft / REF, 1) * 360;
   document.getElementById('tarc').setAttribute('d',ap(50,50,46,tDeg));
   document.getElementById('tarc').setAttribute('fill',acc);
-  document.getElementById('svg-m').textContent=Math.ceil(timerLeft/60);
+  setHand('hand-timer',50,50,44,tDeg);
 
   // ── Engrenagem FOCO ──────────────────────────────────────────
   const fElapsed=doneMins+timerElapsed;
   const fPct=focusMins>0?Math.min(fElapsed/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(45,45,42,fPct*360));
   const remH=remainMins>=60?(remainMins/60).toFixed(1).replace('.0','')+'h':Math.round(remainMins)+'min';
-  document.getElementById('lbl-foco').textContent=remH;
-  document.getElementById('lbl-foco-sub').textContent='restam';
   document.getElementById('bot-foco').textContent=fmtH(focusMins)+' total';
   document.getElementById('leg-n').textContent=fmtH(focusMins);
 
@@ -573,7 +570,6 @@ function updateDiscs(){
   const now=new Date();
   const el=now.getHours()*60+now.getMinutes();
   document.getElementById('arc-dia').setAttribute('d',ap(45,45,42,(el/1440)*360));
-  document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
 }
 
 function setMins(m){
