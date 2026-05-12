@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.4.0</title>
+<title>Agenda v1.4.1</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -324,7 +324,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.4.0';
+const VERSION = 'v1.4.1';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -529,22 +529,16 @@ function updateDiscs(){
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
 
-  // Total de minutos de foco do dia (todas as tarefas com dur real)
+  // Total de minutos de foco do dia
   const focusMins=tasks.reduce((a,t)=>a+(t.dur||40),0);
-
-  // Minutos já concluídos (tarefas marcadas done)
+  // Minutos concluídos (só tarefas marcadas done — timer não conta aqui)
   const doneMins=tasks.reduce((a,t,i)=>a+(state.doneTasks[dow+'_'+i]?(t.dur||40):0),0);
 
-  // Progresso do timer em curso (minutos decorridos no bloco atual)
-  const timerElapsed=timerRunning||timerLeft<timerTotal ? Math.max(0,(timerTotal-timerLeft)/60) : 0;
-
-  // Minutos restantes no dia de foco
-  const remainMins=Math.max(0,focusMins-doneMins-timerElapsed);
-
-  // ── Engrenagem PEQUENA (Bloco) — mesma referência do timer grande ──
-  // 40min = 360°. 10min zerado = 90°. Encolhe proporcionalmente.
-  const bPct = timerLeft/timerTotal; // 1→0
-  const bDeg = Math.min(timerLeft / 2400, 1) * 360;
+  // ── Bloco: 40min = 360° (referência fixa para todos os presets)
+  // timerLeft em segundos / 2400s (40min) → ângulo proporcional
+  // Valores >40min ficam em 360° (cheio). Valores menores ficam proporcionais.
+  const REF = 2400;
+  const bDeg = Math.min(timerLeft / REF, 1) * 360;
   document.getElementById('arc-bloco').setAttribute('d',ap(45,45,42,bDeg));
   document.getElementById('arc-bloco').setAttribute('fill',acc);
   setHand('hand-bloco',45,45,40,bDeg);
@@ -553,27 +547,28 @@ function updateDiscs(){
   document.getElementById('timer-lbl').textContent=bLabel+' / bloco';
   document.getElementById('leg-bloco').textContent=bLabel;
 
-  // ── Timer grande — 40min = 360° (referência fixa)
-  // Qualquer preset é proporcional: 10min zerado = 90°, 25min = 225°, 60min = 360°(cap)
-  const REF = 2400; // 40min em segundos = referência absoluta
+  // ── Timer grande: mesma lógica do bloco pequeno
   const tDeg = Math.min(timerLeft / REF, 1) * 360;
   document.getElementById('tarc').setAttribute('d',ap(50,50,46,tDeg));
   document.getElementById('tarc').setAttribute('fill',acc);
   setHand('hand-timer',50,50,44,tDeg);
 
-  // ── Engrenagem FOCO ──────────────────────────────────────────
-  const fElapsed=doneMins+timerElapsed;
-  const fRemain=Math.max(0,focusMins-fElapsed);
-  const fPct=focusMins>0?Math.min(fRemain/focusMins,1):0;
-  document.getElementById('arc-foco').setAttribute('d',ap(45,45,42,fPct*360));
-  const remH=remainMins>=60?(remainMins/60).toFixed(1).replace('.0','')+'h':Math.round(remainMins)+'min';
+  // ── Foco do dia: escala = focusMins total do dia
+  // Arco = tempo restante de tarefas = (focusMins - doneMins) / focusMins
+  // Não usa timerElapsed — o foco só muda quando tarefas são marcadas done
+  const fRemain = Math.max(0, focusMins - doneMins);
+  const fDeg = focusMins > 0 ? (fRemain / focusMins) * 360 : 360;
+  document.getElementById('arc-foco').setAttribute('d',ap(45,45,42,fDeg));
   document.getElementById('bot-foco').textContent=fmtH(focusMins)+' total';
   document.getElementById('leg-n').textContent=fmtH(focusMins);
 
-  // ── Engrenagem DIA ───────────────────────────────────────────
+  // ── Dia 24h: minutos restantes no dia a partir de agora
+  // Arco = (1440 - minutoAtual) / 1440 * 360, partindo do topo
   const now=new Date();
-  const el=now.getHours()*60+now.getMinutes();
-  document.getElementById('arc-dia').setAttribute('d',ap(45,45,42,((1440-el)/1440)*360));
+  const elMin=now.getHours()*60+now.getMinutes();
+  const dDeg = ((1440 - elMin) / 1440) * 360;
+  document.getElementById('arc-dia').setAttribute('d',ap(45,45,42,dDeg));
+  document.getElementById('bot-dia').textContent=fmtH(1440-elMin)+' restam';
 }
 
 function setMins(m){
@@ -635,8 +630,16 @@ function detectPeriodEnd(){
 }
 
 function updateTimerDisplay(){
-  const mm=Math.floor(timerLeft/60),ss=timerLeft%60;
-  document.getElementById('t-display').textContent=String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  const ss=timerLeft%60;
+  const totalMins=Math.floor(timerLeft/60);
+  let txt;
+  if(totalMins>=60){
+    const h=Math.floor(totalMins/60), m=totalMins%60;
+    txt=h+'h'+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  } else {
+    txt=String(totalMins).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  }
+  document.getElementById('t-display').textContent=txt;
 }
 
 function nextTask(){
