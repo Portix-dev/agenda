@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.4.2</title>
+<title>Agenda v1.3.0</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -30,7 +30,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .tab-row{display:flex;gap:4px;flex-wrap:wrap}
 .tab-btn{font-family:var(--ff);font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb3);color:var(--nf2);cursor:pointer}
 .tab-btn.active{background:var(--active-bg);color:var(--active-fg);border-color:var(--active-acc)}
-.gears-stage{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 0 10px}
+.gears-stage{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;padding:4px 0 10px}
 .gear-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
 .gear-top{font-size:9px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em}
 .gear-bot{font-size:10px;color:var(--nf3);text-align:center}
@@ -54,8 +54,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .tasks-list{display:flex;flex-direction:column;gap:5px}
 .task-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r4);border:.5px solid var(--brd);cursor:pointer;user-select:none}
 .task-row.done{opacity:.38}
-.task-row.active-task{border-color:var(--active-acc);background:var(--active-bg)}
-.task-row.active-task .tname{color:var(--active-fg);font-weight:600}
 .task-row.period-header{cursor:default;background:var(--nb3);border-color:transparent;padding:5px 10px;margin-top:4px}
 .tcheck{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;color:#107c10}
 .task-row.done .tcheck{background:#dff6dd;border-color:#107c10}
@@ -168,34 +166,44 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="gears-stage">
       <div class="gear-wrap">
         <div class="gear-top">Bloco</div>
-        <svg width="90" height="90" viewBox="0 0 90 90" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Disco do bloco">
-          <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
+        <svg width="68" height="68" viewBox="0 0 68 68" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Disco do bloco">
+          <circle cx="34" cy="34" r="31" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-bloco" d=""/>
-          <line x1="45" y1="45" x2="45" y2="5" stroke="var(--nb2)" stroke-width="1.5" stroke-linecap="round" id="hand-bloco"/>
+          <circle cx="34" cy="34" r="19" fill="var(--nb1)"/>
+          <text x="34" y="31" text-anchor="middle" font-family="var(--ff)" font-size="10" font-weight="600" fill="var(--nf1)" id="lbl-bloco">40</text>
+          <text x="34" y="41" text-anchor="middle" font-family="var(--ff)" font-size="6.5" fill="var(--nf3)">min</text>
         </svg>
         <div class="gear-bot" id="bot-bloco">40 min</div>
       </div>
+      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio1">1/5</div><div class="ratio-line"></div></div>
       <div class="gear-wrap">
         <div class="gear-top">Foco do dia</div>
-        <svg width="90" height="90" viewBox="0 0 90 90" role="img" aria-label="Foco do dia">
-          <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
+        <svg width="110" height="110" viewBox="0 0 110 110" role="img" aria-label="Foco do dia">
+          <circle cx="55" cy="55" r="51" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-foco" d="" fill="#0F6E56" opacity=".85"/>
+          <circle cx="55" cy="55" r="32" fill="var(--nb1)"/>
+          <text x="55" y="52" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="lbl-foco">5</text>
+          <text x="55" y="63" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">blocos</text>
         </svg>
-        <div class="gear-bot" id="bot-foco">--</div>
+        <div class="gear-bot" id="bot-foco">200 min</div>
       </div>
+      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio2">1/7</div><div class="ratio-line"></div></div>
       <div class="gear-wrap">
-        <div class="gear-top">Dia · 24h</div>
-        <svg width="90" height="90" viewBox="0 0 90 90" role="img" aria-label="Dia completo">
-          <circle cx="45" cy="45" r="42" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
+        <div class="gear-top">Dia completo</div>
+        <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Dia completo">
+          <circle cx="80" cy="80" r="75" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-dia" d="" fill="#534AB7" opacity=".75"/>
+          <circle cx="80" cy="80" r="47" fill="var(--nb1)"/>
+          <text x="80" y="76" text-anchor="middle" font-family="var(--ff)" font-size="15" font-weight="600" fill="var(--nf1)" id="lbl-dia">0h00</text>
+          <text x="80" y="90" text-anchor="middle" font-family="var(--ff)" font-size="8" fill="var(--nf3)">de 24h</text>
         </svg>
-        <div class="gear-bot" id="bot-dia">1440 min</div>
+        <div class="gear-bot">1440 min / dia</div>
       </div>
     </div>
     <div class="leg-row">
-      <div class="leg-i"><div class="leg-d" style="background:#185FA5"></div>Bloco · <span id="leg-bloco">40min</span></div>
-      <div class="leg-i"><div class="leg-d" style="background:#0F6E56"></div>Foco · <span id="leg-n">--</span></div>
-      <div class="leg-i"><div class="leg-d" style="background:#534AB7"></div>Dia · 24h</div>
+      <div class="leg-i"><div class="leg-d" style="background:#185FA5"></div>Bloco</div>
+      <div class="leg-i"><div class="leg-d" style="background:#0F6E56"></div>Foco (<span id="leg-n">5</span>× blocos)</div>
+      <div class="leg-i"><div class="leg-d" style="background:#534AB7"></div>Dia completo</div>
     </div>
   </div>
 
@@ -206,7 +214,9 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       <svg width="100" height="100" viewBox="0 0 100 100" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Timer">
         <circle cx="50" cy="50" r="46" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
         <path id="tarc" d="" opacity=".9"/>
-        <line x1="50" y1="50" x2="50" y2="6" stroke="var(--nb2)" stroke-width="2" stroke-linecap="round" id="hand-timer"/>
+        <circle cx="50" cy="50" r="30" fill="var(--nb1)"/>
+        <text x="50" y="47" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="svg-m">40</text>
+        <text x="50" y="58" text-anchor="middle" font-family="var(--ff)" font-size="7.5" fill="var(--nf3)">min</text>
       </svg>
       <div>
         <div class="t-num" id="t-display">40:00</div>
@@ -324,7 +334,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.4.2';
+const VERSION = 'v1.3.0';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -421,8 +431,7 @@ let state = {
   notes: {},
   sched: JSON.parse(JSON.stringify(DEFAULT_SCHED)),
   soundOn: false,
-  sessionMins: {},
-  activeTask: null  // {dow, i} da tarefa selecionada
+  sessionMins: {}
 };
 
 let blockMins=40, timerLeft=2400, timerTotal=2400;
@@ -439,8 +448,6 @@ function loadState(){
       if(!loaded.sched) state.sched=JSON.parse(JSON.stringify(DEFAULT_SCHED));
     }
   }catch(e){}
-  // sempre abrir no dia atual, ignorar viewDow salvo
-  state.viewDow=new Date().getDay();
 }
 function saveState(){ try{localStorage.setItem('agenda_pwa_v2',JSON.stringify(state));}catch(e){} }
 
@@ -507,70 +514,46 @@ function applyColors(dow){
 function ap(cx,cy,r,deg){
   if(deg>=360) return`M${cx},${cy-r} A${r},${r},0,1,1,${cx-.001},${cy-r} Z`;
   if(deg<=0) return'';
-  const rad=(deg-90)*Math.PI/180;
-  const ex=cx+r*Math.cos(rad), ey=cy+r*Math.sin(rad);
+  const rad=deg*Math.PI/180;
+  const ex=cx+r*Math.sin(rad), ey=cy-r*Math.cos(rad);
   return`M${cx},${cy} L${cx},${cy-r} A${r},${r},0,${deg>180?1:0},1,${ex},${ey} Z`;
 }
 function getAcc(){ return getComputedStyle(document.documentElement).getPropertyValue('--active-acc').trim()||'#185FA5'; }
 
-function fmtH(mins){ return mins>=60?(mins/60).toFixed(1).replace('.0','')+'h':mins+'min'; }
-
-// Ponteiro do Time Timer: linha do centro até a borda, na posição do ângulo atual
-function setHand(id, cx, cy, r, deg){
-  const el=document.getElementById(id); if(!el) return;
-  const rad=(deg-90)*Math.PI/180;
-  const x2=cx+r*Math.cos(rad), y2=cy+r*Math.sin(rad);
-  el.setAttribute('x1',cx); el.setAttribute('y1',cy);
-  el.setAttribute('x2',x2.toFixed(2)); el.setAttribute('y2',y2.toFixed(2));
-}
-
 function updateDiscs(){
   const acc=getAcc();
+  const bPct=timerLeft/timerTotal;
+  document.getElementById('arc-bloco').setAttribute('d',ap(34,34,31,bPct*360));
+  document.getElementById('arc-bloco').setAttribute('fill',acc);
+  document.getElementById('tarc').setAttribute('d',ap(50,50,46,bPct*360));
+  document.getElementById('tarc').setAttribute('fill',acc);
+  document.getElementById('lbl-bloco').textContent=Math.ceil(timerLeft/60);
+  document.getElementById('svg-m').textContent=Math.ceil(timerLeft/60);
+
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
+  const focusTasks=tasks.filter(t=>t.s!=='Diário');
+  const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
+  const compMins=blocksCompleted*blockMins+(blockMins-timerLeft/60);
+  const fPct=focusMins>0?Math.min(compMins/focusMins,1):0;
+  document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
+  document.getElementById('lbl-foco').textContent=focusTasks.length-blocksCompleted>0?focusTasks.length-blocksCompleted:0;
+  document.getElementById('bot-foco').textContent=focusMins+' min';
+  document.getElementById('leg-n').textContent=focusTasks.length;
+  document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
+  document.getElementById('ratio2').textContent='1/'+Math.round(1440/Math.max(focusMins,1));
+  document.getElementById('bot-bloco').textContent=fmtMins(blockMins)+' / bloco';
+  document.getElementById('timer-lbl').textContent=fmtMins(blockMins)+' / bloco';
 
-  // Total de minutos de foco do dia
-  const focusMins=tasks.reduce((a,t)=>a+(t.dur||40),0);
-  // Minutos concluídos (só tarefas marcadas done — timer não conta aqui)
-  const doneMins=tasks.reduce((a,t,i)=>a+(state.doneTasks[dow+'_'+i]?(t.dur||40):0),0);
-
-  // ── Bloco: 40min = 360° (referência fixa para todos os presets)
-  // timerLeft em segundos / 2400s (40min) → ângulo proporcional
-  // Valores >40min ficam em 360° (cheio). Valores menores ficam proporcionais.
-  const REF = 2400;
-  const bDeg = Math.min(timerLeft / REF, 1) * 360;
-  document.getElementById('arc-bloco').setAttribute('d',ap(45,45,42,bDeg));
-  document.getElementById('arc-bloco').setAttribute('fill',acc);
-  setHand('hand-bloco',45,45,40,bDeg);
-  const bLabel=fmtH(Math.round(timerTotal/60));
-  document.getElementById('bot-bloco').textContent=bLabel+' / bloco';
-  document.getElementById('timer-lbl').textContent=bLabel+' / bloco';
-  document.getElementById('leg-bloco').textContent=bLabel;
-
-  // ── Timer grande: mesma lógica do bloco pequeno
-  const tDeg = Math.min(timerLeft / REF, 1) * 360;
-  document.getElementById('tarc').setAttribute('d',ap(50,50,46,tDeg));
-  document.getElementById('tarc').setAttribute('fill',acc);
-  setHand('hand-timer',50,50,44,tDeg);
-
-  // ── Foco do dia: escala = focusMins total do dia
-  // Arco = tempo restante de tarefas = (focusMins - doneMins) / focusMins
-  // Não usa timerElapsed — o foco só muda quando tarefas são marcadas done
-  const fRemain = Math.max(0, focusMins - doneMins);
-  const fDeg = focusMins > 0 ? (fRemain / focusMins) * 360 : 360;
-  document.getElementById('arc-foco').setAttribute('d',ap(45,45,42,fDeg));
-  document.getElementById('bot-foco').textContent=fmtH(focusMins)+' total';
-  document.getElementById('leg-n').textContent=fmtH(focusMins);
-
-  // ── Dia 24h: minutos restantes no dia a partir de agora
-  // Arco = (1440 - minutoAtual) / 1440 * 360, partindo do topo
   const now=new Date();
-  const elMin=now.getHours()*60+now.getMinutes();
-  const dDeg = ((1440 - elMin) / 1440) * 360;
-  document.getElementById('arc-dia').setAttribute('d',ap(45,45,42,dDeg));
-  document.getElementById('bot-dia').textContent=fmtH(1440-elMin)+' restam';
+  const el=now.getHours()*60+now.getMinutes();
+  document.getElementById('arc-dia').setAttribute('d',ap(80,80,75,(el/1440)*360));
+  document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
 }
 
+function fmtMins(m){
+  return m>=60?(m%60===0?(m/60)+'h':(Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'))):m+' min';
+}
 function setMins(m){
   blockMins=m; timerTotal=m*60; timerLeft=m*60;
   if(timerRunning){clearInterval(timerInterval);timerRunning=false;}
@@ -584,6 +567,17 @@ function toggleTimer(){
     clearInterval(timerInterval); timerRunning=false;
     document.getElementById('play-btn').textContent='▶ Continuar';
   } else {
+    // Se ainda não iniciou, carrega duração da tarefa ativa
+    if(timerLeft===timerTotal){
+      const dow=state.viewDow;
+      const tasks=state.sched[dow]||[];
+      const active=tasks.find((_,i)=>!state.doneTasks[dow+'_'+i]);
+      if(active&&active.dur&&active.dur!==blockMins){
+        blockMins=active.dur; timerTotal=blockMins*60; timerLeft=timerTotal;
+        [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===blockMins?' sel':''); });
+        updateTimerDisplay(); updateDiscs();
+      }
+    }
     if(timerLeft<=0){timerLeft=timerTotal;}
     timerRunning=true;
     document.getElementById('play-btn').textContent='⏸ Pausar';
@@ -613,7 +607,7 @@ function tick(){
     const sm=state.sessionMins[key]||0;
     state.sessionMins[key]=sm+blockMins;
     saveState();
-    soundBloco();
+    detectPeriodEnd();
     try{if(navigator.vibrate)navigator.vibrate([150,80,150]);}catch(e){}
   }
 }
@@ -629,17 +623,18 @@ function detectPeriodEnd(){
   else soundBloco();
 }
 
-function updateTimerDisplay(){
-  const ss=timerLeft%60;
-  const totalMins=Math.floor(timerLeft/60);
-  let txt;
-  if(totalMins>=60){
-    const h=Math.floor(totalMins/60), m=totalMins%60;
-    txt=h+'h'+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
-  } else {
-    txt=String(totalMins).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+function fmtTimer(secs){
+  if(secs>=3600){
+    const h=Math.floor(secs/3600);
+    const m=Math.floor((secs%3600)/60);
+    const s=secs%60;
+    return h+'h '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   }
-  document.getElementById('t-display').textContent=txt;
+  const mm=Math.floor(secs/60),ss=secs%60;
+  return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+function updateTimerDisplay(){
+  document.getElementById('t-display').textContent=fmtTimer(timerLeft);
 }
 
 function nextTask(){
@@ -663,28 +658,6 @@ function render(){
   document.getElementById('sound-btn').textContent=state.soundOn?'🔔':'🔕';
 }
 
-function selectTask(dow,i){
-  const tasks=state.sched[dow]||[];
-  const tk=tasks[i];
-  if(!tk) return;
-  // toggle: clicar na mesma task deseleciona
-  const already = state.activeTask && state.activeTask.dow===dow && state.activeTask.i===i;
-  state.activeTask = already ? null : {dow,i};
-  if(!already){
-    // carrega duração da tarefa no timer
-    const mins = tk.dur||40;
-    blockMins=mins; timerTotal=mins*60; timerLeft=mins*60;
-    if(timerRunning){clearInterval(timerInterval);timerRunning=false;}
-    document.getElementById('play-btn').textContent='▶ Iniciar';
-    [40,60,25,10].forEach(x=>{document.getElementById('p'+x).className='pbtn'+(x===mins?' sel':'');});
-    document.getElementById('t-task').textContent=tk.t;
-    updateTimerDisplay(); updateDiscs();
-  } else {
-    document.getElementById('t-task').textContent=nextTask();
-  }
-  saveState(); renderTasks();
-}
-
 function renderTasks(){
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
@@ -700,13 +673,12 @@ function renderTasks(){
     }
     const key=dow+'_'+i;
     const done=!!state.doneTasks[key];
-    const isActive=state.activeTask&&state.activeTask.dow===dow&&state.activeTask.i===i;
-    const ct=CATS[tk.cat]||CATS.estudo;
-    html+=`<div class="task-row${done?' done':''}${isActive?' active-task':''}" onclick="selectTask(${dow},${i})">
-      <div class="tcheck" onclick="event.stopPropagation();toggleTask(${dow},${i})">${done?'✓':''}</div>
+    const c=CATS[tk.cat]||CATS.estudo;
+    html+=`<div class="task-row${done?' done':''}" onclick="toggleTask(${dow},${i})">
+      <div class="tcheck">${done?'✓':''}</div>
       <div class="tslot">${tk.s}</div>
       <div class="tname">${tk.t}</div>
-      <span class="pill" style="background:${ct.bg};color:${ct.fg}">${ct.lbl}</span>
+      <span class="pill" style="background:${c.bg};color:${c.fg}">${c.lbl}</span>
     </div>`;
   });
   document.getElementById('today-tasks').innerHTML=html;
@@ -756,7 +728,7 @@ function renderWeek(){
   }).join('');
 }
 
-function switchDay(dow){ state.viewDow=dow; state.activeTask=null; render(); renderConfig(); }
+function switchDay(dow){ state.viewDow=dow; render(); renderConfig(); }
 function prevDay(){ state.viewDow=(state.viewDow+6)%7; render(); renderConfig(); }
 function nextDay(){ state.viewDow=(state.viewDow+1)%7; render(); renderConfig(); }
 
@@ -789,28 +761,19 @@ function renderConfig(){
       html+=`<div style="font-size:10px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px">${pl}</div>`;
     }
     const c=CATS[tk.cat]||CATS.estudo;
-    const durOpts=[10,20,25,40,60,90,120,180,300].map(v=>`<option value="${v}"${tk.dur===v?' selected':''}>${v>=60?Math.round(v/60)+'h':v+'min'}</option>`).join('');
     html+=`<div class="config-task-row">
       <span class="pill" style="background:${c.bg};color:${c.fg};flex-shrink:0">${c.lbl}</span>
-      <input class="config-input" value="${tk.t}" onchange="editTaskName(${dow},${i},this.value)">
-      <select class="cat-select" onchange="editTaskDur(${dow},${i},this.value)" style="min-width:60px">${durOpts}</select>
-      <button class="del-btn" onclick="deleteTask(${dow},${i})">x</button>
+      <input class="config-input" value="${tk.t}" onchange="editTask(${dow},${i},this.value)">
+      <button class="del-btn" onclick="deleteTask(${dow},${i})">×</button>
     </div>`;
   });
   document.getElementById('cfg-task-list').innerHTML=html;
 }
 
-function editTaskName(dow,i,val){
+function editTask(dow,i,val){
   state.sched[dow][i].t=val;
   saveState(); render();
 }
-function editTaskDur(dow,i,val){
-  const mins=parseInt(val);
-  state.sched[dow][i].dur=mins;
-  state.sched[dow][i].s=mins>=60?Math.round(mins/60)+'h':mins+'min';
-  saveState(); render(); renderConfig();
-}
-function editTask(dow,i,val){ editTaskName(dow,i,val); }
 
 function deleteTask(dow,i){
   state.sched[dow].splice(i,1);
@@ -1003,7 +966,7 @@ function updateWidget(){
   const wmin = document.getElementById('w-min');
   if(wmin) wmin.textContent = Math.ceil(timerLeft/60);
   const wtime = document.getElementById('widget-time');
-  if(wtime){ const mm=Math.floor(timerLeft/60),ss=timerLeft%60; wtime.textContent=String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0'); }
+  if(wtime){ wtime.textContent=fmtTimer(timerLeft); }
   const wtask = document.getElementById('widget-task');
   if(wtask) wtask.textContent = nextTask();
   const wgo = document.getElementById('widget-go');
