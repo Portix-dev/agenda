@@ -1,4 +1,4 @@
-const CACHE = 'agenda-v15';
+const CACHE = 'agenda-v16';
 const ASSETS = [
   './',
   './index.html',
@@ -6,14 +6,12 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
 ];
-
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, {cache:'reload'}))))
   );
   self.skipWaiting();
 });
-
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -22,7 +20,6 @@ self.addEventListener('activate', e => {
   );
   self.clients.claim();
 });
-
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
   e.respondWith(
