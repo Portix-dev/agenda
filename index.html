@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.4.7</title>
+<title>Agenda v1.4.9</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -121,6 +121,11 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-dur-wrap input{width:44px;text-align:center}
 .exp-dur-wrap span{font-size:11px;color:var(--nf3)}
 .exp-legend{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:.5px solid var(--brd)}
+.exp-add-hint{font-size:10px;color:var(--nf3);margin-top:4px}
+.exp-parcela-row{display:flex;align-items:center;gap:6px;margin-top:6px;padding:6px 8px;background:var(--active-bg);border-radius:var(--r4);border:.5px solid var(--active-acc)}
+.exp-parcela-row label{font-size:11px;color:var(--active-fg);font-weight:600;white-space:nowrap}
+.exp-parcela-row input{font-family:var(--ff);font-size:12px;padding:3px 6px;border-radius:var(--r4);border:.5px solid var(--active-acc);background:var(--nb1);color:var(--nf1);outline:none;width:60px;text-align:center}
+.exp-parcela-preview{font-size:10px;color:var(--active-fg);font-weight:600}
 .exp-vazio{font-size:12px;color:var(--nf3);padding:10px 0;text-align:center}
 
 /* Expediente inline drawer */
@@ -317,12 +322,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       <div class="exp-fila" id="exp-fila"></div>
       <div class="exp-add-row">
         <input class="exp-nome-input" id="exp-new-nome" placeholder="Nome do trabalho..." />
-        <div class="exp-dur-wrap">
-          <input id="exp-new-h" type="number" min="0" max="5" value="0" />
-          <span>h</span>
-          <input id="exp-new-m" type="number" min="0" max="55" step="5" value="40" />
-          <span>min</span>
-        </div>
+        <input id="exp-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
         <select id="exp-new-tipo">
           <option value="fixo">Fixo diário</option>
           <option value="prazo">Prazo</option>
@@ -331,6 +331,13 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
         </select>
         <button class="cbtn go" onclick="expAddItem()" style="padding:5px 12px;font-size:12px">+ Add</button>
       </div>
+      <div class="exp-parcela-row" id="exp-new-parcela-row" style="display:none">
+        <label>Parcelar em</label>
+        <input id="exp-new-parcela" value="40" title="Tamanho de cada parcela" oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
+        <label>min/dia →</label>
+        <span class="exp-parcela-preview" id="exp-new-preview"></span>
+      </div>
+      <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30min · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
       <div class="exp-legend">
         <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
         <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
@@ -434,12 +441,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="exp-fila" id="exp2-fila"></div>
     <div class="exp-add-row">
       <input class="exp-nome-input" id="exp2-new-nome" placeholder="Nome do trabalho..." />
-      <div class="exp-dur-wrap">
-        <input id="exp2-new-h" type="number" min="0" max="5" value="0" />
-        <span>h</span>
-        <input id="exp2-new-m" type="number" min="0" max="55" step="5" value="40" />
-        <span>min</span>
-      </div>
+      <input id="exp2-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
       <select id="exp2-new-tipo">
         <option value="fixo">Fixo diário</option>
         <option value="prazo">Prazo</option>
@@ -448,6 +450,13 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       </select>
       <button class="cbtn go" onclick="expAddItem2()" style="padding:5px 12px;font-size:12px">+ Add</button>
     </div>
+    <div class="exp-parcela-row" id="exp2-new-parcela-row" style="display:none">
+      <label>Parcelar em</label>
+      <input id="exp2-new-parcela" value="40" oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
+      <label>min/dia →</label>
+      <span class="exp-parcela-preview" id="exp2-new-preview"></span>
+    </div>
+    <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30min · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
     <div class="exp-legend">
       <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
       <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
@@ -483,7 +492,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.4.7';
+const VERSION = 'v1.4.9';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -1266,6 +1275,40 @@ function expToggleConcluido(id){
   expSave(); expRender();
 }
 
+function expEditDur(span, lista, id){
+  const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
+  const item = lista_ref.find(i=>String(i.id)===String(id));
+  if(!item) return;
+  // montar input compacto "1h30" ou "40"
+  const curH = Math.floor(item.dur/60);
+  const curM = item.dur%60;
+  const curVal = curH>0 ? (curM>0 ? curH+'h'+String(curM).padStart(2,'0') : curH+'h') : String(curM);
+
+  const input = document.createElement('input');
+  input.value = curVal;
+  input.title = 'Ex: 30, 1h, 1h30';
+  input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+
+  const parseDur = parseDurStr;
+
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = parseDur(input.value);
+    if(val && val>0) item.dur = val;
+    expSave(); expRender();
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
+  });
+}
+
 function expRenderFila(){
   const fila = state.expFila||[];
   const html = fila.length===0
@@ -1274,7 +1317,7 @@ function expRenderFila(){
     <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="fila">
       <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
       <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
-      <span class="exp-dur ${i.tipo}">${expFmtMin(i.dur)}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
       <button class="exp-act-btn alocar" onclick="expAlocar('${i.id}')">+ hoje</button>
       <button class="exp-act-btn danger" onclick="expDelFila('${i.id}')">×</button>
     </div>`).join('');
@@ -1293,7 +1336,7 @@ function expRenderHoje(){
     <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="hoje">
       <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
       <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
-      <span class="exp-dur ${i.tipo}">${expFmtMin(i.dur)}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
       <button class="exp-act-btn" onclick="expDevolver('${i.id}')">← fila</button>
       <button class="exp-act-btn danger" onclick="expDelHoje('${i.id}')">×</button>
     </div>`).join('');
@@ -1331,6 +1374,13 @@ function expBindContainer(container, lista){
       e.preventDefault();
       const row = nome.closest('[data-id]');
       if(row) expStartEdit(nome, lista, row.dataset.id);
+      return;
+    }
+    const dur = e.target.closest('[data-action="dur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-id]');
+      if(row) expEditDur(dur, lista, row.dataset.id);
     }
   }, sig);
 }
@@ -1343,23 +1393,6 @@ function toggleExpDrawer(open){
   if(show){ expRender(); // garante dados frescos
     setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
   }
-}
-
-// expAddItem2: versão para a aba separada (usa IDs exp2-*)
-function expAddItem2(){
-  const nome = document.getElementById('exp2-new-nome').value.trim();
-  if(!nome) return;
-  const h = parseInt(document.getElementById('exp2-new-h').value)||0;
-  const m = parseInt(document.getElementById('exp2-new-m').value)||0;
-  const dur = h*60+m||40;
-  const tipo = document.getElementById('exp2-new-tipo').value;
-  const fixo = tipo==='fixo';
-  if(!state.expFila) state.expFila=[];
-  state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
-  document.getElementById('exp2-new-nome').value='';
-  document.getElementById('exp2-new-h').value='0';
-  document.getElementById('exp2-new-m').value='40';
-  expSave(); expRender();
 }
 
 function expRender(){ expRenderFila(); expRenderHoje(); expUpdateSaldo(); }
@@ -1383,19 +1416,82 @@ function expDevolver(id){
 function expDelFila(id){ state.expFila=(state.expFila||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
 function expDelHoje(id){ state.expHoje=(state.expHoje||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
 
+// ── parser de duração livre ───────────────────────────────────────────────────
+function parseDurStr(s){
+  if(!s) return null;
+  s = s.trim().toLowerCase().replace(',','.');
+  // "1h30" ou "1h30min"
+  let m = s.match(/^(\d+(?:\.\d+)?)h(\d+)?(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1])*60) + (parseInt(m[2])||0);
+  // "1h"
+  m = s.match(/^(\d+(?:\.\d+)?)h$/);
+  if(m) return Math.round(parseFloat(m[1])*60);
+  // "40min" ou "40"
+  m = s.match(/^(\d+(?:\.\d+)?)(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1]));
+  return null;
+}
+
+// mostra/esconde linha de parcelamento e preview
+function expCheckParcela(durId, rowId, parcelaId, previewId){
+  const durVal = parseDurStr(document.getElementById(durId).value);
+  const parcelaEl = document.getElementById(parcelaId);
+  const parcelaVal = parseDurStr(parcelaEl.value) || 40;
+  const row = document.getElementById(rowId);
+  if(durVal && durVal > parcelaVal){
+    row.style.display = 'flex';
+    const n = Math.ceil(durVal / parcelaVal);
+    document.getElementById(previewId).textContent = n+' parcela'+(n>1?'s':'')+' de '+expFmtMin(parcelaVal)+' (total '+expFmtMin(durVal)+')';
+  } else {
+    row.style.display = 'none';
+    document.getElementById(previewId).textContent = '';
+  }
+}
+
+// cria itens na fila (1 ou N parcelas)
+function expCriarItens(nome, dur, parcela, tipo){
+  const fixo = tipo==='fixo';
+  if(!state.expFila) state.expFila=[];
+  if(parcela && parcela < dur){
+    const n = Math.ceil(dur / parcela);
+    for(let k=1;k<=n;k++){
+      const thisDur = k<n ? parcela : dur-(parcela*(n-1));
+      state.expFila.push({id:'eu'+(expNextId++), nome: n>1?nome+' · '+k+'/'+n:nome, dur:thisDur, tipo, fixo});
+    }
+  } else {
+    state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
+  }
+}
+
 function expAddItem(){
   const nome = document.getElementById('exp-new-nome').value.trim();
   if(!nome) return;
-  const h = parseInt(document.getElementById('exp-new-h').value)||0;
-  const m = parseInt(document.getElementById('exp-new-m').value)||0;
-  const dur = h*60+m||40;
+  const dur = parseDurStr(document.getElementById('exp-new-dur').value) || 40;
   const tipo = document.getElementById('exp-new-tipo').value;
-  const fixo = tipo==='fixo';
-  if(!state.expFila) state.expFila=[];
-  state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
+  const parcelaRow = document.getElementById('exp-new-parcela-row');
+  const parcela = parcelaRow.style.display!=='none'
+    ? (parseDurStr(document.getElementById('exp-new-parcela').value)||40)
+    : null;
+  expCriarItens(nome, dur, parcela, tipo);
   document.getElementById('exp-new-nome').value='';
-  document.getElementById('exp-new-h').value='0';
-  document.getElementById('exp-new-m').value='40';
+  document.getElementById('exp-new-dur').value='';
+  document.getElementById('exp-new-parcela-row').style.display='none';
+  expSave(); expRender();
+}
+
+function expAddItem2(){
+  const nome = document.getElementById('exp2-new-nome').value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(document.getElementById('exp2-new-dur').value) || 40;
+  const tipo = document.getElementById('exp2-new-tipo').value;
+  const parcelaRow = document.getElementById('exp2-new-parcela-row');
+  const parcela = parcelaRow.style.display!=='none'
+    ? (parseDurStr(document.getElementById('exp2-new-parcela').value)||40)
+    : null;
+  expCriarItens(nome, dur, parcela, tipo);
+  document.getElementById('exp2-new-nome').value='';
+  document.getElementById('exp2-new-dur').value='';
+  document.getElementById('exp2-new-parcela-row').style.display='none';
   expSave(); expRender();
 }
 
