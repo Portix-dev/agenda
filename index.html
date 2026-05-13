@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.4.1</title>
+<title>Agenda v1.4.4</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -97,7 +97,12 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-item.prazo{border-left:2.5px solid var(--cat-melhoria-acc)}
 .exp-item.variavel{border-left:2.5px solid var(--cat-estudo-acc)}
 .exp-item.emergencia{border-left:2.5px solid #c4314b}
-.exp-item-nome{flex:1;font-size:13px;font-weight:500;color:var(--nf1);cursor:default}
+.exp-tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#107c10;transition:background .15s,border-color .15s}
+.exp-tick:hover{border-color:var(--active-acc)}
+.exp-item.concluido .exp-tick{background:#dff6dd;border-color:#107c10}
+.exp-item.concluido .exp-item-nome{text-decoration:line-through;color:var(--nf3)}
+.exp-item.concluido .exp-dur{opacity:.5}
+.exp-item-nome{flex:1;font-size:13px;font-weight:500;color:var(--nf1);cursor:text;user-select:none}
 .exp-item-nome:hover{color:var(--nf2)}
 .exp-dur{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
 .exp-dur.fixo{background:var(--cat-trabalho-bg);color:var(--cat-trabalho-fg)}
@@ -117,6 +122,13 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-dur-wrap span{font-size:11px;color:var(--nf3)}
 .exp-legend{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:.5px solid var(--brd)}
 .exp-vazio{font-size:12px;color:var(--nf3);padding:10px 0;text-align:center}
+
+/* Expediente inline drawer */
+.exp-drawer{display:none;flex-direction:column;gap:10px;margin-top:4px}
+.exp-drawer.show{display:flex}
+.exp-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--cat-trabalho-bg);border-radius:var(--r4);border:.5px solid var(--cat-trabalho-acc)}
+.exp-drawer-title{font-size:11px;font-weight:600;color:var(--cat-trabalho-fg);text-transform:uppercase;letter-spacing:.06em}
+.exp-drawer-close{font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-trabalho-acc);background:transparent;color:var(--cat-trabalho-fg);cursor:pointer}
 
 /* Config screen */
 .config-screen{display:none;flex-direction:column;gap:10px}
@@ -189,7 +201,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <button class="tab-btn active" id="tab-agenda" onclick="showScreen('agenda')">Agenda</button>
     <button class="tab-btn" id="tab-config" onclick="showScreen('config')">Configurar</button>
     <button class="tab-btn" id="tab-report" onclick="showScreen('report')">Relatório</button>
-    <button class="tab-btn" id="tab-expediente" onclick="showScreen('expediente')">Expediente</button>
+    <button class="tab-btn" id="tab-expediente" onclick="toggleExpDrawer(true)">Expediente</button>
   </div>
 </div>
 
@@ -278,6 +290,56 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="tasks-list" id="today-tasks"></div>
   </div>
 
+  <!-- EXPEDIENTE DRAWER inline (dentro da tela Agenda) -->
+  <div class="exp-drawer" id="exp-drawer">
+    <div class="exp-drawer-header">
+      <span class="exp-drawer-title">Expediente</span>
+      <button class="exp-drawer-close" onclick="toggleExpDrawer(false)">✕ fechar</button>
+    </div>
+    <!-- saldo compacto -->
+    <div class="card card-sm">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" style="font-size:16px">5h00</div><div class="exp-metric-l">disponível</div></div>
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" id="exp-m-al" style="font-size:16px">0h00</div><div class="exp-metric-l">alocado</div></div>
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" id="exp-m-liv" style="font-size:16px">5h00</div><div class="exp-metric-l">livre</div></div>
+      </div>
+      <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
+      <div class="exp-barra-lbl"><span id="exp-bl-pct">0% ocupado</span><span id="exp-bl-av" style="color:#c4314b"></span></div>
+    </div>
+    <!-- hoje -->
+    <div class="card card-sm">
+      <div class="sec-lbl">Hoje</div>
+      <div class="exp-fila" id="exp-hoje"></div>
+    </div>
+    <!-- fila -->
+    <div class="card card-sm">
+      <div class="sec-lbl">Fila de trabalhos</div>
+      <div class="exp-fila" id="exp-fila"></div>
+      <div class="exp-add-row">
+        <input class="exp-nome-input" id="exp-new-nome" placeholder="Nome do trabalho..." />
+        <div class="exp-dur-wrap">
+          <input id="exp-new-h" type="number" min="0" max="5" value="0" />
+          <span>h</span>
+          <input id="exp-new-m" type="number" min="0" max="55" step="5" value="40" />
+          <span>min</span>
+        </div>
+        <select id="exp-new-tipo">
+          <option value="fixo">Fixo diário</option>
+          <option value="prazo">Prazo</option>
+          <option value="variavel">Variável</option>
+          <option value="emergencia">Emergência</option>
+        </select>
+        <button class="cbtn go" onclick="expAddItem()" style="padding:5px 12px;font-size:12px">+ Add</button>
+      </div>
+      <div class="exp-legend">
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-estudo-acc)"></div>Variável</div>
+        <div class="leg-i"><div class="leg-d" style="background:#c4314b"></div>Emergência</div>
+      </div>
+    </div>
+  </div>
+
   <!-- WEEK -->
   <div class="card card-sm">
     <div class="sec-lbl">Semana</div>
@@ -353,38 +415,38 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="sec-lbl">Expediente · saldo de 5h</div>
     <div class="exp-saldo-row">
       <div class="exp-metric"><div class="exp-metric-n">5h00</div><div class="exp-metric-l">disponível</div></div>
-      <div class="exp-metric"><div class="exp-metric-n" id="exp-m-al">0h00</div><div class="exp-metric-l">alocado</div></div>
-      <div class="exp-metric"><div class="exp-metric-n" id="exp-m-liv">5h00</div><div class="exp-metric-l">livre</div></div>
+      <div class="exp-metric"><div class="exp-metric-n" id="exp2-m-al">0h00</div><div class="exp-metric-l">alocado</div></div>
+      <div class="exp-metric"><div class="exp-metric-n" id="exp2-m-liv">5h00</div><div class="exp-metric-l">livre</div></div>
     </div>
-    <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
-    <div class="exp-barra-lbl"><span id="exp-bl-pct">0% ocupado</span><span id="exp-bl-av" style="color:#c4314b"></span></div>
+    <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp2-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
+    <div class="exp-barra-lbl"><span id="exp2-bl-pct">0% ocupado</span><span id="exp2-bl-av" style="color:#c4314b"></span></div>
   </div>
 
   <!-- hoje -->
   <div class="card card-sm">
     <div class="sec-lbl">Hoje</div>
-    <div class="exp-fila" id="exp-hoje"></div>
+    <div class="exp-fila" id="exp2-hoje"></div>
   </div>
 
   <!-- fila -->
   <div class="card card-sm">
     <div class="sec-lbl">Fila de trabalhos</div>
-    <div class="exp-fila" id="exp-fila"></div>
+    <div class="exp-fila" id="exp2-fila"></div>
     <div class="exp-add-row">
-      <input class="exp-nome-input" id="exp-new-nome" placeholder="Nome do trabalho..." />
+      <input class="exp-nome-input" id="exp2-new-nome" placeholder="Nome do trabalho..." />
       <div class="exp-dur-wrap">
-        <input id="exp-new-h" type="number" min="0" max="5" value="0" />
+        <input id="exp2-new-h" type="number" min="0" max="5" value="0" />
         <span>h</span>
-        <input id="exp-new-m" type="number" min="0" max="55" step="5" value="40" />
+        <input id="exp2-new-m" type="number" min="0" max="55" step="5" value="40" />
         <span>min</span>
       </div>
-      <select id="exp-new-tipo">
+      <select id="exp2-new-tipo">
         <option value="fixo">Fixo diário</option>
         <option value="prazo">Prazo</option>
         <option value="variavel">Variável</option>
         <option value="emergencia">Emergência</option>
       </select>
-      <button class="cbtn go" onclick="expAddItem()" style="padding:5px 12px;font-size:12px">+ Add</button>
+      <button class="cbtn go" onclick="expAddItem2()" style="padding:5px 12px;font-size:12px">+ Add</button>
     </div>
     <div class="exp-legend">
       <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
@@ -421,7 +483,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.4.1';
+const VERSION = 'v1.4.4';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -755,7 +817,10 @@ function renderTasks(){
       const pc=PERIOD_COLORS[tk.period]||{bg:'var(--nb3)',fg:'var(--nf3)'};
       const pl=PERIODS[tk.period]?.lbl||tk.period;
       const pdur=tk.period==='expediente'?'5h':tk.period==='melhorias'?'3× 1h':'40 min / bloco';
-      html+=`<div class="task-row period-header"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3);margin-left:6px">${pdur}</span></div>`;
+      const expLink=tk.period==='expediente'
+        ?`<button onclick="showScreen('expediente')" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8" title="Abrir despachante">↗ abrir</button>`
+        :'';
+      html+=`<div class="task-row period-header" style="justify-content:flex-start;gap:6px"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3)">${pdur}</span>${expLink}</div>`;
     }
     const key=dow+'_'+i;
     const done=!!state.doneTasks[key];
@@ -1140,65 +1205,153 @@ function expUpdateSaldo(){
   const al = expTotalHoje();
   const liv = Math.max(EXP_TOTAL-al,0);
   const pct = Math.min(Math.round(al/EXP_TOTAL*100),100);
-  const elAl = document.getElementById('exp-m-al');
-  const elLiv = document.getElementById('exp-m-liv');
-  const elBar = document.getElementById('exp-barra');
-  const elPct = document.getElementById('exp-bl-pct');
-  const elAv  = document.getElementById('exp-bl-av');
-  if(!elAl) return;
-  elAl.textContent = expFmtMin(al);
-  elLiv.textContent = expFmtMin(liv);
-  elBar.style.width = pct+'%';
-  elBar.style.background = pct>100?'#c4314b':pct>85?'var(--cat-melhoria-acc)':'var(--cat-trabalho-acc)';
-  elPct.textContent = pct+'% ocupado';
-  elAv.textContent = al>EXP_TOTAL ? '⚠ excede em '+expFmtMin(al-EXP_TOTAL) : '';
+  const barColor = pct>100?'#c4314b':pct>85?'var(--cat-melhoria-acc)':'var(--cat-trabalho-acc)';
+  const avTxt = al>EXP_TOTAL ? '⚠ excede em '+expFmtMin(al-EXP_TOTAL) : '';
+  // atualiza drawer (ids primários) e tela separada (ids exp2-)
+  [['exp-m-al','exp-m-liv','exp-barra','exp-bl-pct','exp-bl-av'],
+   ['exp2-m-al','exp2-m-liv','exp2-barra','exp2-bl-pct','exp2-bl-av']].forEach(([idAl,idLiv,idBar,idPct,idAv])=>{
+    const eAl=document.getElementById(idAl);
+    if(!eAl) return;
+    eAl.textContent=expFmtMin(al);
+    document.getElementById(idLiv).textContent=expFmtMin(liv);
+    const bar=document.getElementById(idBar);
+    bar.style.width=pct+'%'; bar.style.background=barColor;
+    document.getElementById(idPct).textContent=pct+'% ocupado';
+    document.getElementById(idAv).textContent=avTxt;
+  });
 }
 
-// ── NOVO: edição inline por duplo clique ──────────────────
-function expEditInline(span, lista, id){
+// ── Edição inline (delegação de evento no container) ──────
+function expStartEdit(span, lista, id){
+  if(span.querySelector('input')) return; // já editando
   const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
   const item = lista_ref.find(i=>String(i.id)===String(id));
   if(!item) return;
   const input = document.createElement('input');
   input.value = item.nome;
+  input.setAttribute('data-editing','1');
   input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
-  span.replaceWith(input);
+  // substituir conteúdo do span (não o span em si, para manter delegação)
+  span.textContent = '';
+  span.appendChild(input);
   input.focus();
   input.select();
-  const commit = ()=>{ const val=input.value.trim(); if(val) item.nome=val; expSave(); expRender(); };
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = input.value.trim();
+    if(val) item.nome = val;
+    expSave(); expRender();
+  };
   input.addEventListener('blur', commit);
   input.addEventListener('keydown', e=>{
     if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
-    if(e.key==='Escape'){ input.removeEventListener('blur',commit); expRender(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
   });
 }
 
+// ── Tick de conclusão ─────────────────────────────────────
+function expToggleConcluido(id){
+  // procura em hoje e fila
+  const item = (state.expHoje||[]).find(i=>String(i.id)===String(id))
+            || (state.expFila||[]).find(i=>String(i.id)===String(id));
+  if(!item) return;
+  item.concluido = !item.concluido;
+  // registra timestamp se concluindo
+  if(item.concluido){
+    item.concluidoEm = new Date().toISOString();
+  } else {
+    delete item.concluidoEm;
+  }
+  expSave(); expRender();
+}
+
 function expRenderFila(){
-  const el = document.getElementById('exp-fila');
-  if(!el) return;
   const fila = state.expFila||[];
-  if(fila.length===0){ el.innerHTML='<div class="exp-vazio">Fila vazia</div>'; return; }
-  el.innerHTML = fila.map(i=>`
-    <div class="exp-item ${i.tipo}">
-      <span class="exp-item-nome" ondblclick="expEditInline(this,'fila','${i.id}')" title="Duplo clique para editar">${i.nome}</span>
+  const html = fila.length===0
+    ? '<div class="exp-vazio">Fila vazia</div>'
+    : fila.map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="fila">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
       <span class="exp-dur ${i.tipo}">${expFmtMin(i.dur)}</span>
       <button class="exp-act-btn alocar" onclick="expAlocar('${i.id}')">+ hoje</button>
       <button class="exp-act-btn danger" onclick="expDelFila('${i.id}')">×</button>
     </div>`).join('');
+  ['exp-fila','exp2-fila'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'fila');
+  });
 }
 
 function expRenderHoje(){
-  const el = document.getElementById('exp-hoje');
-  if(!el) return;
-  const hoje = state.expHoje||[];
-  if(hoje.length===0){ el.innerHTML='<div class="exp-vazio">Nenhum trabalho alocado — use a fila abaixo</div>'; return; }
-  el.innerHTML = hoje.map(i=>`
-    <div class="exp-item ${i.tipo}">
-      <span class="exp-item-nome" ondblclick="expEditInline(this,'hoje','${i.id}')" title="Duplo clique para editar">${i.nome}</span>
+  const html = (state.expHoje||[]).length===0
+    ? '<div class="exp-vazio">Nenhum trabalho alocado — use a fila abaixo</div>'
+    : (state.expHoje||[]).map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="hoje">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
       <span class="exp-dur ${i.tipo}">${expFmtMin(i.dur)}</span>
       <button class="exp-act-btn" onclick="expDevolver('${i.id}')">← fila</button>
       <button class="exp-act-btn danger" onclick="expDelHoje('${i.id}')">×</button>
     </div>`).join('');
+  ['exp-hoje','exp2-hoje'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'hoje');
+  });
+}
+
+// delegação de evento — evita problema de onclick inline em PWA
+function expBindContainer(container, lista){
+  let clickTimer = null;
+  container.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="tick"]');
+    if(tick){
+      const row = tick.closest('[data-id]');
+      if(row) expToggleConcluido(row.dataset.id);
+      return;
+    }
+  }, {capture:false});
+
+  container.addEventListener('dblclick', e=>{
+    const nome = e.target.closest('[data-action="edit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-id]');
+      if(row) expStartEdit(nome, lista, row.dataset.id);
+    }
+  });
+}
+
+function toggleExpDrawer(open){
+  const drawer = document.getElementById('exp-drawer');
+  if(!drawer) return;
+  const show = open !== undefined ? open : !drawer.classList.contains('show');
+  drawer.classList.toggle('show', show);
+  if(show){ expRender(); // garante dados frescos
+    setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
+}
+
+// expAddItem2: versão para a aba separada (usa IDs exp2-*)
+function expAddItem2(){
+  const nome = document.getElementById('exp2-new-nome').value.trim();
+  if(!nome) return;
+  const h = parseInt(document.getElementById('exp2-new-h').value)||0;
+  const m = parseInt(document.getElementById('exp2-new-m').value)||0;
+  const dur = h*60+m||40;
+  const tipo = document.getElementById('exp2-new-tipo').value;
+  const fixo = tipo==='fixo';
+  if(!state.expFila) state.expFila=[];
+  state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
+  document.getElementById('exp2-new-nome').value='';
+  document.getElementById('exp2-new-h').value='0';
+  document.getElementById('exp2-new-m').value='40';
+  expSave(); expRender();
 }
 
 function expRender(){ expRenderFila(); expRenderHoje(); expUpdateSaldo(); }
