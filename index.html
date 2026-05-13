@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.4.9</title>
+<title>Agenda v1.5.1</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -130,6 +130,18 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
 /* Expediente inline drawer */
 .exp-drawer{display:none;flex-direction:column;gap:10px;margin-top:4px}
+.per-drawer{display:none;flex-direction:column;gap:6px;margin-top:4px}
+.per-drawer.show{display:flex}
+.per-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:var(--r4);border:.5px solid}
+.per-drawer-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.per-drawer-close{font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid;background:transparent;cursor:pointer}
+.per-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r4);border:.5px solid var(--brd);background:var(--nb1)}
+.per-item.concluido .per-nome{text-decoration:line-through;color:var(--nf3)}
+.per-item.concluido .per-dur{opacity:.5}
+.per-item.concluido .per-tick{background:#dff6dd;border-color:#107c10;color:#107c10}
+.per-tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#107c10}
+.per-nome{flex:1;font-size:13px;font-weight:500;color:var(--nf1);cursor:text}
+.per-dur{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
 .exp-drawer.show{display:flex}
 .exp-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--cat-trabalho-bg);border-radius:var(--r4);border:.5px solid var(--cat-trabalho-acc)}
 .exp-drawer-title{font-size:11px;font-weight:600;color:var(--cat-trabalho-fg);text-transform:uppercase;letter-spacing:.06em}
@@ -347,6 +359,28 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     </div>
   </div>
 
+  <!-- MELHORIAS DRAWER -->
+  <div class="per-drawer" id="mel-drawer">
+    <div class="per-drawer-header" id="mel-drawer-hdr" style="background:var(--cat-melhoria-bg);border-color:var(--cat-melhoria-acc)">
+      <span class="per-drawer-title" style="color:var(--cat-melhoria-fg)">Melhorias</span>
+      <button class="per-drawer-close" style="color:var(--cat-melhoria-fg);border-color:var(--cat-melhoria-acc)" onclick="togglePerDrawer('mel',false)">✕ fechar</button>
+    </div>
+    <div class="card card-sm" style="padding:8px 10px">
+      <div id="mel-list"></div>
+    </div>
+  </div>
+
+  <!-- ESTUDOS DRAWER -->
+  <div class="per-drawer" id="est-drawer">
+    <div class="per-drawer-header" id="est-drawer-hdr" style="background:var(--cat-estudo-bg);border-color:var(--cat-estudo-acc)">
+      <span class="per-drawer-title" style="color:var(--cat-estudo-fg)">Estudos</span>
+      <button class="per-drawer-close" style="color:var(--cat-estudo-fg);border-color:var(--cat-estudo-acc)" onclick="togglePerDrawer('est',false)">✕ fechar</button>
+    </div>
+    <div class="card card-sm" style="padding:8px 10px">
+      <div id="est-list"></div>
+    </div>
+  </div>
+
   <!-- WEEK -->
   <div class="card card-sm">
     <div class="sec-lbl">Semana</div>
@@ -492,7 +526,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.4.9';
+const VERSION = 'v1.5.1';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -826,8 +860,9 @@ function renderTasks(){
       const pc=PERIOD_COLORS[tk.period]||{bg:'var(--nb3)',fg:'var(--nf3)'};
       const pl=PERIODS[tk.period]?.lbl||tk.period;
       const pdur=tk.period==='expediente'?'5h':tk.period==='melhorias'?'3× 1h':'40 min / bloco';
-      const expLink=tk.period==='expediente'
-        ?`<button onclick="event.stopPropagation();toggleExpDrawer(true)" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8" title="Abrir despachante">↗ abrir</button>`
+      const _drawerKey = tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':tk.period==='estudos'?'est':null;
+      const expLink=_drawerKey
+        ?`<button onclick="event.stopPropagation();${_drawerKey==='exp'?'toggleExpDrawer(true)':'togglePerDrawer(\''+_drawerKey+'\',true)'}" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8" title="Abrir painel">↗ abrir</button>`
         :'';
       html+=`<div class="period-header" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--nb3);border-radius:var(--r4);margin-bottom:2px"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3)">${pdur}</span>${expLink}</div>`;
     }
@@ -1381,6 +1416,115 @@ function expBindContainer(container, lista){
       e.preventDefault();
       const row = dur.closest('[data-id]');
       if(row) expEditDur(dur, lista, row.dataset.id);
+    }
+  }, sig);
+}
+
+// ── Drawers de Melhorias e Estudos ───────────────────────────────────────────
+const _perAbort = {};
+
+function togglePerDrawer(key, open){
+  const drawer = document.getElementById(key+'-drawer');
+  if(!drawer) return;
+  const show = open !== undefined ? open : !drawer.classList.contains('show');
+  drawer.classList.toggle('show', show);
+  if(show){
+    renderPerDrawer(key);
+    setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
+}
+
+function renderPerDrawer(key){
+  const period = key==='mel'?'melhorias':'estudos';
+  const dow = state.viewDow;
+  const tasks = (state.sched[dow]||[]).map((tk,i)=>({tk,i})).filter(({tk})=>tk.period===period);
+  const el = document.getElementById(key+'-list');
+  if(!el) return;
+  if(tasks.length===0){ el.innerHTML='<div style="font-size:12px;color:var(--nf3);padding:8px 0;text-align:center">Sem tarefas neste período</div>'; return; }
+  const acBg = key==='mel'?'var(--cat-melhoria-bg)':'var(--cat-estudo-bg)';
+  const acFg = key==='mel'?'var(--cat-melhoria-fg)':'var(--cat-estudo-fg)';
+  const html = tasks.map(({tk,i})=>{
+    const dkey = dow+'_'+i;
+    const done = !!state.doneTasks[dkey];
+    const c = CATS[tk.cat]||CATS.estudo;
+    return `<div class="per-item${done?' concluido':''}" data-dow="${dow}" data-idx="${i}">
+      <div class="per-tick" data-action="pertick" title="Concluído">${done?'✓':''}</div>
+      <span class="per-nome" data-action="peredit" title="Duplo clique para editar">${tk.t}</span>
+      <span class="per-dur" data-action="perdur" title="Duplo clique para editar tempo" style="background:${c.bg};color:${c.fg};cursor:pointer">${expFmtMin(tk.dur||40)}</span>
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
+
+  // AbortController
+  const abKey = key+'-list';
+  if(_perAbort[abKey]) _perAbort[abKey].abort();
+  const ctrl = new AbortController();
+  _perAbort[abKey] = ctrl;
+  const sig = {signal:ctrl.signal};
+
+  el.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="pertick"]');
+    if(tick){
+      e.stopPropagation();
+      const row = tick.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const k=d+'_'+idx;
+      state.doneTasks[k]=!state.doneTasks[k];
+      const today=new Date().toISOString().slice(0,10);
+      if(Object.keys(state.doneTasks).some(x=>x.startsWith(d+'_')&&state.doneTasks[x]))
+        if(!state.doneDays.includes(today)) state.doneDays.push(today);
+      saveState(); renderTasks(); renderPerDrawer(key);
+    }
+  }, sig);
+
+  el.addEventListener('dblclick', e=>{
+    // editar nome
+    const nome = e.target.closest('[data-action="peredit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const input = document.createElement('input');
+      input.value = item.t;
+      input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
+      nome.textContent=''; nome.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{ if(committed)return; committed=true; const v=input.value.trim(); if(v){item.t=v;} saveState(); renderTasks(); renderPerDrawer(key); };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
+      return;
+    }
+    // editar duração
+    const dur = e.target.closest('[data-action="perdur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const curH=Math.floor((item.dur||40)/60), curM=(item.dur||40)%60;
+      const curVal=curH>0?(curM>0?curH+'h'+String(curM).padStart(2,'0'):curH+'h'):String(curM||40);
+      const input = document.createElement('input');
+      input.value = curVal;
+      input.title = 'Ex: 40, 1h, 1h30';
+      input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+      dur.textContent=''; dur.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{
+        if(committed)return; committed=true;
+        const val=parseDurStr(input.value);
+        if(val&&val>0){ item.dur=val; item.s=expFmtMin(val); }
+        saveState(); renderTasks(); renderPerDrawer(key);
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
     }
   }, sig);
 }
