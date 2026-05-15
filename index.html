@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.3.0</title>
+<title>Agenda v1.5.1</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -81,6 +81,72 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #install-btn{font-family:var(--ff);font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--r4);border:none;background:var(--active-acc);color:#fff;cursor:pointer}
 .ver-badge{font-size:10px;color:var(--nf3);margin-left:6px;font-weight:400}
 
+/* Expediente screen */
+.expediente-screen{display:none;flex-direction:column;gap:10px}
+.expediente-screen.show{display:flex}
+.exp-saldo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.exp-metric{background:var(--nb2);border-radius:var(--r4);padding:10px;text-align:center;border:.5px solid var(--brd)}
+.exp-metric-n{font-size:22px;font-weight:600;color:var(--nf1)}
+.exp-metric-l{font-size:10px;color:var(--nf3);margin-top:1px}
+.exp-barra-wrap{height:7px;background:var(--nb3);border-radius:4px;overflow:hidden;margin:8px 0 4px}
+.exp-barra-fill{height:100%;border-radius:4px;transition:width .3s}
+.exp-barra-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--nf3)}
+.exp-fila{display:flex;flex-direction:column;gap:5px}
+.exp-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r4);border:.5px solid var(--brd)}
+.exp-item.fixo{border-left:2.5px solid var(--cat-trabalho-acc)}
+.exp-item.prazo{border-left:2.5px solid var(--cat-melhoria-acc)}
+.exp-item.variavel{border-left:2.5px solid var(--cat-estudo-acc)}
+.exp-item.emergencia{border-left:2.5px solid #c4314b}
+.exp-tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#107c10;transition:background .15s,border-color .15s}
+.exp-tick:hover{border-color:var(--active-acc)}
+.exp-item.concluido .exp-tick{background:#dff6dd;border-color:#107c10}
+.exp-item.concluido .exp-item-nome{text-decoration:line-through;color:var(--nf3)}
+.exp-item.concluido .exp-dur{opacity:.5}
+.exp-item-nome{flex:1;font-size:13px;font-weight:500;color:var(--nf1);cursor:text;user-select:none}
+.exp-item-nome:hover{color:var(--nf2)}
+.exp-dur{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.exp-dur.fixo{background:var(--cat-trabalho-bg);color:var(--cat-trabalho-fg)}
+.exp-dur.prazo{background:var(--cat-melhoria-bg);color:var(--cat-melhoria-fg)}
+.exp-dur.variavel{background:var(--cat-estudo-bg);color:var(--cat-estudo-fg)}
+.exp-dur.emergencia{background:#fde7ec;color:#c4314b}
+.exp-act-btn{font-family:var(--ff);font-size:11px;padding:2px 7px;border-radius:3px;border:.5px solid var(--brd2);background:var(--nb3);color:var(--nf3);cursor:pointer;flex-shrink:0}
+.exp-act-btn:active{background:var(--nb4)}
+.exp-act-btn.alocar{color:var(--cat-trabalho-acc);border-color:var(--cat-trabalho-acc)}
+.exp-act-btn.danger{color:#c4314b;border-color:#c4314b}
+.exp-add-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.exp-add-row input,.exp-add-row select{font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none}
+.exp-add-row input:focus,.exp-add-row select:focus{border-color:var(--active-acc)}
+.exp-nome-input{flex:2;min-width:120px}
+.exp-dur-wrap{display:flex;gap:3px;align-items:center}
+.exp-dur-wrap input{width:44px;text-align:center}
+.exp-dur-wrap span{font-size:11px;color:var(--nf3)}
+.exp-legend{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:.5px solid var(--brd)}
+.exp-add-hint{font-size:10px;color:var(--nf3);margin-top:4px}
+.exp-parcela-row{display:flex;align-items:center;gap:6px;margin-top:6px;padding:6px 8px;background:var(--active-bg);border-radius:var(--r4);border:.5px solid var(--active-acc)}
+.exp-parcela-row label{font-size:11px;color:var(--active-fg);font-weight:600;white-space:nowrap}
+.exp-parcela-row input{font-family:var(--ff);font-size:12px;padding:3px 6px;border-radius:var(--r4);border:.5px solid var(--active-acc);background:var(--nb1);color:var(--nf1);outline:none;width:60px;text-align:center}
+.exp-parcela-preview{font-size:10px;color:var(--active-fg);font-weight:600}
+.exp-vazio{font-size:12px;color:var(--nf3);padding:10px 0;text-align:center}
+
+/* Expediente inline drawer */
+.exp-drawer{display:none;flex-direction:column;gap:10px;margin-top:4px}
+.per-drawer{display:none;flex-direction:column;gap:6px;margin-top:4px}
+.per-drawer.show{display:flex}
+.per-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:var(--r4);border:.5px solid}
+.per-drawer-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.per-drawer-close{font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid;background:transparent;cursor:pointer}
+.per-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r4);border:.5px solid var(--brd);background:var(--nb1)}
+.per-item.concluido .per-nome{text-decoration:line-through;color:var(--nf3)}
+.per-item.concluido .per-dur{opacity:.5}
+.per-item.concluido .per-tick{background:#dff6dd;border-color:#107c10;color:#107c10}
+.per-tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#107c10}
+.per-nome{flex:1;font-size:13px;font-weight:500;color:var(--nf1);cursor:text}
+.per-dur{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.exp-drawer.show{display:flex}
+.exp-drawer-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--cat-trabalho-bg);border-radius:var(--r4);border:.5px solid var(--cat-trabalho-acc)}
+.exp-drawer-title{font-size:11px;font-weight:600;color:var(--cat-trabalho-fg);text-transform:uppercase;letter-spacing:.06em}
+.exp-drawer-close{font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-trabalho-acc);background:transparent;color:var(--cat-trabalho-fg);cursor:pointer}
+
 /* Config screen */
 .config-screen{display:none;flex-direction:column;gap:10px}
 .config-screen.show{display:flex}
@@ -103,7 +169,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .print-btn{font-family:var(--ff);font-size:12px;font-weight:600;padding:6px 16px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb1);color:var(--nf1);cursor:pointer}
 .print-btn:active{background:var(--nb3)}
 
-/* ── Compact widget ───────────────────────────────────── */
+/* Compact widget */
 #widget{display:none;position:fixed;bottom:20px;right:20px;z-index:9999;background:transparent;cursor:pointer;user-select:none}
 #widget-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
 #widget-disc{position:relative;width:120px;height:120px}
@@ -117,8 +183,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #widget-pin.on{color:var(--active-acc)}
 #widget-go{font-family:var(--ff);font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;border:none;background:var(--active-acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #widget-toggle{display:none}
-
-/* compact mode — janela vira só o widget */
 .compact-mode #root{display:none}
 .compact-mode #install-banner{display:none!important}
 .compact-mode body{margin:0;padding:0;min-height:unset;background:#1a1a1a!important;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
@@ -142,7 +206,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 <div class="card card-sm">
   <div class="hdr-row">
     <div>
-      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.3.0</span></div>
+      <div class="hdr-title" id="hd-day">Agenda <span class="ver-badge">v1.4.1</span></div>
       <div class="hdr-sub" id="hd-date"></div>
     </div>
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -154,6 +218,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <button class="tab-btn active" id="tab-agenda" onclick="showScreen('agenda')">Agenda</button>
     <button class="tab-btn" id="tab-config" onclick="showScreen('config')">Configurar</button>
     <button class="tab-btn" id="tab-report" onclick="showScreen('report')">Relatório</button>
+    <button class="tab-btn" id="tab-expediente" onclick="showScreen('expediente')">Expediente</button>
   </div>
 </div>
 
@@ -242,6 +307,80 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="tasks-list" id="today-tasks"></div>
   </div>
 
+  <!-- EXPEDIENTE DRAWER inline (dentro da tela Agenda) -->
+  <div class="exp-drawer" id="exp-drawer">
+    <div class="exp-drawer-header">
+      <span class="exp-drawer-title">Expediente</span>
+      <button class="exp-drawer-close" onclick="toggleExpDrawer(false)">✕ fechar</button>
+    </div>
+    <!-- saldo compacto -->
+    <div class="card card-sm">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" style="font-size:16px">5h00</div><div class="exp-metric-l">disponível</div></div>
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" id="exp-m-al" style="font-size:16px">0h00</div><div class="exp-metric-l">alocado</div></div>
+        <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" id="exp-m-liv" style="font-size:16px">5h00</div><div class="exp-metric-l">livre</div></div>
+      </div>
+      <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
+      <div class="exp-barra-lbl"><span id="exp-bl-pct">0% ocupado</span><span id="exp-bl-av" style="color:#c4314b"></span></div>
+    </div>
+    <!-- hoje -->
+    <div class="card card-sm">
+      <div class="sec-lbl">Hoje</div>
+      <div class="exp-fila" id="exp-hoje"></div>
+    </div>
+    <!-- fila -->
+    <div class="card card-sm">
+      <div class="sec-lbl">Fila de trabalhos</div>
+      <div class="exp-fila" id="exp-fila"></div>
+      <div class="exp-add-row">
+        <input class="exp-nome-input" id="exp-new-nome" placeholder="Nome do trabalho..." />
+        <input id="exp-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
+        <select id="exp-new-tipo">
+          <option value="fixo">Fixo diário</option>
+          <option value="prazo">Prazo</option>
+          <option value="variavel">Variável</option>
+          <option value="emergencia">Emergência</option>
+        </select>
+        <button class="cbtn go" onclick="expAddItem()" style="padding:5px 12px;font-size:12px">+ Add</button>
+      </div>
+      <div class="exp-parcela-row" id="exp-new-parcela-row" style="display:none">
+        <label>Parcelar em</label>
+        <input id="exp-new-parcela" value="40" title="Tamanho de cada parcela" oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
+        <label>min/dia →</label>
+        <span class="exp-parcela-preview" id="exp-new-preview"></span>
+      </div>
+      <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30min · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
+      <div class="exp-legend">
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-estudo-acc)"></div>Variável</div>
+        <div class="leg-i"><div class="leg-d" style="background:#c4314b"></div>Emergência</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MELHORIAS DRAWER -->
+  <div class="per-drawer" id="mel-drawer">
+    <div class="per-drawer-header" id="mel-drawer-hdr" style="background:var(--cat-melhoria-bg);border-color:var(--cat-melhoria-acc)">
+      <span class="per-drawer-title" style="color:var(--cat-melhoria-fg)">Melhorias</span>
+      <button class="per-drawer-close" style="color:var(--cat-melhoria-fg);border-color:var(--cat-melhoria-acc)" onclick="togglePerDrawer('mel',false)">✕ fechar</button>
+    </div>
+    <div class="card card-sm" style="padding:8px 10px">
+      <div id="mel-list"></div>
+    </div>
+  </div>
+
+  <!-- ESTUDOS DRAWER -->
+  <div class="per-drawer" id="est-drawer">
+    <div class="per-drawer-header" id="est-drawer-hdr" style="background:var(--cat-estudo-bg);border-color:var(--cat-estudo-acc)">
+      <span class="per-drawer-title" style="color:var(--cat-estudo-fg)">Estudos</span>
+      <button class="per-drawer-close" style="color:var(--cat-estudo-fg);border-color:var(--cat-estudo-acc)" onclick="togglePerDrawer('est',false)">✕ fechar</button>
+    </div>
+    <div class="card card-sm" style="padding:8px 10px">
+      <div id="est-list"></div>
+    </div>
+  </div>
+
   <!-- WEEK -->
   <div class="card card-sm">
     <div class="sec-lbl">Semana</div>
@@ -309,6 +448,59 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
   </div>
 </div>
 
+<!-- EXPEDIENTE SCREEN -->
+<div class="expediente-screen" id="expediente-screen">
+
+  <!-- saldo -->
+  <div class="card">
+    <div class="sec-lbl">Expediente · saldo de 5h</div>
+    <div class="exp-saldo-row">
+      <div class="exp-metric"><div class="exp-metric-n">5h00</div><div class="exp-metric-l">disponível</div></div>
+      <div class="exp-metric"><div class="exp-metric-n" id="exp2-m-al">0h00</div><div class="exp-metric-l">alocado</div></div>
+      <div class="exp-metric"><div class="exp-metric-n" id="exp2-m-liv">5h00</div><div class="exp-metric-l">livre</div></div>
+    </div>
+    <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp2-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
+    <div class="exp-barra-lbl"><span id="exp2-bl-pct">0% ocupado</span><span id="exp2-bl-av" style="color:#c4314b"></span></div>
+  </div>
+
+  <!-- hoje -->
+  <div class="card card-sm">
+    <div class="sec-lbl">Hoje</div>
+    <div class="exp-fila" id="exp2-hoje"></div>
+  </div>
+
+  <!-- fila -->
+  <div class="card card-sm">
+    <div class="sec-lbl">Fila de trabalhos</div>
+    <div class="exp-fila" id="exp2-fila"></div>
+    <div class="exp-add-row">
+      <input class="exp-nome-input" id="exp2-new-nome" placeholder="Nome do trabalho..." />
+      <input id="exp2-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
+      <select id="exp2-new-tipo">
+        <option value="fixo">Fixo diário</option>
+        <option value="prazo">Prazo</option>
+        <option value="variavel">Variável</option>
+        <option value="emergencia">Emergência</option>
+      </select>
+      <button class="cbtn go" onclick="expAddItem2()" style="padding:5px 12px;font-size:12px">+ Add</button>
+    </div>
+    <div class="exp-parcela-row" id="exp2-new-parcela-row" style="display:none">
+      <label>Parcelar em</label>
+      <input id="exp2-new-parcela" value="40" oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
+      <label>min/dia →</label>
+      <span class="exp-parcela-preview" id="exp2-new-preview"></span>
+    </div>
+    <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30min · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
+    <div class="exp-legend">
+      <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
+      <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
+      <div class="leg-i"><div class="leg-d" style="background:var(--cat-estudo-acc)"></div>Variável</div>
+      <div class="leg-i"><div class="leg-d" style="background:#c4314b"></div>Emergência</div>
+    </div>
+  </div>
+
+</div>
+
 </div><!-- /wrap -->
 
 <!-- COMPACT WIDGET -->
@@ -334,7 +526,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.3.0';
+const VERSION = 'v1.5.1';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -514,8 +706,8 @@ function applyColors(dow){
 function ap(cx,cy,r,deg){
   if(deg>=360) return`M${cx},${cy-r} A${r},${r},0,1,1,${cx-.001},${cy-r} Z`;
   if(deg<=0) return'';
-  const rad=(deg-90)*Math.PI/180;
-  const ex=cx+r*Math.cos(rad-Math.PI/2), ey=cy+r*Math.sin(rad-Math.PI/2);
+  const rad=deg*Math.PI/180;
+  const ex=cx+r*Math.sin(rad), ey=cy-r*Math.cos(rad);
   return`M${cx},${cy} L${cx},${cy-r} A${r},${r},0,${deg>180?1:0},1,${ex},${ey} Z`;
 }
 function getAcc(){ return getComputedStyle(document.documentElement).getPropertyValue('--active-acc').trim()||'#185FA5'; }
@@ -532,25 +724,22 @@ function updateDiscs(){
 
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
-  // Inclui TODAS as tarefas (incluindo expediente) no foco do dia
-  const focusTasks=tasks; // antes filtrava s!=='Diário', excluindo o expediente
+  const focusTasks=tasks; // inclui expediente (s==='Diário')
   const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
-  // Calcula minutos concluídos com base nas tarefas marcadas (não no timer interno)
   const doneMins=focusTasks.reduce((a,t,i)=>{
     const key=dow+'_'+i;
     return a+(state.doneTasks[key]?(t.dur||40):0);
   },0);
-  // Adiciona progresso parcial do timer atual se estiver rodando
   const partialMins=timerRunning?(blockMins-timerLeft/60):0;
   const fPct=focusMins>0?Math.min((doneMins+partialMins)/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
-  const remaining=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
-  document.getElementById('lbl-foco').textContent=remaining>0?remaining:0;
+  document.getElementById('lbl-foco').textContent=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
   document.getElementById('bot-foco').textContent=focusMins+' min';
   document.getElementById('leg-n').textContent=focusTasks.length;
   document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
   document.getElementById('ratio2').textContent='1/'+Math.round(1440/Math.max(focusMins,1));
-  document.getElementById('bot-bloco').textContent=blockMins+' min / bloco';
+  document.getElementById('bot-bloco').textContent=fmtMins(blockMins)+' / bloco';
+  document.getElementById('timer-lbl').textContent=fmtMins(blockMins)+' / bloco';
 
   const now=new Date();
   const el=now.getHours()*60+now.getMinutes();
@@ -558,6 +747,9 @@ function updateDiscs(){
   document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
 }
 
+function fmtMins(m){
+  return m>=60?(m%60===0?(m/60)+'h':(Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'))):m+' min';
+}
 function setMins(m){
   blockMins=m; timerTotal=m*60; timerLeft=m*60;
   if(timerRunning){clearInterval(timerInterval);timerRunning=false;}
@@ -571,6 +763,16 @@ function toggleTimer(){
     clearInterval(timerInterval); timerRunning=false;
     document.getElementById('play-btn').textContent='▶ Continuar';
   } else {
+    if(timerLeft===timerTotal){
+      const dow=state.viewDow;
+      const tasks=state.sched[dow]||[];
+      const active=tasks.find((_,i)=>!state.doneTasks[dow+'_'+i]);
+      if(active&&active.dur&&active.dur!==blockMins){
+        blockMins=active.dur; timerTotal=blockMins*60; timerLeft=timerTotal;
+        [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===blockMins?' sel':''); });
+        updateTimerDisplay(); updateDiscs();
+      }
+    }
     if(timerLeft<=0){timerLeft=timerTotal;}
     timerRunning=true;
     document.getElementById('play-btn').textContent='⏸ Pausar';
@@ -616,19 +818,18 @@ function detectPeriodEnd(){
   else soundBloco();
 }
 
+function fmtTimer(secs){
+  if(secs>=3600){
+    const h=Math.floor(secs/3600);
+    const m=Math.floor((secs%3600)/60);
+    const s=secs%60;
+    return h+'h '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  const mm=Math.floor(secs/60),ss=secs%60;
+  return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
 function updateTimerDisplay(){
-  const totalSecs=timerLeft;
-  const hh=Math.floor(totalSecs/3600);
-  const mm=Math.floor((totalSecs%3600)/60);
-  const ss=totalSecs%60;
-  const txt=hh>0
-    ? hh+'h '+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0')
-    : String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
-  document.getElementById('t-display').textContent=txt;
-  // label do timer (ex: "5H / BLOCO" vs "40 MIN / BLOCO")
-  const lblMins=Math.round(timerTotal/60);
-  const lblStr=lblMins>=60?(lblMins/60)+'H':lblMins+' MIN';
-  document.getElementById('timer-lbl').textContent=lblStr+' / BLOCO';
+  document.getElementById('t-display').textContent=fmtTimer(timerLeft);
 }
 
 function nextTask(){
@@ -663,7 +864,11 @@ function renderTasks(){
       const pc=PERIOD_COLORS[tk.period]||{bg:'var(--nb3)',fg:'var(--nf3)'};
       const pl=PERIODS[tk.period]?.lbl||tk.period;
       const pdur=tk.period==='expediente'?'5h':tk.period==='melhorias'?'3× 1h':'40 min / bloco';
-      html+=`<div class="task-row period-header"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3);margin-left:6px">${pdur}</span></div>`;
+      const _drawerKey = tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':tk.period==='estudos'?'est':null;
+      const expLink=_drawerKey
+        ?`<button onclick="event.stopPropagation();${_drawerKey==='exp'?'toggleExpDrawer(true)':'togglePerDrawer(\''+_drawerKey+'\',true)'}" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8" title="Abrir painel">↗ abrir</button>`
+        :'';
+      html+=`<div class="period-header" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--nb3);border-radius:var(--r4);margin-bottom:2px"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3)">${pdur}</span>${expLink}</div>`;
     }
     const key=dow+'_'+i;
     const done=!!state.doneTasks[key];
@@ -884,14 +1089,16 @@ function renderPlanned(){
 }
 
 function showScreen(s){
-  ['agenda','config','report'].forEach(id=>{
+  ['agenda','config','report','expediente'].forEach(id=>{
     document.getElementById('tab-'+id).className='tab-btn'+(id===s?' active':'');
   });
   document.getElementById('main-screen').className='main-screen'+(s==='agenda'?'':' hide');
   document.getElementById('config-screen').className='config-screen'+(s==='config'?' show':'');
   document.getElementById('report-screen').className='report-screen'+(s==='report'?' show':'');
+  document.getElementById('expediente-screen').className='expediente-screen'+(s==='expediente'?' show':'');
   if(s==='config') renderConfig();
   if(s==='report') renderReport();
+  if(s==='expediente') expRender();
 }
 
 document.getElementById('notes-ta').addEventListener('input',e=>{
@@ -909,7 +1116,6 @@ function installPWA(){
 }
 window.addEventListener('appinstalled',()=>document.getElementById('install-banner').classList.remove('show'));
 
-
 // ── Compact mode ───────────────────────────────────────
 let compactMode = false;
 let pinned = false;
@@ -924,10 +1130,7 @@ function toggleCompact(){
     window._prevY = window.screenY;
     setTimeout(()=>{
       window.resizeTo(240, 320);
-      window.moveTo(
-        window.screen.availWidth - 260,
-        window.screen.availHeight - 340
-      );
+      window.moveTo(window.screen.availWidth - 260, window.screen.availHeight - 340);
     }, 50);
   } else {
     document.getElementById('root').style.display='';
@@ -947,25 +1150,22 @@ function togglePin(e){
   btn.classList.toggle('on', pinned);
   const widget = document.getElementById('widget');
   widget.classList.toggle('pinned', pinned);
-  // PWA always-on-top via CSS only — visual indicator
   widget.style.opacity = pinned ? '1' : '0.92';
 }
 
 function updateWidget(){
   const acc = getAcc();
-  // sync arc
   const bPct = timerLeft / timerTotal;
   const warc = document.getElementById('warc');
   if(warc){ warc.setAttribute('d', ap(60,60,55,bPct*360)); warc.setAttribute('fill',acc); }
   const wmin = document.getElementById('w-min');
   if(wmin) wmin.textContent = Math.ceil(timerLeft/60);
   const wtime = document.getElementById('widget-time');
-  if(wtime){ const mm=Math.floor(timerLeft/60),ss=timerLeft%60; wtime.textContent=String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0'); }
+  if(wtime){ wtime.textContent=fmtTimer(timerLeft); }
   const wtask = document.getElementById('widget-task');
   if(wtask) wtask.textContent = nextTask();
   const wgo = document.getElementById('widget-go');
   if(wgo){ wgo.textContent = timerRunning ? '⏸' : '▶'; wgo.style.background = acc; }
-  // add compact toggle button to nav when in full mode
   renderCompactBtn();
 }
 
@@ -986,16 +1186,467 @@ function renderCompactBtn(){
   }
 }
 
-// patch tick and toggleTimer to also update widget
-const _origTick = tick;
 setInterval(()=>{ if(compactMode) updateWidget(); }, 1000);
-
-// init compact btn
 setTimeout(renderCompactBtn, 100);
- navigator.serviceWorker.register('./sw.js').catch(()=>{});
+navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+// ── Expediente / Despachante ─────────────────────────────
+const EXP_TOTAL = 300;
+const EXP_DEFAULTS = [
+  {id:'ef1', nome:'E-mails e comunicações',    dur:30,  tipo:'fixo',    fixo:true},
+  {id:'ef2', nome:'IRPF — maio',               dur:60,  tipo:'prazo',   fixo:false},
+  {id:'ef3', nome:'Retificações (2 meses)',    dur:60,  tipo:'prazo',   fixo:false},
+  {id:'ef4', nome:'Reunião / atendimento',     dur:60,  tipo:'fixo',    fixo:true},
+  {id:'ef5', nome:'Execução processos rotineiros', dur:60, tipo:'fixo', fixo:true},
+];
+let expNextId = 100;
+
+function expLoad(){
+  const raw = localStorage.getItem('agenda_exp_v1');
+  if(raw){
+    try{
+      const s = JSON.parse(raw);
+      state.expFila = s.fila || JSON.parse(JSON.stringify(EXP_DEFAULTS));
+      state.expHoje = s.hoje || [];
+      state.expHojeDate = s.hojeDate || '';
+      expNextId = s.nextId || 100;
+    }catch(e){ expReset(); }
+  } else {
+    expReset();
+  }
+  const today = new Date().toISOString().slice(0,10);
+  if(state.expHojeDate !== today){
+    state.expHoje.forEach(i=>{ if(!state.expFila.find(f=>f.id===i.id)) state.expFila.push(i); });
+    state.expHoje = [];
+    state.expFila.filter(i=>i.fixo).forEach(i=>expAlocar(i.id, true));
+    state.expHojeDate = today;
+    expSave();
+  }
+}
+
+function expReset(){
+  state.expFila = JSON.parse(JSON.stringify(EXP_DEFAULTS));
+  state.expHoje = [];
+  state.expHojeDate = '';
+  expNextId = 100;
+}
+
+function expSave(){
+  localStorage.setItem('agenda_exp_v1', JSON.stringify({
+    fila: state.expFila,
+    hoje: state.expHoje,
+    hojeDate: state.expHojeDate,
+    nextId: expNextId
+  }));
+}
+
+function expFmtMin(m){
+  const h=Math.floor(m/60), mn=m%60;
+  if(h===0) return mn+'min';
+  if(mn===0) return h+'h';
+  return h+'h'+String(mn).padStart(2,'0');
+}
+
+function expTotalHoje(){ return (state.expHoje||[]).reduce((a,i)=>a+i.dur,0); }
+
+function expUpdateSaldo(){
+  const al = expTotalHoje();
+  const liv = Math.max(EXP_TOTAL-al,0);
+  const pct = Math.min(Math.round(al/EXP_TOTAL*100),100);
+  const barColor = pct>100?'#c4314b':pct>85?'var(--cat-melhoria-acc)':'var(--cat-trabalho-acc)';
+  const avTxt = al>EXP_TOTAL ? '⚠ excede em '+expFmtMin(al-EXP_TOTAL) : '';
+  // atualiza drawer (ids primários) e tela separada (ids exp2-)
+  [['exp-m-al','exp-m-liv','exp-barra','exp-bl-pct','exp-bl-av'],
+   ['exp2-m-al','exp2-m-liv','exp2-barra','exp2-bl-pct','exp2-bl-av']].forEach(([idAl,idLiv,idBar,idPct,idAv])=>{
+    const eAl=document.getElementById(idAl);
+    if(!eAl) return;
+    eAl.textContent=expFmtMin(al);
+    document.getElementById(idLiv).textContent=expFmtMin(liv);
+    const bar=document.getElementById(idBar);
+    bar.style.width=pct+'%'; bar.style.background=barColor;
+    document.getElementById(idPct).textContent=pct+'% ocupado';
+    document.getElementById(idAv).textContent=avTxt;
+  });
+}
+
+// ── Edição inline (delegação de evento no container) ──────
+function expStartEdit(span, lista, id){
+  if(span.querySelector('input')) return; // já editando
+  const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
+  const item = lista_ref.find(i=>String(i.id)===String(id));
+  if(!item) return;
+  const input = document.createElement('input');
+  input.value = item.nome;
+  input.setAttribute('data-editing','1');
+  input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
+  // substituir conteúdo do span (não o span em si, para manter delegação)
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = input.value.trim();
+    if(val) item.nome = val;
+    expSave(); expRender();
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
+  });
+}
+
+// ── Tick de conclusão ─────────────────────────────────────
+function expToggleConcluido(id){
+  // procura em hoje e fila
+  const item = (state.expHoje||[]).find(i=>String(i.id)===String(id))
+            || (state.expFila||[]).find(i=>String(i.id)===String(id));
+  if(!item) return;
+  item.concluido = !item.concluido;
+  // registra timestamp se concluindo
+  if(item.concluido){
+    item.concluidoEm = new Date().toISOString();
+  } else {
+    delete item.concluidoEm;
+  }
+  expSave(); expRender();
+}
+
+function expEditDur(span, lista, id){
+  const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
+  const item = lista_ref.find(i=>String(i.id)===String(id));
+  if(!item) return;
+  // montar input compacto "1h30" ou "40"
+  const curH = Math.floor(item.dur/60);
+  const curM = item.dur%60;
+  const curVal = curH>0 ? (curM>0 ? curH+'h'+String(curM).padStart(2,'0') : curH+'h') : String(curM);
+
+  const input = document.createElement('input');
+  input.value = curVal;
+  input.title = 'Ex: 30, 1h, 1h30';
+  input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+
+  const parseDur = parseDurStr;
+
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = parseDur(input.value);
+    if(val && val>0) item.dur = val;
+    expSave(); expRender();
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
+  });
+}
+
+function expRenderFila(){
+  const fila = state.expFila||[];
+  const html = fila.length===0
+    ? '<div class="exp-vazio">Fila vazia</div>'
+    : fila.map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="fila">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
+      <button class="exp-act-btn alocar" onclick="expAlocar('${i.id}')">+ hoje</button>
+      <button class="exp-act-btn danger" onclick="expDelFila('${i.id}')">×</button>
+    </div>`).join('');
+  ['exp-fila','exp2-fila'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'fila');
+  });
+}
+
+function expRenderHoje(){
+  const html = (state.expHoje||[]).length===0
+    ? '<div class="exp-vazio">Nenhum trabalho alocado — use a fila abaixo</div>'
+    : (state.expHoje||[]).map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="hoje">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
+      <button class="exp-act-btn" onclick="expDevolver('${i.id}')">← fila</button>
+      <button class="exp-act-btn danger" onclick="expDelHoje('${i.id}')">×</button>
+    </div>`).join('');
+  ['exp-hoje','exp2-hoje'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'hoje');
+  });
+}
+
+// delegação de evento — um listener por container (AbortController limpa o anterior)
+const _expAbort = {};
+function expBindContainer(container, lista){
+  // cancela listeners anteriores deste container
+  const key = container.id || lista;
+  if(_expAbort[key]) _expAbort[key].abort();
+  const ctrl = new AbortController();
+  _expAbort[key] = ctrl;
+  const sig = {signal: ctrl.signal};
+
+  container.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="tick"]');
+    if(tick){
+      e.stopPropagation();
+      const row = tick.closest('[data-id]');
+      if(row) expToggleConcluido(row.dataset.id);
+      return;
+    }
+  }, sig);
+
+  container.addEventListener('dblclick', e=>{
+    const nome = e.target.closest('[data-action="edit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-id]');
+      if(row) expStartEdit(nome, lista, row.dataset.id);
+      return;
+    }
+    const dur = e.target.closest('[data-action="dur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-id]');
+      if(row) expEditDur(dur, lista, row.dataset.id);
+    }
+  }, sig);
+}
+
+// ── Drawers de Melhorias e Estudos ───────────────────────────────────────────
+const _perAbort = {};
+
+function togglePerDrawer(key, open){
+  const drawer = document.getElementById(key+'-drawer');
+  if(!drawer) return;
+  const show = open !== undefined ? open : !drawer.classList.contains('show');
+  drawer.classList.toggle('show', show);
+  if(show){
+    renderPerDrawer(key);
+    setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
+}
+
+function renderPerDrawer(key){
+  const period = key==='mel'?'melhorias':'estudos';
+  const dow = state.viewDow;
+  const tasks = (state.sched[dow]||[]).map((tk,i)=>({tk,i})).filter(({tk})=>tk.period===period);
+  const el = document.getElementById(key+'-list');
+  if(!el) return;
+  if(tasks.length===0){ el.innerHTML='<div style="font-size:12px;color:var(--nf3);padding:8px 0;text-align:center">Sem tarefas neste período</div>'; return; }
+  const acBg = key==='mel'?'var(--cat-melhoria-bg)':'var(--cat-estudo-bg)';
+  const acFg = key==='mel'?'var(--cat-melhoria-fg)':'var(--cat-estudo-fg)';
+  const html = tasks.map(({tk,i})=>{
+    const dkey = dow+'_'+i;
+    const done = !!state.doneTasks[dkey];
+    const c = CATS[tk.cat]||CATS.estudo;
+    return `<div class="per-item${done?' concluido':''}" data-dow="${dow}" data-idx="${i}">
+      <div class="per-tick" data-action="pertick" title="Concluído">${done?'✓':''}</div>
+      <span class="per-nome" data-action="peredit" title="Duplo clique para editar">${tk.t}</span>
+      <span class="per-dur" data-action="perdur" title="Duplo clique para editar tempo" style="background:${c.bg};color:${c.fg};cursor:pointer">${expFmtMin(tk.dur||40)}</span>
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
+
+  // AbortController
+  const abKey = key+'-list';
+  if(_perAbort[abKey]) _perAbort[abKey].abort();
+  const ctrl = new AbortController();
+  _perAbort[abKey] = ctrl;
+  const sig = {signal:ctrl.signal};
+
+  el.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="pertick"]');
+    if(tick){
+      e.stopPropagation();
+      const row = tick.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const k=d+'_'+idx;
+      state.doneTasks[k]=!state.doneTasks[k];
+      const today=new Date().toISOString().slice(0,10);
+      if(Object.keys(state.doneTasks).some(x=>x.startsWith(d+'_')&&state.doneTasks[x]))
+        if(!state.doneDays.includes(today)) state.doneDays.push(today);
+      saveState(); renderTasks(); renderPerDrawer(key);
+    }
+  }, sig);
+
+  el.addEventListener('dblclick', e=>{
+    // editar nome
+    const nome = e.target.closest('[data-action="peredit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const input = document.createElement('input');
+      input.value = item.t;
+      input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
+      nome.textContent=''; nome.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{ if(committed)return; committed=true; const v=input.value.trim(); if(v){item.t=v;} saveState(); renderTasks(); renderPerDrawer(key); };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
+      return;
+    }
+    // editar duração
+    const dur = e.target.closest('[data-action="perdur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const curH=Math.floor((item.dur||40)/60), curM=(item.dur||40)%60;
+      const curVal=curH>0?(curM>0?curH+'h'+String(curM).padStart(2,'0'):curH+'h'):String(curM||40);
+      const input = document.createElement('input');
+      input.value = curVal;
+      input.title = 'Ex: 40, 1h, 1h30';
+      input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+      dur.textContent=''; dur.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{
+        if(committed)return; committed=true;
+        const val=parseDurStr(input.value);
+        if(val&&val>0){ item.dur=val; item.s=expFmtMin(val); }
+        saveState(); renderTasks(); renderPerDrawer(key);
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
+    }
+  }, sig);
+}
+
+function toggleExpDrawer(open){
+  const drawer = document.getElementById('exp-drawer');
+  if(!drawer) return;
+  const show = open !== undefined ? open : !drawer.classList.contains('show');
+  drawer.classList.toggle('show', show);
+  if(show){ expRender(); // garante dados frescos
+    setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
+}
+
+function expRender(){ expRenderFila(); expRenderHoje(); expUpdateSaldo(); }
+
+function expAlocar(id, silent){
+  const idx = (state.expFila||[]).findIndex(i=>String(i.id)===String(id));
+  if(idx===-1) return;
+  if(!state.expHoje) state.expHoje=[];
+  state.expHoje.push(state.expFila.splice(idx,1)[0]);
+  if(!silent){ expSave(); expRender(); }
+}
+
+function expDevolver(id){
+  const idx = (state.expHoje||[]).findIndex(i=>String(i.id)===String(id));
+  if(idx===-1) return;
+  if(!state.expFila) state.expFila=[];
+  state.expFila.push(state.expHoje.splice(idx,1)[0]);
+  expSave(); expRender();
+}
+
+function expDelFila(id){ state.expFila=(state.expFila||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
+function expDelHoje(id){ state.expHoje=(state.expHoje||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
+
+// ── parser de duração livre ───────────────────────────────────────────────────
+function parseDurStr(s){
+  if(!s) return null;
+  s = s.trim().toLowerCase().replace(',','.');
+  // "1h30" ou "1h30min"
+  let m = s.match(/^(\d+(?:\.\d+)?)h(\d+)?(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1])*60) + (parseInt(m[2])||0);
+  // "1h"
+  m = s.match(/^(\d+(?:\.\d+)?)h$/);
+  if(m) return Math.round(parseFloat(m[1])*60);
+  // "40min" ou "40"
+  m = s.match(/^(\d+(?:\.\d+)?)(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1]));
+  return null;
+}
+
+// mostra/esconde linha de parcelamento e preview
+function expCheckParcela(durId, rowId, parcelaId, previewId){
+  const durVal = parseDurStr(document.getElementById(durId).value);
+  const parcelaEl = document.getElementById(parcelaId);
+  const parcelaVal = parseDurStr(parcelaEl.value) || 40;
+  const row = document.getElementById(rowId);
+  if(durVal && durVal > parcelaVal){
+    row.style.display = 'flex';
+    const n = Math.ceil(durVal / parcelaVal);
+    document.getElementById(previewId).textContent = n+' parcela'+(n>1?'s':'')+' de '+expFmtMin(parcelaVal)+' (total '+expFmtMin(durVal)+')';
+  } else {
+    row.style.display = 'none';
+    document.getElementById(previewId).textContent = '';
+  }
+}
+
+// cria itens na fila (1 ou N parcelas)
+function expCriarItens(nome, dur, parcela, tipo){
+  const fixo = tipo==='fixo';
+  if(!state.expFila) state.expFila=[];
+  if(parcela && parcela < dur){
+    const n = Math.ceil(dur / parcela);
+    for(let k=1;k<=n;k++){
+      const thisDur = k<n ? parcela : dur-(parcela*(n-1));
+      state.expFila.push({id:'eu'+(expNextId++), nome: n>1?nome+' · '+k+'/'+n:nome, dur:thisDur, tipo, fixo});
+    }
+  } else {
+    state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
+  }
+}
+
+function expAddItem(){
+  const nome = document.getElementById('exp-new-nome').value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(document.getElementById('exp-new-dur').value) || 40;
+  const tipo = document.getElementById('exp-new-tipo').value;
+  const parcelaRow = document.getElementById('exp-new-parcela-row');
+  const parcela = parcelaRow.style.display!=='none'
+    ? (parseDurStr(document.getElementById('exp-new-parcela').value)||40)
+    : null;
+  expCriarItens(nome, dur, parcela, tipo);
+  document.getElementById('exp-new-nome').value='';
+  document.getElementById('exp-new-dur').value='';
+  document.getElementById('exp-new-parcela-row').style.display='none';
+  expSave(); expRender();
+}
+
+function expAddItem2(){
+  const nome = document.getElementById('exp2-new-nome').value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(document.getElementById('exp2-new-dur').value) || 40;
+  const tipo = document.getElementById('exp2-new-tipo').value;
+  const parcelaRow = document.getElementById('exp2-new-parcela-row');
+  const parcela = parcelaRow.style.display!=='none'
+    ? (parseDurStr(document.getElementById('exp2-new-parcela').value)||40)
+    : null;
+  expCriarItens(nome, dur, parcela, tipo);
+  document.getElementById('exp2-new-nome').value='';
+  document.getElementById('exp2-new-dur').value='';
+  document.getElementById('exp2-new-parcela-row').style.display='none';
+  expSave(); expRender();
+}
+
+document.getElementById('exp-new-nome').addEventListener('keydown',e=>{ if(e.key==='Enter') expAddItem(); });
 
 setInterval(()=>updateDiscs(),60000);
-loadState(); render(); updateTimerDisplay(); updateDiscs();
+loadState(); expLoad(); render(); updateTimerDisplay(); updateDiscs(); expRender();
 </script>
 </body>
 </html>
