@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Agenda v1.5.4</title>
+<title>Agenda v1.5.5</title>
 <style>
 :root{--ff:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;--nb1:#fff;--nb2:#fafafa;--nb3:#f5f5f5;--nb4:#ebebeb;--nf1:#242424;--nf2:#424242;--nf3:#717171;--brd:rgba(0,0,0,.13);--brd2:rgba(0,0,0,.24);--sh2:0 1px 2px rgba(0,0,0,.10),0 0 1px rgba(0,0,0,.08);--sh4:0 2px 4px rgba(0,0,0,.10),0 0 2px rgba(0,0,0,.08);--r4:4px;--r8:8px;--cat-trabalho-bg:#E6F1FB;--cat-trabalho-fg:#0C447C;--cat-trabalho-acc:#185FA5;--cat-estudo-bg:#E1F5EE;--cat-estudo-fg:#085041;--cat-estudo-acc:#0F6E56;--cat-eea-bg:#EEEDFE;--cat-eea-fg:#3C3489;--cat-eea-acc:#534AB7;--cat-projeto-bg:#FAEEDA;--cat-projeto-fg:#633806;--cat-projeto-acc:#854F0B;--cat-leitura-bg:#F1EFE8;--cat-leitura-fg:#444441;--cat-leitura-acc:#5F5E5A;--cat-melhoria-bg:#FBE9F0;--cat-melhoria-fg:#72243E;--cat-melhoria-acc:#993556;--active-acc:#185FA5;--active-bg:#E6F1FB;--active-fg:#0C447C}
 @media(prefers-color-scheme:dark){:root{--nb1:#1e1e1e;--nb2:#161616;--nb3:#212121;--nb4:#2a2a2a;--nf1:#f0f0f0;--nf2:#c0c0c0;--nf3:#888;--brd:rgba(255,255,255,.12);--brd2:rgba(255,255,255,.24);--sh2:0 1px 2px rgba(0,0,0,.40),0 0 1px rgba(0,0,0,.30);--sh4:0 2px 4px rgba(0,0,0,.40),0 0 2px rgba(0,0,0,.30);--cat-trabalho-bg:#0C2A4A;--cat-trabalho-fg:#85B7EB;--cat-trabalho-acc:#378ADD;--cat-estudo-bg:#062E1E;--cat-estudo-fg:#5DCAA5;--cat-estudo-acc:#1D9E75;--cat-eea-bg:#1E1A42;--cat-eea-fg:#AFA9EC;--cat-eea-acc:#7F77DD;--cat-projeto-bg:#2E1E06;--cat-projeto-fg:#FAC775;--cat-projeto-acc:#EF9F27;--cat-leitura-bg:#282826;--cat-leitura-fg:#B4B2A9;--cat-leitura-acc:#888780;--cat-melhoria-bg:#3A1525;--cat-melhoria-fg:#F4C0D1;--cat-melhoria-acc:#D4537E;--active-acc:#378ADD;--active-bg:#0C2A4A;--active-fg:#85B7EB}}
@@ -537,7 +537,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.5.4';
+const VERSION = 'v1.5.5';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -736,25 +736,43 @@ function updateDiscs(){
 
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
-  const focusTasks=tasks; // inclui expediente
-  const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
-  const doneMins=focusTasks.reduce((a,t,i)=>{
-    return a+(state.doneTasks[dow+'_'+i]?(t.dur||40):0);
+
+  // tarefas não-expediente (melhorias + estudos)
+  const nonExpTasks=tasks.filter(t=>t.period!=='expediente');
+  const nonExpDoneMins=nonExpTasks.reduce((a,t,i)=>{
+    const globalIdx=tasks.indexOf(t);
+    return a+(state.doneTasks[dow+'_'+globalIdx]?(t.dur||40):0);
   },0);
-  // foco = maior entre minutos de timers completos e minutos de tarefas marcadas
-  // (max evita double-count quando as duas fontes se sobrepõem)
+  const nonExpTotalMins=nonExpTasks.reduce((a,t)=>a+(t.dur||40),0);
+
+  // expediente: usa expHoje como fonte de verdade
+  const expHoje=state.expHoje||[];
+  const expTotalMins=expHoje.reduce((a,x)=>a+x.dur,0);
+  const expDoneMins=expHoje.filter(x=>x.concluido).reduce((a,x)=>a+x.dur,0);
+
+  const focusMins=nonExpTotalMins+expTotalMins;
+  const doneMins=nonExpDoneMins+expDoneMins;
+
+  // foco = maior entre timers acumulados e tarefas marcadas (sem double-count)
   const todayKey=new Date().toISOString().slice(0,10);
   const accumulated=(state.timerMins&&state.timerMins[todayKey])||0;
   const focusProgress=Math.max(accumulated, doneMins);
-  // soma progresso parcial do timer em andamento
+  // progresso parcial do timer em andamento
   const partialMins=timerRunning?(blockMins-timerLeft/60):0;
   const fPct=focusMins>0?Math.min((focusProgress+partialMins)/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
-  const remaining=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
+
+  // contador "blocos restantes" = itens não concluídos de todas as fontes
+  const nonExpRemaining=nonExpTasks.filter((t,_)=>{
+    const gi=tasks.indexOf(t);
+    return !state.doneTasks[dow+'_'+gi];
+  }).length;
+  const expRemaining=expHoje.filter(x=>!x.concluido).length;
+  const remaining=nonExpRemaining+expRemaining;
   document.getElementById('lbl-foco').textContent=remaining;
-  document.getElementById('bot-foco').textContent=focusMins+' min';
-  document.getElementById('leg-n').textContent=focusTasks.length;
-  document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
+  document.getElementById('bot-foco').textContent=focusMins>0?expFmtMin(focusMins):'—';
+  document.getElementById('leg-n').textContent=nonExpTasks.length+expHoje.length;
+  document.getElementById('ratio1').textContent='1/'+(nonExpTasks.length+expHoje.length||1);
   document.getElementById('ratio2').textContent='1/'+Math.round(1440/Math.max(focusMins,1));
   document.getElementById('bot-bloco').textContent=fmtMins(blockMins)+' / bloco';
   document.getElementById('timer-lbl').textContent=fmtMins(blockMins)+' / bloco';
@@ -917,18 +935,57 @@ function renderTasks(){
   const tasks=state.sched[dow]||[];
   let html='';
   let lastPeriod=null;
+
   tasks.forEach((tk,i)=>{
+    // ── header de período ──────────────────────────────────────────────
     if(tk.period!==lastPeriod){
       lastPeriod=tk.period;
       const pc=PERIOD_COLORS[tk.period]||{bg:'var(--nb3)',fg:'var(--nf3)'};
       const pl=PERIODS[tk.period]?.lbl||tk.period;
-      const pdur=tk.period==='expediente'?'5h':tk.period==='melhorias'?'3× 1h':'40 min / bloco';
-      const _drawerKey = tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':tk.period==='estudos'?'est':null;
-      const expLink=_drawerKey
-        ?`<button onclick="event.stopPropagation();${_drawerKey==='exp'?'toggleExpDrawer(true)':'togglePerDrawer(\''+_drawerKey+'\',true)'}" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8" title="Abrir painel">↗ abrir</button>`
+
+      // duração real por período
+      let pdur='';
+      if(tk.period==='expediente'){
+        const expTotal=(state.expHoje||[]).reduce((a,x)=>a+x.dur,0);
+        pdur=expTotal>0?expFmtMin(expTotal):'5h';
+      } else {
+        const grp=tasks.filter(t=>t.period===tk.period);
+        pdur=expFmtMin(grp.reduce((a,t)=>a+(t.dur||40),0));
+      }
+
+      const _dk=tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':tk.period==='estudos'?'est':null;
+      const _dkFn=_dk==='exp'?'toggleExpDrawer(true)':('togglePerDrawer(\''+_dk+'\',true)');
+      const expLink=_dk
+        ?('<button onclick="event.stopPropagation();'+_dkFn+'" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid '+pc.fg+';background:transparent;color:'+pc.fg+';cursor:pointer;opacity:.8">↗ abrir</button>')
         :'';
       html+=`<div class="period-header" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--nb3);border-radius:var(--r4);margin-bottom:2px"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3)">${pdur}</span>${expLink}</div>`;
+
+      // ── expediente: itens reais de expHoje ─────────────────────────
+      if(tk.period==='expediente'){
+        const hoje=state.expHoje||[];
+        if(hoje.length===0){
+          html+=`<div style="font-size:12px;color:var(--nf3);padding:8px 10px">Nenhum trabalho alocado — use ↗ abrir para despachar da fila</div>`;
+        } else {
+          hoje.forEach(item=>{
+            const done=!!item.concluido;
+            const tipo=item.tipo||'fixo';
+            const durBg=tipo==='prazo'?'var(--cat-melhoria-bg)':tipo==='variavel'?'var(--cat-estudo-bg)':tipo==='emergencia'?'#fde7ec':'var(--cat-trabalho-bg)';
+            const durFg=tipo==='prazo'?'var(--cat-melhoria-fg)':tipo==='variavel'?'var(--cat-estudo-fg)':tipo==='emergencia'?'#c4314b':'var(--cat-trabalho-fg)';
+            html+=`<div class="task-row${done?' done':''}" onclick="expToggleConcluido('${item.id}');renderTasks();updateDiscs()">
+              <div class="tcheck">${done?'✓':''}</div>
+              <div class="tslot">${expFmtMin(item.dur)}</div>
+              <div class="tname">${item.nome}</div>
+              <span class="pill" style="background:${durBg};color:${durFg}">${tipo}</span>
+            </div>`;
+          });
+        }
+      }
     }
+
+    // pula entrada Diário do sched (expediente já renderizado acima via expHoje)
+    if(tk.period==='expediente') return;
+
+    // ── melhorias e estudos: comportamento original ────────────────────
     const key=dow+'_'+i;
     const done=!!state.doneTasks[key];
     const c=CATS[tk.cat]||CATS.estudo;
@@ -941,7 +998,6 @@ function renderTasks(){
   });
   document.getElementById('today-tasks').innerHTML=html;
 }
-
 function toggleTask(dow,i){
   const key=dow+'_'+i;
   state.doneTasks[key]=!state.doneTasks[key];
