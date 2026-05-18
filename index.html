@@ -367,6 +367,11 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     </div>
     <div class="card card-sm" style="padding:8px 10px">
       <div id="mel-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
+        <input id="mel-new-nome" type="text" placeholder="Nova melhoria…" style="font-family:var(--ff);font-size:12px;flex:1;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0">
+        <input id="mel-new-dur" type="text" placeholder="60min" title="Ex: 60, 1h, 1h30" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
+        <button onclick="perAddItem('mel')" style="font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-melhoria-acc);background:transparent;color:var(--cat-melhoria-fg);cursor:pointer">+ add</button>
+      </div>
     </div>
   </div>
 
@@ -378,6 +383,11 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     </div>
     <div class="card card-sm" style="padding:8px 10px">
       <div id="est-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
+        <input id="est-new-nome" type="text" placeholder="Novo estudo…" style="font-family:var(--ff);font-size:12px;flex:1;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0">
+        <input id="est-new-dur" type="text" placeholder="40min" title="Ex: 40, 1h, 1h30" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
+        <button onclick="perAddItem('est')" style="font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-estudo-acc);background:transparent;color:var(--cat-estudo-fg);cursor:pointer">+ add</button>
+      </div>
     </div>
   </div>
 
@@ -526,7 +536,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.5.1';
+const VERSION = 'v1.5.2';
 
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
@@ -724,16 +734,12 @@ function updateDiscs(){
 
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
-  const focusTasks=tasks; // inclui expediente (s==='Diário')
+  const focusTasks=tasks.filter(t=>t.s!=='Diário');
   const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
-  const doneMins=focusTasks.reduce((a,t,i)=>{
-    const key=dow+'_'+i;
-    return a+(state.doneTasks[key]?(t.dur||40):0);
-  },0);
-  const partialMins=timerRunning?(blockMins-timerLeft/60):0;
-  const fPct=focusMins>0?Math.min((doneMins+partialMins)/focusMins,1):0;
+  const compMins=blocksCompleted*blockMins+(blockMins-timerLeft/60);
+  const fPct=focusMins>0?Math.min(compMins/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
-  document.getElementById('lbl-foco').textContent=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
+  document.getElementById('lbl-foco').textContent=focusTasks.length-blocksCompleted>0?focusTasks.length-blocksCompleted:0;
   document.getElementById('bot-foco').textContent=focusMins+' min';
   document.getElementById('leg-n').textContent=focusTasks.length;
   document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
@@ -906,7 +912,7 @@ function toggleTask(dow,i){
   const todayKey=new Date().toISOString().slice(0,10);
   const anyDone=Object.keys(state.doneTasks).some(k=>k.startsWith(dow+'_')&&state.doneTasks[k]);
   if(anyDone&&!state.doneDays.includes(todayKey)) state.doneDays.push(todayKey);
-  saveState(); renderTasks(); renderWeek(); renderStats(); updateDiscs();
+  saveState(); renderTasks(); renderWeek(); renderStats();
 }
 
 function renderWeek(){
@@ -1455,6 +1461,7 @@ function renderPerDrawer(key){
       <div class="per-tick" data-action="pertick" title="Concluído">${done?'✓':''}</div>
       <span class="per-nome" data-action="peredit" title="Duplo clique para editar">${tk.t}</span>
       <span class="per-dur" data-action="perdur" title="Duplo clique para editar tempo" style="background:${c.bg};color:${c.fg};cursor:pointer">${expFmtMin(tk.dur||40)}</span>
+      <button class="exp-act-btn danger" data-action="perdel" style="margin-left:4px" title="Remover">×</button>
     </div>`;
   }).join('');
   el.innerHTML = html;
@@ -1478,7 +1485,23 @@ function renderPerDrawer(key){
       const today=new Date().toISOString().slice(0,10);
       if(Object.keys(state.doneTasks).some(x=>x.startsWith(d+'_')&&state.doneTasks[x]))
         if(!state.doneDays.includes(today)) state.doneDays.push(today);
-      saveState(); renderTasks(); renderPerDrawer(key);
+      saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
+    }
+    const del = e.target.closest('[data-action="perdel"]');
+    if(del){
+      e.stopPropagation();
+      const row = del.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      state.sched[d].splice(idx,1);
+      const newDone={};
+      Object.keys(state.doneTasks).forEach(k=>{
+        const [kd,ki]=k.split('_').map(Number);
+        if(kd===d){ if(ki<idx) newDone[k]=state.doneTasks[k]; else if(ki>idx) newDone[kd+'_'+(ki-1)]=state.doneTasks[k]; }
+        else { newDone[k]=state.doneTasks[k]; }
+      });
+      state.doneTasks=newDone;
+      saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
     }
   }, sig);
 
@@ -1541,6 +1564,21 @@ function toggleExpDrawer(open){
   if(show){ expRender(); // garante dados frescos
     setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
   }
+}
+
+function perAddItem(key){
+  const period = key==='mel'?'melhorias':'estudos';
+  const cat     = key==='mel'?'melhoria':'estudo';
+  const nomeEl  = document.getElementById(key+'-new-nome');
+  const durEl   = document.getElementById(key+'-new-dur');
+  const nome = nomeEl.value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(durEl.value) || (key==='mel'?60:40);
+  const dow = state.viewDow;
+  if(!state.sched[dow]) state.sched[dow]=[];
+  state.sched[dow].push({s:expFmtMin(dur), t:nome, cat, dur, period});
+  nomeEl.value=''; durEl.value='';
+  saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
 }
 
 function expRender(){ expRenderFila(); expRenderHoje(); expUpdateSaldo(); }
@@ -1647,6 +1685,12 @@ document.getElementById('exp-new-nome').addEventListener('keydown',e=>{ if(e.key
 
 setInterval(()=>updateDiscs(),60000);
 loadState(); expLoad(); render(); updateTimerDisplay(); updateDiscs(); expRender();
+['mel','est'].forEach(key=>{
+  const n=document.getElementById(key+'-new-nome');
+  const d=document.getElementById(key+'-new-dur');
+  if(n) n.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();perAddItem(key);} });
+  if(d) d.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();perAddItem(key);} });
+});
 </script>
 </body>
 </html>
