@@ -291,6 +291,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
           <button class="pbtn" id="p60" onclick="setMins(60)">60 min</button>
           <button class="pbtn" id="p25" onclick="setMins(25)">25 min</button>
           <button class="pbtn" id="p10" onclick="setMins(10)">10 min</button>
+          <button class="pbtn" id="p-custom" onclick="setMins(state.customMins||90)" ondblclick="editCustomMins()" title="Duplo clique para personalizar">90 min</button>
         </div>
         <div class="btn-row">
           <button class="cbtn go" id="play-btn" onclick="toggleTimer()">▶ Iniciar</button>
@@ -764,8 +765,31 @@ function setMins(m){
   blockMins=m; timerTotal=m*60; timerLeft=m*60;
   if(timerRunning){clearInterval(timerInterval);timerRunning=false;}
   document.getElementById('play-btn').textContent='▶ Iniciar';
+  const custom=state.customMins||90;
   [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===m?' sel':''); });
+  document.getElementById('p-custom').className='pbtn'+(m===custom?' sel':'');
   updateTimerDisplay(); updateDiscs();
+}
+
+function editCustomMins(){
+  const btn=document.getElementById('p-custom');
+  const cur=state.customMins||90;
+  const input=document.createElement('input');
+  input.value=cur; input.title='Ex: 90, 1h30, 2h';
+  input.style.cssText='width:52px;font-family:var(--ff);font-size:11px;font-weight:600;text-align:center;border:none;border-bottom:1.5px solid var(--active-acc);background:transparent;color:var(--nf1);outline:none;padding:0';
+  btn.textContent=''; btn.appendChild(input);
+  input.focus(); input.select();
+  let committed=false;
+  const commit=()=>{
+    if(committed)return; committed=true;
+    const val=parseDurStr(input.value)||cur;
+    state.customMins=val;
+    btn.textContent=fmtMins(val);
+    saveState();
+    setMins(val);
+  };
+  input.addEventListener('blur',commit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}if(e.key==='Escape'){committed=true;btn.textContent=fmtMins(cur);}});
 }
 
 function toggleTimer(){
@@ -1689,6 +1713,9 @@ document.getElementById('exp-new-nome').addEventListener('keydown',e=>{ if(e.key
 
 setInterval(()=>updateDiscs(),60000);
 loadState(); expLoad(); render(); updateTimerDisplay(); updateDiscs(); expRender();
+// inicializa pill customizável
+const _cb=document.getElementById('p-custom');
+if(_cb) _cb.textContent=fmtMins(state.customMins||90);
 ['mel','est'].forEach(key=>{
   const n=document.getElementById(key+'-new-nome');
   const d=document.getElementById(key+'-new-dur');
