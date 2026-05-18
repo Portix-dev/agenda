@@ -734,12 +734,16 @@ function updateDiscs(){
 
   const dow=state.viewDow;
   const tasks=state.sched[dow]||[];
-  const focusTasks=tasks.filter(t=>t.s!=='Diário');
+  const focusTasks=tasks; // inclui expediente
   const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
-  const compMins=blocksCompleted*blockMins+(blockMins-timerLeft/60);
-  const fPct=focusMins>0?Math.min(compMins/focusMins,1):0;
+  const doneMins=focusTasks.reduce((a,t,i)=>{
+    return a+(state.doneTasks[dow+'_'+i]?(t.dur||40):0);
+  },0);
+  const partialMins=timerRunning?(blockMins-timerLeft/60):0;
+  const fPct=focusMins>0?Math.min((doneMins+partialMins)/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
-  document.getElementById('lbl-foco').textContent=focusTasks.length-blocksCompleted>0?focusTasks.length-blocksCompleted:0;
+  const remaining=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
+  document.getElementById('lbl-foco').textContent=remaining;
   document.getElementById('bot-foco').textContent=focusMins+' min';
   document.getElementById('leg-n').textContent=focusTasks.length;
   document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
@@ -912,7 +916,7 @@ function toggleTask(dow,i){
   const todayKey=new Date().toISOString().slice(0,10);
   const anyDone=Object.keys(state.doneTasks).some(k=>k.startsWith(dow+'_')&&state.doneTasks[k]);
   if(anyDone&&!state.doneDays.includes(todayKey)) state.doneDays.push(todayKey);
-  saveState(); renderTasks(); renderWeek(); renderStats();
+  saveState(); renderTasks(); renderWeek(); renderStats(); updateDiscs();
 }
 
 function renderWeek(){
