@@ -76,6 +76,10 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #install-btn{font-family:var(--ff);font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--r4);border:none;background:var(--active-acc);color:#fff;cursor:pointer}
 .ver-badge{font-size:10px;color:var(--nf3);margin-left:6px;font-weight:400}
 
+/* item selecionado para o timer */
+.task-row.timer-active{outline:2px solid var(--active-acc);outline-offset:-1px;background:var(--active-bg)}
+.task-row.timer-active .tname{font-weight:600}
+
 /* period header — clicável para selecionar foco */
 .period-hdr{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r4);margin-bottom:2px;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s}
 .period-hdr.active-period{border-color:var(--active-acc);background:var(--active-bg)}
@@ -639,6 +643,8 @@ let blockMins=40, timerLeft=2400, timerTotal=2400;
 let timerRunning=false, timerInterval=null, blocksCompleted=0;
 // minutos consumidos no período ativo pela sessão do timer (zera ao trocar de período)
 let periodTimerMins = { expediente:0, melhorias:0, estudos:0 };
+// item atualmente selecionado para o timer (id do item exp ou chave dow_i para tarefas)
+let activeTimerItem = null;
 let deferredInstall=null;
 let audioCtx=null;
 
@@ -801,7 +807,24 @@ function updateDiscs(){
   document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
 }
 
-// ── Timer ─────────────────────────────────────────────────────────────────────
+// ── Seleção de item para o timer ──────────────────────────────────────────────
+// Clicar no card (fora do checkbox) seleciona o item e carrega sua duração no timer
+// O checkbox continua sendo o único caminho para marcar concluído
+function selecionarItemTimer(itemId, dur, nome, period){
+  // garante que o período correto está ativo
+  if(state.activePeriod !== period) setActivePeriod(period);
+  activeTimerItem = itemId;
+  // carrega duração no timer sem iniciar
+  blockMins = dur; timerTotal = dur*60;
+  if(!timerRunning) timerLeft = dur*60;
+  // atualiza presets visuais — nenhum fica "sel" pois é duração livre do item
+  [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===dur?' sel':''); });
+  document.getElementById('timer-lbl').textContent = fmtMins(dur);
+  document.getElementById('t-task').textContent = nome;
+  updateTimerDisplay(); updateDiscs(); renderTasks();
+}
+
+
 function fmtMins(m){
   return m>=60?(m%60===0?(m/60)+'h':(Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'))):m+' min';
 }
@@ -934,11 +957,13 @@ function renderTasks(){
         } else {
           hoje.forEach(item=>{
             const done=!!item.concluido;
+            const isTimerActive = activeTimerItem === item.id;
             const tipo=item.tipo||'variavel';
             const durBg=tipo==='prazo'?'var(--cat-melhoria-bg)':tipo==='emergencia'?'#fde7ec':tipo==='fixo'?'var(--cat-trabalho-bg)':'var(--cat-estudo-bg)';
             const durFg=tipo==='prazo'?'var(--cat-melhoria-fg)':tipo==='emergencia'?'#c4314b':tipo==='fixo'?'var(--cat-trabalho-fg)':'var(--cat-estudo-fg)';
-            html+='<div class="task-row'+(done?' done':'')+'" onclick="expToggleConcluido(\''+item.id+'\');renderTasks();updateDiscs()">'
-                 +'<div class="tcheck">'+(done?'✓':'')+'</div>'
+            // card: clique seleciona para timer | checkbox: clique marca concluído
+            html+='<div class="task-row'+(done?' done':'')+(isTimerActive?' timer-active':'')+'" onclick="selecionarItemTimer(\''+item.id+'\','+item.dur+',\''+item.nome.replace(/'/g,"\\'")+'\',\'expediente\')">'
+                 +'<div class="tcheck" onclick="event.stopPropagation();expToggleConcluido(\''+item.id+'\');renderTasks();updateDiscs()">'+(done?'✓':'')+'</div>'
                  +'<div class="tslot">'+expFmtMin(item.dur)+'</div>'
                  +'<div class="tname">'+item.nome+'</div>'
                  +'<span class="pill" style="background:'+durBg+';color:'+durFg+'">'+tipo+'</span>'
@@ -952,8 +977,9 @@ function renderTasks(){
 
     const key=dow+'_'+i; const done=!!state.doneTasks[key];
     const c=CATS[tk.cat]||CATS.estudo;
-    html+='<div class="task-row'+(done?' done':'')+'" onclick="toggleTask('+dow+','+i+')">'
-         +'<div class="tcheck">'+(done?'✓':'')+'</div>'
+    const isTimerActive = activeTimerItem === key;
+    html+='<div class="task-row'+(done?' done':'')+(isTimerActive?' timer-active':'')+'" onclick="selecionarItemTimer(\''+key+'\','+tk.dur+',\''+tk.t.replace(/'/g,"\\'")+'\',\''+tk.period+'\')">'
+         +'<div class="tcheck" onclick="event.stopPropagation();toggleTask('+dow+','+i+')">'+(done?'✓':'')+'</div>'
          +'<div class="tslot">'+tk.s+'</div>'
          +'<div class="tname">'+tk.t+'</div>'
          +'<span class="pill" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</span>'
