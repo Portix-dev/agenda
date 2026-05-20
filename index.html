@@ -24,6 +24,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .hdr-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .hdr-title{font-size:15px;font-weight:600;color:var(--nf1)}
 .hdr-sub{font-size:11px;color:var(--nf3);margin-top:2px}
+.day-badge{font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px;background:var(--nb3);color:var(--nf2);border:.5px solid var(--brd2)}
 .nav-btn{font-size:13px;font-weight:600;padding:3px 10px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb1);color:var(--nf2);cursor:pointer}
 .nav-btn:active{background:var(--nb3)}
 .tab-row{display:flex;gap:4px;flex-wrap:wrap}
@@ -49,14 +50,18 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .cbtn{font-family:var(--ff);font-size:12px;font-weight:600;padding:6px 16px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb1);color:var(--nf1);cursor:pointer}
 .cbtn:active{background:var(--nb3)}
 .cbtn.go{background:var(--active-acc);color:#fff;border-color:var(--active-acc)}
+.period-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:6px}
 .tasks-list{display:flex;flex-direction:column;gap:5px}
 .task-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r4);border:.5px solid var(--brd);cursor:pointer;user-select:none}
 .task-row.done{opacity:.38}
+.task-row.period-header{cursor:default;background:var(--nb3);border-color:transparent;padding:5px 10px;margin-top:4px}
 .tcheck{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;color:#107c10}
 .task-row.done .tcheck{background:#dff6dd;border-color:#107c10}
 .tslot{font-size:10px;font-weight:600;color:var(--nf3);min-width:34px}
 .tname{font-size:13px;font-weight:500;color:var(--nf1);flex:1}
+.tname-edit{font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1px solid var(--active-acc)}
 .pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.edit-btn{font-size:11px;padding:2px 6px;border-radius:3px;border:.5px solid var(--brd2);background:var(--nb3);color:var(--nf3);cursor:pointer;flex-shrink:0}
 .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .wday{border-radius:var(--r4);border:.5px solid var(--brd);background:var(--nb2);padding:6px 4px;text-align:center;cursor:pointer}
 .wday:active{background:var(--nb3)}
@@ -76,15 +81,6 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #install-btn{font-family:var(--ff);font-size:12px;font-weight:600;padding:4px 12px;border-radius:var(--r4);border:none;background:var(--active-acc);color:#fff;cursor:pointer}
 .ver-badge{font-size:10px;color:var(--nf3);margin-left:6px;font-weight:400}
 
-/* item selecionado para o timer */
-.task-row.timer-active{outline:2px solid var(--active-acc);outline-offset:-1px;background:var(--active-bg)}
-.task-row.timer-active .tname{font-weight:600}
-
-/* period header — clicável para selecionar foco */
-.period-hdr{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r4);margin-bottom:2px;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s}
-.period-hdr.active-period{border-color:var(--active-acc);background:var(--active-bg)}
-.period-hdr:hover{background:var(--nb3)}
-
 /* Expediente screen */
 .expediente-screen{display:none;flex-direction:column;gap:10px}
 .expediente-screen.show{display:flex}
@@ -101,6 +97,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-item.prazo{border-left:2.5px solid var(--cat-melhoria-acc)}
 .exp-item.variavel{border-left:2.5px solid var(--cat-estudo-acc)}
 .exp-item.emergencia{border-left:2.5px solid #c4314b}
+.exp-item.recorrente{border-left:2.5px solid var(--cat-projeto-acc)}
 .exp-tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;cursor:pointer;color:#107c10;transition:background .15s,border-color .15s}
 .exp-tick:hover{border-color:var(--active-acc)}
 .exp-item.concluido .exp-tick{background:#dff6dd;border-color:#107c10}
@@ -113,6 +110,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-dur.prazo{background:var(--cat-melhoria-bg);color:var(--cat-melhoria-fg)}
 .exp-dur.variavel{background:var(--cat-estudo-bg);color:var(--cat-estudo-fg)}
 .exp-dur.emergencia{background:#fde7ec;color:#c4314b}
+.exp-dur.recorrente{background:var(--cat-projeto-bg);color:var(--cat-projeto-fg)}
 .exp-act-btn{font-family:var(--ff);font-size:11px;padding:2px 7px;border-radius:3px;border:.5px solid var(--brd2);background:var(--nb3);color:var(--nf3);cursor:pointer;flex-shrink:0}
 .exp-act-btn:active{background:var(--nb4)}
 .exp-act-btn.alocar{color:var(--cat-trabalho-acc);border-color:var(--cat-trabalho-acc)}
@@ -121,12 +119,11 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 .exp-add-row input,.exp-add-row select{font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none}
 .exp-add-row input:focus,.exp-add-row select:focus{border-color:var(--active-acc)}
 .exp-nome-input{flex:2;min-width:120px}
+.exp-dur-wrap{display:flex;gap:3px;align-items:center}
+.exp-dur-wrap input{width:44px;text-align:center}
+.exp-dur-wrap span{font-size:11px;color:var(--nf3)}
 .exp-legend{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:.5px solid var(--brd)}
 .exp-add-hint{font-size:10px;color:var(--nf3);margin-top:4px}
-.exp-parcela-row{display:flex;align-items:center;gap:6px;margin-top:6px;padding:6px 8px;background:var(--active-bg);border-radius:var(--r4);border:.5px solid var(--active-acc)}
-.exp-parcela-row label{font-size:11px;color:var(--active-fg);font-weight:600;white-space:nowrap}
-.exp-parcela-row input{font-family:var(--ff);font-size:12px;padding:3px 6px;border-radius:var(--r4);border:.5px solid var(--active-acc);background:var(--nb1);color:var(--nf1);outline:none;width:60px;text-align:center}
-.exp-parcela-preview{font-size:10px;color:var(--active-fg);font-weight:600}
 .exp-vazio{font-size:12px;color:var(--nf3);padding:10px 0;text-align:center}
 
 /* Expediente inline drawer */
@@ -183,6 +180,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 #widget-pin{font-size:13px;background:none;border:none;cursor:pointer;color:var(--nf3);padding:2px;line-height:1;transition:color .15s}
 #widget-pin.on{color:var(--active-acc)}
 #widget-go{font-family:var(--ff);font-size:11px;font-weight:700;width:32px;height:32px;border-radius:50%;border:none;background:var(--active-acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#widget-toggle{display:none}
 .compact-mode #root{display:none}
 .compact-mode #install-banner{display:none!important}
 .compact-mode body{margin:0;padding:0;min-height:unset;background:#1a1a1a!important;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
@@ -227,32 +225,32 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
   <!-- GEARS -->
   <div class="card">
-    <div class="sec-lbl">Engrenagens de tempo · <span id="gear-period-lbl" style="color:var(--active-fg)">Expediente</span></div>
+    <div class="sec-lbl">Engrenagens de tempo</div>
     <div class="gears-stage">
       <div class="gear-wrap">
-        <div class="gear-top">Saldo do bloco</div>
+        <div class="gear-top">Bloco</div>
         <svg width="68" height="68" viewBox="0 0 68 68" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Disco do bloco">
           <circle cx="34" cy="34" r="31" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-bloco" d=""/>
           <circle cx="34" cy="34" r="19" fill="var(--nb1)"/>
-          <text x="34" y="31" text-anchor="middle" font-family="var(--ff)" font-size="10" font-weight="600" fill="var(--nf1)" id="lbl-bloco">—</text>
-          <text x="34" y="41" text-anchor="middle" font-family="var(--ff)" font-size="6.5" fill="var(--nf3)" id="lbl-bloco-unit">min</text>
+          <text x="34" y="31" text-anchor="middle" font-family="var(--ff)" font-size="10" font-weight="600" fill="var(--nf1)" id="lbl-bloco">40</text>
+          <text x="34" y="41" text-anchor="middle" font-family="var(--ff)" font-size="6.5" fill="var(--nf3)">min</text>
         </svg>
-        <div class="gear-bot" id="bot-bloco">—</div>
+        <div class="gear-bot" id="bot-bloco">40 min</div>
       </div>
-      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio1">·</div><div class="ratio-line"></div></div>
+      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio1">1/5</div><div class="ratio-line"></div></div>
       <div class="gear-wrap">
         <div class="gear-top">Foco do dia</div>
         <svg width="110" height="110" viewBox="0 0 110 110" role="img" aria-label="Foco do dia">
           <circle cx="55" cy="55" r="51" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
           <path id="arc-foco" d="" fill="#0F6E56" opacity=".85"/>
           <circle cx="55" cy="55" r="32" fill="var(--nb1)"/>
-          <text x="55" y="52" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="lbl-foco">—</text>
-          <text x="55" y="63" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">pendentes</text>
+          <text x="55" y="52" text-anchor="middle" font-family="var(--ff)" font-size="13" font-weight="600" fill="var(--nf1)" id="lbl-foco">5</text>
+          <text x="55" y="63" text-anchor="middle" font-family="var(--ff)" font-size="7" fill="var(--nf3)">blocos</text>
         </svg>
-        <div class="gear-bot" id="bot-foco">—</div>
+        <div class="gear-bot" id="bot-foco">200 min</div>
       </div>
-      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio2">·</div><div class="ratio-line"></div></div>
+      <div class="ratio-col"><div class="ratio-line"></div><div class="ratio-txt" id="ratio2">1/7</div><div class="ratio-line"></div></div>
       <div class="gear-wrap">
         <div class="gear-top">Dia completo</div>
         <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Dia completo">
@@ -266,15 +264,15 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       </div>
     </div>
     <div class="leg-row">
-      <div class="leg-i"><div class="leg-d" style="background:var(--active-acc)"></div>Saldo do período ativo</div>
-      <div class="leg-i"><div class="leg-d" style="background:#0F6E56"></div>Foco do dia</div>
+      <div class="leg-i"><div class="leg-d" style="background:#185FA5"></div>Bloco</div>
+      <div class="leg-i"><div class="leg-d" style="background:#0F6E56"></div>Foco (<span id="leg-n">5</span>× blocos)</div>
       <div class="leg-i"><div class="leg-d" style="background:#534AB7"></div>Dia completo</div>
     </div>
   </div>
 
   <!-- TIMER -->
   <div class="card">
-    <div class="sec-lbl">Time timer · <span id="timer-lbl">40 min</span></div>
+    <div class="sec-lbl">Time timer · <span id="timer-lbl">40 min / bloco</span></div>
     <div class="timer-grid">
       <svg width="100" height="100" viewBox="0 0 100 100" style="cursor:pointer" onclick="toggleTimer()" role="img" aria-label="Timer">
         <circle cx="50" cy="50" r="46" fill="var(--nb3)" stroke="var(--brd)" stroke-width=".5"/>
@@ -291,6 +289,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
           <button class="pbtn" id="p60" onclick="setMins(60)">60 min</button>
           <button class="pbtn" id="p25" onclick="setMins(25)">25 min</button>
           <button class="pbtn" id="p10" onclick="setMins(10)">10 min</button>
+          <span class="pbtn" id="p-custom-wrap" title="Digite um valor e pressione Enter" style="display:inline-flex;align-items:center;gap:3px;cursor:text" onclick="focusCustomInput()">✎ <input id="p-custom-input" value="90 min" style="font-family:var(--ff);font-size:11px;font-weight:600;width:46px;border:none;background:transparent;color:inherit;outline:none;cursor:text;padding:0" title="Ex: 15, 40, 1h, 1h30" /></span>
         </div>
         <div class="btn-row">
           <button class="cbtn go" id="play-btn" onclick="toggleTimer()">▶ Iniciar</button>
@@ -303,16 +302,17 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
   <!-- TASKS -->
   <div class="card card-sm">
-    <div class="sec-lbl">Tarefas de hoje <span style="font-weight:400;font-size:9px;color:var(--nf3)">&nbsp;·&nbsp;clique no período para focar</span></div>
+    <div class="sec-lbl">Tarefas de hoje</div>
     <div class="tasks-list" id="today-tasks"></div>
   </div>
 
-  <!-- EXPEDIENTE DRAWER inline -->
+  <!-- EXPEDIENTE DRAWER inline (dentro da tela Agenda) -->
   <div class="exp-drawer" id="exp-drawer">
     <div class="exp-drawer-header">
       <span class="exp-drawer-title">Expediente</span>
-      <button class="exp-drawer-close" onclick="toggleExpDrawer(false)">✕ fechar</button>
+      <button class="exp-drawer-close" onclick="toggleDrawer('exp')">✕ fechar</button>
     </div>
+    <!-- saldo compacto -->
     <div class="card card-sm">
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <div class="exp-metric" style="flex:1;min-width:70px"><div class="exp-metric-n" style="font-size:16px">5h00</div><div class="exp-metric-l">disponível</div></div>
@@ -322,33 +322,31 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
       <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
       <div class="exp-barra-lbl"><span id="exp-bl-pct">0% ocupado</span><span id="exp-bl-av" style="color:#c4314b"></span></div>
     </div>
+    <!-- hoje -->
     <div class="card card-sm">
       <div class="sec-lbl">Hoje</div>
       <div class="exp-fila" id="exp-hoje"></div>
     </div>
+    <!-- fila -->
     <div class="card card-sm">
       <div class="sec-lbl">Fila de trabalhos</div>
       <div class="exp-fila" id="exp-fila"></div>
       <div class="exp-add-row">
         <input class="exp-nome-input" id="exp-new-nome" placeholder="Nome do trabalho..." />
-        <input id="exp-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
+        <input id="exp-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." />
         <select id="exp-new-tipo">
-          <option value="variavel">Variável</option>
+          <option value="fixo">Fixo diário</option>
+          <option value="recorrente">Recorrente</option>
           <option value="prazo">Prazo</option>
-          <option value="fixo">Recorrente</option>
+          <option value="variavel">Variável</option>
           <option value="emergencia">Emergência</option>
         </select>
         <button class="cbtn go" onclick="expAddItem()" style="padding:5px 12px;font-size:12px">+ Add</button>
       </div>
-      <div class="exp-parcela-row" id="exp-new-parcela-row" style="display:none">
-        <label>Parcelar em</label>
-        <input id="exp-new-parcela" value="40" oninput="expCheckParcela('exp-new-dur','exp-new-parcela-row','exp-new-parcela','exp-new-preview')" />
-        <label>min/dia →</label>
-        <span class="exp-parcela-preview" id="exp-new-preview"></span>
-      </div>
-      <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30 · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
+      <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30 · <strong>4h</strong> = 4h</div>
       <div class="exp-legend">
-        <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Recorrente</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
+        <div class="leg-i"><div class="leg-d" style="background:var(--cat-projeto-acc)"></div>Recorrente</div>
         <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
         <div class="leg-i"><div class="leg-d" style="background:var(--cat-estudo-acc)"></div>Variável</div>
         <div class="leg-i"><div class="leg-d" style="background:#c4314b"></div>Emergência</div>
@@ -358,15 +356,15 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
   <!-- MELHORIAS DRAWER -->
   <div class="per-drawer" id="mel-drawer">
-    <div class="per-drawer-header" style="background:var(--cat-melhoria-bg);border-color:var(--cat-melhoria-acc)">
+    <div class="per-drawer-header" id="mel-drawer-hdr" style="background:var(--cat-melhoria-bg);border-color:var(--cat-melhoria-acc)">
       <span class="per-drawer-title" style="color:var(--cat-melhoria-fg)">Melhorias</span>
-      <button class="per-drawer-close" style="color:var(--cat-melhoria-fg);border-color:var(--cat-melhoria-acc)" onclick="togglePerDrawer('mel',false)">✕ fechar</button>
+      <button class="per-drawer-close" style="color:var(--cat-melhoria-fg);border-color:var(--cat-melhoria-acc)" onclick="toggleDrawer('mel')">✕ fechar</button>
     </div>
     <div class="card card-sm" style="padding:8px 10px">
       <div id="mel-list"></div>
       <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
         <input id="mel-new-nome" type="text" placeholder="Nova melhoria…" style="font-family:var(--ff);font-size:12px;flex:1;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0">
-        <input id="mel-new-dur" type="text" placeholder="60min" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
+        <input id="mel-new-dur" type="text" placeholder="60min" title="Ex: 60, 1h, 1h30" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
         <button onclick="perAddItem('mel')" style="font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-melhoria-acc);background:transparent;color:var(--cat-melhoria-fg);cursor:pointer">+ add</button>
       </div>
     </div>
@@ -374,15 +372,15 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
   <!-- ESTUDOS DRAWER -->
   <div class="per-drawer" id="est-drawer">
-    <div class="per-drawer-header" style="background:var(--cat-estudo-bg);border-color:var(--cat-estudo-acc)">
+    <div class="per-drawer-header" id="est-drawer-hdr" style="background:var(--cat-estudo-bg);border-color:var(--cat-estudo-acc)">
       <span class="per-drawer-title" style="color:var(--cat-estudo-fg)">Estudos</span>
-      <button class="per-drawer-close" style="color:var(--cat-estudo-fg);border-color:var(--cat-estudo-acc)" onclick="togglePerDrawer('est',false)">✕ fechar</button>
+      <button class="per-drawer-close" style="color:var(--cat-estudo-fg);border-color:var(--cat-estudo-acc)" onclick="toggleDrawer('est')">✕ fechar</button>
     </div>
     <div class="card card-sm" style="padding:8px 10px">
       <div id="est-list"></div>
       <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
         <input id="est-new-nome" type="text" placeholder="Novo estudo…" style="font-family:var(--ff);font-size:12px;flex:1;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0">
-        <input id="est-new-dur" type="text" placeholder="40min" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
+        <input id="est-new-dur" type="text" placeholder="40min" title="Ex: 40, 1h, 1h30" style="font-family:var(--ff);font-size:12px;width:48px;border:none;border-bottom:1px solid var(--brd2);background:transparent;color:var(--nf1);outline:none;padding:2px 0;text-align:center">
         <button onclick="perAddItem('est')" style="font-family:var(--ff);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid var(--cat-estudo-acc);background:transparent;color:var(--cat-estudo-fg);cursor:pointer">+ add</button>
       </div>
     </div>
@@ -396,7 +394,7 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
   <!-- STATS -->
   <div class="stat-row">
-    <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">tarefas concluídas</div></div>
+    <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">blocos concluídos</div></div>
     <div class="stat"><div class="stat-n" id="s-mins">0</div><div class="stat-l">minutos hoje</div></div>
     <div class="stat"><div class="stat-n" id="s-streak">0</div><div class="stat-l">dias seguidos</div></div>
   </div>
@@ -465,6 +463,8 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 
 <!-- EXPEDIENTE SCREEN -->
 <div class="expediente-screen" id="expediente-screen">
+
+  <!-- saldo -->
   <div class="card">
     <div class="sec-lbl">Expediente · saldo de 5h</div>
     <div class="exp-saldo-row">
@@ -475,38 +475,39 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
     <div class="exp-barra-wrap"><div class="exp-barra-fill" id="exp2-barra" style="background:var(--cat-trabalho-acc);width:0%"></div></div>
     <div class="exp-barra-lbl"><span id="exp2-bl-pct">0% ocupado</span><span id="exp2-bl-av" style="color:#c4314b"></span></div>
   </div>
+
+  <!-- hoje -->
   <div class="card card-sm">
     <div class="sec-lbl">Hoje</div>
     <div class="exp-fila" id="exp2-hoje"></div>
   </div>
+
+  <!-- fila -->
   <div class="card card-sm">
     <div class="sec-lbl">Fila de trabalhos</div>
     <div class="exp-fila" id="exp2-fila"></div>
     <div class="exp-add-row">
       <input class="exp-nome-input" id="exp2-new-nome" placeholder="Nome do trabalho..." />
-      <input id="exp2-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
+      <input id="exp2-new-dur" placeholder="ex: 40, 1h, 4h" style="width:90px;font-family:var(--ff);font-size:12px;padding:5px 7px;border-radius:var(--r4);border:.5px solid var(--brd2);background:var(--nb2);color:var(--nf1);outline:none" title="Duração: 40, 1h, 1h30, 4h..." />
       <select id="exp2-new-tipo">
-        <option value="variavel">Variável</option>
+        <option value="fixo">Fixo diário</option>
+        <option value="recorrente">Recorrente</option>
         <option value="prazo">Prazo</option>
-        <option value="fixo">Recorrente</option>
+        <option value="variavel">Variável</option>
         <option value="emergencia">Emergência</option>
       </select>
       <button class="cbtn go" onclick="expAddItem2()" style="padding:5px 12px;font-size:12px">+ Add</button>
     </div>
-    <div class="exp-parcela-row" id="exp2-new-parcela-row" style="display:none">
-      <label>Parcelar em</label>
-      <input id="exp2-new-parcela" value="40" oninput="expCheckParcela('exp2-new-dur','exp2-new-parcela-row','exp2-new-parcela','exp2-new-preview')" />
-      <label>min/dia →</label>
-      <span class="exp-parcela-preview" id="exp2-new-preview"></span>
-    </div>
-    <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30 · <strong>4h</strong> = 4h &nbsp;|&nbsp; Duração > parcela: divide automaticamente</div>
+    <div class="exp-add-hint">Duração: <strong>40</strong> = 40min · <strong>1h</strong> = 1h · <strong>1h30</strong> = 1h30 · <strong>4h</strong> = 4h</div>
     <div class="exp-legend">
-      <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Recorrente</div>
+      <div class="leg-i"><div class="leg-d" style="background:var(--cat-trabalho-acc)"></div>Fixo diário</div>
+      <div class="leg-i"><div class="leg-d" style="background:var(--cat-projeto-acc)"></div>Recorrente</div>
       <div class="leg-i"><div class="leg-d" style="background:var(--cat-melhoria-acc)"></div>Prazo</div>
       <div class="leg-i"><div class="leg-d" style="background:var(--cat-estudo-acc)"></div>Variável</div>
       <div class="leg-i"><div class="leg-d" style="background:#c4314b"></div>Emergência</div>
     </div>
   </div>
+
 </div>
 
 </div><!-- /wrap -->
@@ -534,20 +535,12 @@ body{font-family:var(--ff);font-size:14px;color:var(--nf1);background:var(--nb2)
 </div>
 
 <script>
-const VERSION = 'v1.5.8';
+const VERSION = 'v1.5.6';
 
-// ── Períodos e estruturas ──────────────────────────────────────────────────────
 const PERIODS = {
   expediente: { lbl:'Expediente', dur:300, cat:'trabalho' },
   melhorias:  { lbl:'Melhorias',  dur:180, cat:'melhoria' },
   estudos:    { lbl:'Estudos',    dur:null, cat:'estudo'  }
-};
-
-// Cores canônicas por período (independente de --active-*)
-const PERIOD_ACC = {
-  expediente: { acc:'var(--cat-trabalho-acc)', bg:'var(--cat-trabalho-bg)', fg:'var(--cat-trabalho-fg)' },
-  melhorias:  { acc:'var(--cat-melhoria-acc)', bg:'var(--cat-melhoria-bg)', fg:'var(--cat-melhoria-fg)' },
-  estudos:    { acc:'var(--cat-estudo-acc)',   bg:'var(--cat-estudo-bg)',   fg:'var(--cat-estudo-fg)'   },
 };
 
 const DEFAULT_SCHED = {
@@ -623,10 +616,15 @@ const CATS = {
   leitura: {bg:'var(--cat-leitura-bg)', fg:'var(--cat-leitura-fg)', acc:'var(--cat-leitura-acc)',lbl:'Leitura'},
 };
 
+const PERIOD_COLORS = {
+  expediente: {bg:'var(--cat-trabalho-bg)',fg:'var(--cat-trabalho-fg)'},
+  melhorias:  {bg:'var(--cat-melhoria-bg)',fg:'var(--cat-melhoria-fg)'},
+  estudos:    {bg:'var(--cat-estudo-bg)',  fg:'var(--cat-estudo-fg)'},
+};
+
 const DAY_FULL  = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 const DAY_SHORT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
-// ── Estado ────────────────────────────────────────────────────────────────────
 let state = {
   viewDow: new Date().getDay(),
   doneTasks: {},
@@ -635,20 +633,14 @@ let state = {
   sched: JSON.parse(JSON.stringify(DEFAULT_SCHED)),
   soundOn: false,
   sessionMins: {},
-  timerMins: {},
-  activePeriod: 'expediente'   // período com foco ativo
+  timerMins: {}
 };
 
 let blockMins=40, timerLeft=2400, timerTotal=2400;
 let timerRunning=false, timerInterval=null, blocksCompleted=0;
-// minutos consumidos no período ativo pela sessão do timer (zera ao trocar de período)
-let periodTimerMins = { expediente:0, melhorias:0, estudos:0 };
-// item atualmente selecionado para o timer (id do item exp ou chave dow_i para tarefas)
-let activeTimerItem = null;
 let deferredInstall=null;
 let audioCtx=null;
 
-// ── Persistência ──────────────────────────────────────────────────────────────
 function loadState(){
   try{
     const s=localStorage.getItem('agenda_pwa_v2');
@@ -656,71 +648,71 @@ function loadState(){
       const loaded=JSON.parse(s);
       state={...state,...loaded};
       if(!loaded.sched) state.sched=JSON.parse(JSON.stringify(DEFAULT_SCHED));
-      if(!state.activePeriod) state.activePeriod='expediente';
     }
   }catch(e){}
 }
 function saveState(){ try{localStorage.setItem('agenda_pwa_v2',JSON.stringify(state));}catch(e){} }
 
-// ── Áudio ─────────────────────────────────────────────────────────────────────
 function getCtx(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+
 function soundBloco(){
   if(!state.soundOn) return;
-  const c=getCtx(); const o=c.createOscillator(),g=c.createGain();
-  o.type='sine'; o.frequency.value=432; o.connect(g); g.connect(c.destination);
-  g.gain.setValueAtTime(0,c.currentTime); g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.15);
-  g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.45); g.gain.linearRampToValueAtTime(0,c.currentTime+0.7);
+  const c=getCtx();
+  const o=c.createOscillator(),g=c.createGain();
+  o.type='sine'; o.frequency.value=432;
+  o.connect(g); g.connect(c.destination);
+  g.gain.setValueAtTime(0,c.currentTime);
+  g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.15);
+  g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.45);
+  g.gain.linearRampToValueAtTime(0,c.currentTime+0.7);
   o.start(c.currentTime); o.stop(c.currentTime+0.72);
 }
 function soundMelhorias(){
   if(!state.soundOn) return;
   const c=getCtx();
-  [0,0.35].forEach(delay=>{ const o=c.createOscillator(),g=c.createGain(); o.type='sine'; o.frequency.value=528;
-    o.connect(g); g.connect(c.destination); g.gain.setValueAtTime(0,c.currentTime+delay);
-    g.gain.linearRampToValueAtTime(0.14,c.currentTime+delay+0.08); g.gain.linearRampToValueAtTime(0,c.currentTime+delay+0.28);
-    o.start(c.currentTime+delay); o.stop(c.currentTime+delay+0.3); });
+  [0,0.35].forEach(delay=>{
+    const o=c.createOscillator(),g=c.createGain();
+    o.type='sine'; o.frequency.value=528;
+    o.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(0,c.currentTime+delay);
+    g.gain.linearRampToValueAtTime(0.14,c.currentTime+delay+0.08);
+    g.gain.linearRampToValueAtTime(0,c.currentTime+delay+0.28);
+    o.start(c.currentTime+delay); o.stop(c.currentTime+delay+0.3);
+  });
 }
 function soundExpediente(){
   if(!state.soundOn) return;
   const c=getCtx();
-  [[396,0],[528,0.45]].forEach(([freq,delay])=>{ const o=c.createOscillator(),g=c.createGain(); o.type='sine'; o.frequency.value=freq;
-    o.connect(g); g.connect(c.destination); g.gain.setValueAtTime(0,c.currentTime+delay);
-    g.gain.linearRampToValueAtTime(0.16,c.currentTime+delay+0.05); g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+delay+0.95);
-    o.start(c.currentTime+delay); o.stop(c.currentTime+delay+1.0); });
+  [[396,0],[528,0.45]].forEach(([freq,delay])=>{
+    const o=c.createOscillator(),g=c.createGain();
+    o.type='sine'; o.frequency.value=freq;
+    o.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(0,c.currentTime+delay);
+    g.gain.linearRampToValueAtTime(0.16,c.currentTime+delay+0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+delay+0.95);
+    o.start(c.currentTime+delay); o.stop(c.currentTime+delay+1.0);
+  });
 }
+
 function toggleSound(){
   state.soundOn=!state.soundOn;
   document.getElementById('sound-btn').textContent=state.soundOn?'🔔':'🔕';
-  if(state.soundOn) soundBloco();
+  if(state.soundOn){ soundBloco(); }
   saveState();
 }
 
-// ── Período ativo ─────────────────────────────────────────────────────────────
-function setActivePeriod(p){
-  if(state.activePeriod===p) return;
-  state.activePeriod=p;
-  // para o timer ao trocar de período para não contabilizar no período errado
-  if(timerRunning){ clearInterval(timerInterval); timerRunning=false; document.getElementById('play-btn').textContent='▶ Iniciar'; }
-  saveState(); applyPeriodColors(); renderTasks(); updateDiscs();
-}
-
-function applyPeriodColors(){
-  const p = state.activePeriod || 'expediente';
-  const c = PERIOD_ACC[p] || PERIOD_ACC.expediente;
-  const r = document.documentElement;
-  r.style.setProperty('--active-acc', c.acc);
-  r.style.setProperty('--active-bg',  c.bg);
-  r.style.setProperty('--active-fg',  c.fg);
+function applyColors(dow){
+  const tasks=state.sched[dow]||[];
+  const firstStudy=tasks.find(t=>t.period==='estudos')||tasks[0];
+  const c=firstStudy?CATS[firstStudy.cat]:CATS.trabalho;
+  const r=document.documentElement;
+  r.style.setProperty('--active-acc',c.acc);
+  r.style.setProperty('--active-bg',c.bg);
+  r.style.setProperty('--active-fg',c.fg);
   const pb=document.getElementById('play-btn');
-  if(pb){ pb.style.background=''; pb.style.borderColor=''; } // deixa o CSS var cuidar
-  // label no cabeçalho das engrenagens
-  const lbl=document.getElementById('gear-period-lbl');
-  if(lbl){ lbl.textContent=PERIODS[p]?.lbl||p; }
-  // cor do label
-  if(lbl){ lbl.style.color=c.fg; }
+  if(pb){pb.style.background=c.acc;pb.style.borderColor=c.acc;}
 }
 
-// ── Geometria SVG ─────────────────────────────────────────────────────────────
 function ap(cx,cy,r,deg){
   if(deg>=360) return`M${cx},${cy-r} A${r},${r},0,1,1,${cx-.001},${cy-r} Z`;
   if(deg<=0) return'';
@@ -730,116 +722,102 @@ function ap(cx,cy,r,deg){
 }
 function getAcc(){ return getComputedStyle(document.documentElement).getPropertyValue('--active-acc').trim()||'#185FA5'; }
 
-// ── updateDiscs ───────────────────────────────────────────────────────────────
-// Engrenagem Bloco = saldo do PERÍODO ATIVO (total − consumido pelo timer nesta sessão)
-// Engrenagem Foco  = progresso geral do dia
 function updateDiscs(){
   const acc=getAcc();
-  const p=state.activePeriod||'expediente';
-  const dow=state.viewDow;
-  const tasks=state.sched[dow]||[];
-
-  // ── saldo do período ativo para a engrenagem Bloco ────────────────────────
-  let periodTotal=0, periodConsumed=0;
-  if(p==='expediente'){
-    const hoje=state.expHoje||[];
-    periodTotal=hoje.reduce((a,x)=>a+x.dur,0);
-    periodConsumed=(periodTimerMins.expediente||0);
-  } else {
-    const grp=tasks.filter(t=>t.period===p);
-    periodTotal=grp.reduce((a,t)=>a+(t.dur||40),0);
-    periodConsumed=(periodTimerMins[p]||0);
-  }
-  // progresso parcial se timer rodando no período ativo
-  const partialNow=timerRunning?(blockMins-timerLeft/60):0;
-  const periodUsed=Math.min(periodConsumed+partialNow, periodTotal);
-  const periodSaldo=Math.max(periodTotal-periodUsed,0);
-  const bPct=periodTotal>0?(periodSaldo/periodTotal):1;
-
-  // disco Bloco
+  const bPct=timerLeft/timerTotal;
   document.getElementById('arc-bloco').setAttribute('d',ap(34,34,31,bPct*360));
   document.getElementById('arc-bloco').setAttribute('fill',acc);
-  // label dentro do Bloco: saldo em horas/min
-  const lblBloco=document.getElementById('lbl-bloco');
-  const unitBloco=document.getElementById('lbl-bloco-unit');
-  if(periodTotal>0){
-    if(periodSaldo>=60){ lblBloco.textContent=(periodSaldo/60).toFixed(1).replace('.0',''); unitBloco.textContent='h'; }
-    else { lblBloco.textContent=Math.ceil(periodSaldo); unitBloco.textContent='min'; }
-  } else { lblBloco.textContent='—'; unitBloco.textContent=''; }
-  document.getElementById('bot-bloco').textContent=periodTotal>0?expFmtMin(periodSaldo)+' restante':'—';
-
-  // timer SVG (espelha o timer, não o saldo do período)
-  const tPct=timerLeft/timerTotal;
-  document.getElementById('tarc').setAttribute('d',ap(50,50,46,tPct*360));
+  document.getElementById('tarc').setAttribute('d',ap(50,50,46,bPct*360));
   document.getElementById('tarc').setAttribute('fill',acc);
+  document.getElementById('lbl-bloco').textContent=Math.ceil(timerLeft/60);
   document.getElementById('svg-m').textContent=Math.ceil(timerLeft/60);
 
-  // ── Foco do dia (todas as fontes) ─────────────────────────────────────────
-  const nonExpTasks=tasks.filter(t=>t.period!=='expediente');
-  const nonExpTotal=nonExpTasks.reduce((a,t)=>a+(t.dur||40),0);
-  const nonExpDone=nonExpTasks.reduce((a,t)=>{
-    const gi=tasks.indexOf(t);
-    return a+(state.doneTasks[dow+'_'+gi]?(t.dur||40):0);
+  const dow=state.viewDow;
+  const tasks=state.sched[dow]||[];
+  const focusTasks=tasks; // inclui expediente
+  const focusMins=focusTasks.reduce((a,t)=>a+(t.dur||40),0);
+  const doneMins=focusTasks.reduce((a,t,i)=>{
+    return a+(state.doneTasks[dow+'_'+i]?(t.dur||40):0);
   },0);
-  const expHoje=state.expHoje||[];
-  const expTotal=expHoje.reduce((a,x)=>a+x.dur,0);
-  const expDone=expHoje.filter(x=>x.concluido).reduce((a,x)=>a+x.dur,0);
-  const focusMins=nonExpTotal+expTotal;
-  const doneMins=nonExpDone+expDone;
+  // foco = maior entre minutos de timers completos e minutos de tarefas marcadas
+  // (max evita double-count quando as duas fontes se sobrepõem)
   const todayKey=new Date().toISOString().slice(0,10);
   const accumulated=(state.timerMins&&state.timerMins[todayKey])||0;
-  const focusProgress=Math.max(accumulated,doneMins);
-  const fPct=focusMins>0?Math.min((focusProgress+partialNow)/focusMins,1):0;
+  const focusProgress=Math.max(accumulated, doneMins);
+  // soma progresso parcial do timer em andamento
+  const partialMins=timerRunning?(blockMins-timerLeft/60):0;
+  const fPct=focusMins>0?Math.min((focusProgress+partialMins)/focusMins,1):0;
   document.getElementById('arc-foco').setAttribute('d',ap(55,55,51,fPct*360));
-  const nonExpRem=nonExpTasks.filter(t=>!state.doneTasks[dow+'_'+tasks.indexOf(t)]).length;
-  const expRem=expHoje.filter(x=>!x.concluido).length;
-  const remaining=nonExpRem+expRem;
-  document.getElementById('lbl-foco').textContent=remaining>0?remaining:'✓';
-  document.getElementById('bot-foco').textContent=focusMins>0?expFmtMin(doneMins)+' / '+expFmtMin(focusMins):'—';
-  document.getElementById('ratio1').textContent=periodTotal>0?expFmtMin(Math.round(periodSaldo)):'—';
-  document.getElementById('ratio2').textContent=focusMins>0?Math.round(fPct*100)+'%':'—';
-  document.getElementById('timer-lbl').textContent=fmtMins(blockMins);
+  const remaining=focusTasks.filter((_,i)=>!state.doneTasks[dow+'_'+i]).length;
+  document.getElementById('lbl-foco').textContent=remaining;
+  document.getElementById('bot-foco').textContent=focusMins+' min';
+  document.getElementById('leg-n').textContent=focusTasks.length;
+  document.getElementById('ratio1').textContent='1/'+Math.max(focusTasks.length,1);
+  document.getElementById('ratio2').textContent='1/'+Math.round(1440/Math.max(focusMins,1));
+  document.getElementById('bot-bloco').textContent=fmtMins(blockMins)+' / bloco';
+  document.getElementById('timer-lbl').textContent=fmtMins(blockMins)+' / bloco';
 
-  // ── Dia completo ──────────────────────────────────────────────────────────
   const now=new Date();
   const el=now.getHours()*60+now.getMinutes();
   document.getElementById('arc-dia').setAttribute('d',ap(80,80,75,(el/1440)*360));
   document.getElementById('lbl-dia').textContent=now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
 }
 
-// ── Seleção de item para o timer ──────────────────────────────────────────────
-// Clicar no card (fora do checkbox) seleciona o item e carrega sua duração no timer
-// O checkbox continua sendo o único caminho para marcar concluído
-function selecionarItemTimer(itemId, dur, nome, period){
-  // garante que o período correto está ativo
-  if(state.activePeriod !== period) setActivePeriod(period);
-  activeTimerItem = itemId;
-  // carrega duração no timer sem iniciar
-  blockMins = dur; timerTotal = dur*60;
-  if(!timerRunning) timerLeft = dur*60;
-  // atualiza presets visuais — nenhum fica "sel" pois é duração livre do item
-  [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===dur?' sel':''); });
-  document.getElementById('timer-lbl').textContent = fmtMins(dur);
-  document.getElementById('t-task').textContent = nome;
-  updateTimerDisplay(); updateDiscs(); renderTasks();
-}
-
-
 function fmtMins(m){
   return m>=60?(m%60===0?(m/60)+'h':(Math.floor(m/60)+'h'+String(m%60).padStart(2,'0'))):m+' min';
 }
-function fmtTimer(secs){
-  if(secs>=3600){ const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60; return h+'h '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
-  const mm=Math.floor(secs/60),ss=secs%60; return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
-}
-function updateTimerDisplay(){ document.getElementById('t-display').textContent=fmtTimer(timerLeft); }
-
 function setMins(m){
   blockMins=m; timerTotal=m*60; timerLeft=m*60;
-  if(timerRunning){ clearInterval(timerInterval); timerRunning=false; }
+  if(timerRunning){clearInterval(timerInterval);timerRunning=false;}
   document.getElementById('play-btn').textContent='▶ Iniciar';
+  const custom=state.customMins||90;
   [40,60,25,10].forEach(x=>{ document.getElementById('p'+x).className='pbtn'+(x===m?' sel':''); });
+  const wrap=document.getElementById('p-custom-wrap');
+  if(wrap) wrap.className='pbtn'+(m===custom?' sel':'');
   updateTimerDisplay(); updateDiscs();
+}
+
+function focusCustomInput(){
+  const inp=document.getElementById('p-custom-input');
+  if(inp){ inp.focus(); inp.select(); }
+}
+
+function initCustomPill(){
+  const inp=document.getElementById('p-custom-input');
+  if(!inp) return;
+  const cur=state.customMins||90;
+  inp.value=fmtMins(cur);
+  updateCustomPillSel(cur);
+  inp.addEventListener('focus',()=>{ inp.select(); });
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      const val=parseDurStr(inp.value);
+      if(val&&val>0){
+        state.customMins=val;
+        inp.value=fmtMins(val);
+        saveState();
+        setMins(val);
+      } else {
+        inp.value=fmtMins(state.customMins||90);
+      }
+      inp.blur();
+    }
+    if(e.key==='Escape'){ inp.value=fmtMins(state.customMins||90); inp.blur(); }
+  });
+  inp.addEventListener('blur',()=>{
+    // normaliza display mas não dispara timer
+    const val=parseDurStr(inp.value);
+    if(val&&val>0){ state.customMins=val; inp.value=fmtMins(val); saveState(); }
+    else inp.value=fmtMins(state.customMins||90);
+    updateCustomPillSel(state.customMins||90);
+  });
+}
+
+function updateCustomPillSel(m){
+  const wrap=document.getElementById('p-custom-wrap');
+  const custom=state.customMins||90;
+  if(wrap) wrap.className='pbtn'+(m===custom&&blockMins===custom?' sel':'');
 }
 
 function toggleTimer(){
@@ -847,7 +825,9 @@ function toggleTimer(){
     clearInterval(timerInterval); timerRunning=false;
     document.getElementById('play-btn').textContent='▶ Continuar';
   } else {
-    if(timerLeft<=0){ timerLeft=timerTotal; }
+    // não sobrescreve o preset com dur de tarefas longas (ex: Expediente=300min)
+    // o timer reflete o preset escolhido pelo usuário, não a duração da tarefa
+    if(timerLeft<=0){timerLeft=timerTotal;}
     timerRunning=true;
     document.getElementById('play-btn').textContent='⏸ Pausar';
     document.getElementById('t-task').textContent=nextTask();
@@ -866,47 +846,62 @@ function tick(){
   timerLeft--;
   updateTimerDisplay(); updateDiscs();
   if(timerLeft<=0){
-    // ── PARAR — não reiniciar automaticamente ────────────────────────────────
     blocksCompleted++;
     clearInterval(timerInterval); timerRunning=false;
-    timerLeft=0; // mantém em 00:00, não reseta
+    timerLeft=timerTotal;
     document.getElementById('play-btn').textContent='▶ Próximo';
     document.getElementById('t-task').textContent='✓ Bloco '+blocksCompleted+' concluído!';
-
-    // acumula minutos no período ativo e no dia
-    const p=state.activePeriod||'expediente';
-    periodTimerMins[p]=(periodTimerMins[p]||0)+blockMins;
+    const dow=state.viewDow;
     const key=new Date().toISOString().slice(0,10);
-    state.sessionMins[key]=(state.sessionMins[key]||0)+blockMins;
+    const sm=state.sessionMins[key]||0;
+    state.sessionMins[key]=sm+blockMins;
+    // acumula no rastreador de progresso do foco do dia
     if(!state.timerMins) state.timerMins={};
     state.timerMins[key]=(state.timerMins[key]||0)+blockMins;
     saveState();
-
-    // som pelo período
-    if(p==='expediente') soundExpediente();
-    else if(p==='melhorias') soundMelhorias();
-    else soundBloco();
-
-    try{ if(navigator.vibrate) navigator.vibrate([150,80,150]); }catch(e){}
-    updateDiscs();
+    detectPeriodEnd();
+    try{if(navigator.vibrate)navigator.vibrate([150,80,150]);}catch(e){}
   }
 }
 
-// "▶ Próximo" reseta para próximo bloco quando clicado após conclusão
-// toggleTimer já trata: se timerLeft===0 reseta para timerTotal
+function detectPeriodEnd(){
+  const dow=state.viewDow;
+  const tasks=state.sched[dow]||[];
+  const done=tasks.filter((_,i)=>state.doneTasks[dow+'_'+i]);
+  const lastDone=done[done.length-1];
+  if(!lastDone) return;
+  if(lastDone.period==='expediente') soundExpediente();
+  else if(lastDone.period==='melhorias') soundMelhorias();
+  else soundBloco();
+}
+
+function fmtTimer(secs){
+  if(secs>=3600){
+    const h=Math.floor(secs/3600);
+    const m=Math.floor((secs%3600)/60);
+    const s=secs%60;
+    return h+'h '+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  const mm=Math.floor(secs/60),ss=secs%60;
+  return String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+}
+function updateTimerDisplay(){
+  document.getElementById('t-display').textContent=fmtTimer(timerLeft);
+}
 
 function nextTask(){
-  const dow=state.viewDow; const tasks=state.sched[dow]||[];
+  const dow=state.viewDow;
+  const tasks=state.sched[dow]||[];
   const f=tasks.find((_,i)=>!state.doneTasks[dow+'_'+i]);
   return f?f.t:'Todas as tarefas concluídas';
 }
 
-// ── Render principal ──────────────────────────────────────────────────────────
 function render(){
   const dow=state.viewDow;
-  applyPeriodColors();
+  applyColors(dow);
   document.getElementById('hd-day').innerHTML=DAY_FULL[dow]+'<span class="ver-badge">'+VERSION+'</span>';
-  const now=new Date(); const diff=(dow-now.getDay()+7)%7;
+  const now=new Date();
+  const diff=(dow-now.getDay()+7)%7;
   const d=new Date(now); d.setDate(now.getDate()+diff);
   document.getElementById('hd-date').textContent=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
   renderTasks(); renderWeek(); renderStats(); updateDiscs();
@@ -916,74 +911,31 @@ function render(){
 }
 
 function renderTasks(){
-  const dow=state.viewDow; const tasks=state.sched[dow]||[];
-  let html=''; let lastPeriod=null;
-
+  const dow=state.viewDow;
+  const tasks=state.sched[dow]||[];
+  let html='';
+  let lastPeriod=null;
   tasks.forEach((tk,i)=>{
     if(tk.period!==lastPeriod){
       lastPeriod=tk.period;
-      const pc=PERIOD_ACC[tk.period]||PERIOD_ACC.estudos;
+      const pc=PERIOD_COLORS[tk.period]||{bg:'var(--nb3)',fg:'var(--nf3)'};
       const pl=PERIODS[tk.period]?.lbl||tk.period;
-      const isActive=state.activePeriod===tk.period;
-
-      // duração do grupo no header
-      let pdur='';
-      if(tk.period==='expediente'){
-        const tot=(state.expHoje||[]).reduce((a,x)=>a+x.dur,0);
-        const cons=periodTimerMins.expediente||0;
-        pdur=tot>0?(expFmtMin(Math.max(tot-cons,0))+' restante'):' — alocar na fila';
-      } else {
-        const grp=tasks.filter(t=>t.period===tk.period);
-        const tot=grp.reduce((a,t)=>a+(t.dur||40),0);
-        const cons=periodTimerMins[tk.period]||0;
-        pdur=expFmtMin(Math.max(tot-cons,0))+' restante';
-      }
-
-      const _dk=tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':'est';
-      const _fn=_dk==='exp'?'toggleExpDrawer(true)':('togglePerDrawer(\''+_dk+'\',true)');
-      const openBtn='<button onclick="event.stopPropagation();'+_fn+'" style="font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid '+pc.fg+';background:transparent;color:'+pc.fg+';cursor:pointer;opacity:.8">↗ abrir</button>';
-
-      html+='<div class="period-hdr'+(isActive?' active-period':'')+'" onclick="setActivePeriod(\''+tk.period+'\')" title="Clique para focar neste período">'
-           +'<span style="font-size:10px;font-weight:600;color:'+pc.fg+';background:'+pc.bg+';padding:2px 8px;border-radius:20px">'+pl+'</span>'
-           +(isActive?'<span style="font-size:9px;color:'+pc.fg+';opacity:.7">● foco</span>':'')
-           +'<span style="font-size:10px;color:var(--nf3);flex:1">'+pdur+'</span>'
-           +openBtn+'</div>';
-
-      // expediente: mostra itens de expHoje
-      if(tk.period==='expediente'){
-        const hoje=state.expHoje||[];
-        if(hoje.length===0){
-          html+='<div style="font-size:12px;color:var(--nf3);padding:8px 10px;margin-bottom:4px">Nenhum trabalho alocado — use ↗ abrir para despachar da fila</div>';
-        } else {
-          hoje.forEach(item=>{
-            const done=!!item.concluido;
-            const isTimerActive = activeTimerItem === item.id;
-            const tipo=item.tipo||'variavel';
-            const durBg=tipo==='prazo'?'var(--cat-melhoria-bg)':tipo==='emergencia'?'#fde7ec':tipo==='fixo'?'var(--cat-trabalho-bg)':'var(--cat-estudo-bg)';
-            const durFg=tipo==='prazo'?'var(--cat-melhoria-fg)':tipo==='emergencia'?'#c4314b':tipo==='fixo'?'var(--cat-trabalho-fg)':'var(--cat-estudo-fg)';
-            // card: clique seleciona para timer | checkbox: clique marca concluído
-            html+='<div class="task-row'+(done?' done':'')+(isTimerActive?' timer-active':'')+'" onclick="selecionarItemTimer(\''+item.id+'\','+item.dur+',\''+item.nome.replace(/'/g,"\\'")+'\',\'expediente\')">'
-                 +'<div class="tcheck" onclick="event.stopPropagation();expToggleConcluido(\''+item.id+'\');renderTasks();updateDiscs()">'+(done?'✓':'')+'</div>'
-                 +'<div class="tslot">'+expFmtMin(item.dur)+'</div>'
-                 +'<div class="tname">'+item.nome+'</div>'
-                 +'<span class="pill" style="background:'+durBg+';color:'+durFg+'">'+tipo+'</span>'
-                 +'</div>';
-          });
-        }
-      }
+      const pdur=tk.period==='expediente'?'5h':tk.period==='melhorias'?'3× 1h':'40 min / bloco';
+      const _drawerKey = tk.period==='expediente'?'exp':tk.period==='melhorias'?'mel':tk.period==='estudos'?'est':null;
+      const expLink=_drawerKey
+        ?`<button id="drawer-btn-${_drawerKey}" onclick="event.stopPropagation();toggleDrawer('${_drawerKey}')" style="margin-left:auto;font-family:var(--ff);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:.5px solid ${pc.fg};background:transparent;color:${pc.fg};cursor:pointer;opacity:.8">↗ abrir</button>`
+        :'';
+      html+=`<div class="period-header" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--nb3);border-radius:var(--r4);margin-bottom:2px"><span style="font-size:10px;font-weight:600;color:${pc.fg};background:${pc.bg};padding:2px 8px;border-radius:20px">${pl}</span><span style="font-size:10px;color:var(--nf3)">${pdur}</span>${expLink}</div>`;
     }
-    // pula a entrada Diário — expediente já renderizado via expHoje
-    if(tk.period==='expediente') return;
-
-    const key=dow+'_'+i; const done=!!state.doneTasks[key];
+    const key=dow+'_'+i;
+    const done=!!state.doneTasks[key];
     const c=CATS[tk.cat]||CATS.estudo;
-    const isTimerActive = activeTimerItem === key;
-    html+='<div class="task-row'+(done?' done':'')+(isTimerActive?' timer-active':'')+'" onclick="selecionarItemTimer(\''+key+'\','+tk.dur+',\''+tk.t.replace(/'/g,"\\'")+'\',\''+tk.period+'\')">'
-         +'<div class="tcheck" onclick="event.stopPropagation();toggleTask('+dow+','+i+')">'+(done?'✓':'')+'</div>'
-         +'<div class="tslot">'+tk.s+'</div>'
-         +'<div class="tname">'+tk.t+'</div>'
-         +'<span class="pill" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</span>'
-         +'</div>';
+    html+=`<div class="task-row${done?' done':''}" onclick="toggleTask(${dow},${i})">
+      <div class="tcheck">${done?'✓':''}</div>
+      <div class="tslot">${tk.s}</div>
+      <div class="tname">${tk.t}</div>
+      <span class="pill" style="background:${c.bg};color:${c.fg}">${c.lbl}</span>
+    </div>`;
   });
   document.getElementById('today-tasks').innerHTML=html;
 }
@@ -992,17 +944,21 @@ function toggleTask(dow,i){
   const key=dow+'_'+i;
   state.doneTasks[key]=!state.doneTasks[key];
   if(state.doneTasks[key]){
-    const tasks=state.sched[dow]||[]; const tk=tasks[i]; const period=tk?.period||'estudos';
+    const tasks=state.sched[dow]||[];
+    const tk=tasks[i];
+    const period=tk?.period||'estudos';
     const allInPeriod=tasks.filter(t=>t.period===period);
     const doneInPeriod=allInPeriod.filter((_,pi)=>{
-      const globalIdx=tasks.findIndex((t)=>t===allInPeriod[pi]);
+      const globalIdx=tasks.findIndex((t,gi)=>t===allInPeriod[pi]);
       return state.doneTasks[dow+'_'+globalIdx];
     });
     if(doneInPeriod.length===allInPeriod.length){
       if(period==='expediente') soundExpediente();
       else if(period==='melhorias') soundMelhorias();
       else soundBloco();
-    } else soundBloco();
+    } else {
+      soundBloco();
+    }
   }
   const todayKey=new Date().toISOString().slice(0,10);
   const anyDone=Object.keys(state.doneTasks).some(k=>k.startsWith(dow+'_')&&state.doneTasks[k]);
@@ -1011,14 +967,20 @@ function toggleTask(dow,i){
 }
 
 function renderWeek(){
-  const today=new Date(); const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  const today=new Date();
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
   document.getElementById('week-strip').innerHTML=[1,2,3,4,5,6,0].map(dow=>{
-    const off=dow===0?6:dow-1; const d=new Date(mon); d.setDate(mon.getDate()+off);
+    const off=dow===0?6:dow-1;
+    const d=new Date(mon); d.setDate(mon.getDate()+off);
     const key=d.toISOString().slice(0,10);
-    const isToday=d.toDateString()===today.toDateString(); const isView=dow===state.viewDow;
+    const isToday=d.toDateString()===today.toDateString();
+    const isView=dow===state.viewDow;
     const hasDone=state.doneDays.includes(key);
-    return'<div class="wday'+((isToday||isView)?' active-day':'')+(hasDone?' has-done':'')+'" onclick="switchDay('+dow+')">'
-          +'<div class="wday-n">'+DAY_SHORT[dow]+'</div><div class="wday-d">'+d.getDate()+'</div><div class="wday-dot"></div></div>';
+    return`<div class="wday${(isToday||isView)?' active-day':''}${hasDone?' has-done':''}" onclick="switchDay(${dow})">
+      <div class="wday-n">${DAY_SHORT[dow]}</div>
+      <div class="wday-d">${d.getDate()}</div>
+      <div class="wday-dot"></div>
+    </div>`;
   }).join('');
 }
 
@@ -1027,33 +989,48 @@ function prevDay(){ state.viewDow=(state.viewDow+6)%7; render(); renderConfig();
 function nextDay(){ state.viewDow=(state.viewDow+1)%7; render(); renderConfig(); }
 
 function renderStats(){
-  const dow=state.viewDow; const tasks=state.sched[dow]||[];
+  const dow=state.viewDow;
+  const tasks=state.sched[dow]||[];
   const done=tasks.filter((_,i)=>state.doneTasks[dow+'_'+i]).length;
   document.getElementById('s-done').textContent=done;
   const todayKey=new Date().toISOString().slice(0,10);
-  document.getElementById('s-mins').textContent=state.sessionMins[todayKey]||0;
+  document.getElementById('s-mins').textContent=state.sessionMins[todayKey]||done*blockMins;
   let streak=0,d=new Date();
   for(let i=0;i<365;i++){
-    if(state.doneDays.includes(d.toISOString().slice(0,10))){ streak++; d.setDate(d.getDate()-1); } else break;
+    if(state.doneDays.includes(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1);}
+    else break;
   }
   document.getElementById('s-streak').textContent=streak;
 }
 
-// ── Config ────────────────────────────────────────────────────────────────────
+// CONFIG
 function renderConfig(){
-  const dow=state.viewDow; document.getElementById('cfg-day-lbl').textContent=DAY_FULL[dow];
-  const tasks=state.sched[dow]||[]; let html=''; let lastPeriod=null;
+  const dow=state.viewDow;
+  document.getElementById('cfg-day-lbl').textContent=DAY_FULL[dow];
+  const tasks=state.sched[dow]||[];
+  let html='';
+  let lastPeriod=null;
   tasks.forEach((tk,i)=>{
-    if(tk.period!==lastPeriod){ lastPeriod=tk.period; const pl=PERIODS[tk.period]?.lbl||tk.period;
-      html+='<div style="font-size:10px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px">'+pl+'</div>'; }
+    if(tk.period!==lastPeriod){
+      lastPeriod=tk.period;
+      const pl=PERIODS[tk.period]?.lbl||tk.period;
+      html+=`<div style="font-size:10px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px">${pl}</div>`;
+    }
     const c=CATS[tk.cat]||CATS.estudo;
-    html+='<div class="config-task-row"><span class="pill" style="background:'+c.bg+';color:'+c.fg+';flex-shrink:0">'+c.lbl+'</span>'
-         +'<input class="config-input" value="'+tk.t+'" onchange="editTask('+dow+','+i+',this.value)">'
-         +'<button class="del-btn" onclick="deleteTask('+dow+','+i+')">×</button></div>';
+    html+=`<div class="config-task-row">
+      <span class="pill" style="background:${c.bg};color:${c.fg};flex-shrink:0">${c.lbl}</span>
+      <input class="config-input" value="${tk.t}" onchange="editTask(${dow},${i},this.value)">
+      <button class="del-btn" onclick="deleteTask(${dow},${i})">×</button>
+    </div>`;
   });
   document.getElementById('cfg-task-list').innerHTML=html;
 }
-function editTask(dow,i,val){ state.sched[dow][i].t=val; saveState(); render(); }
+
+function editTask(dow,i,val){
+  state.sched[dow][i].t=val;
+  saveState(); render();
+}
+
 function deleteTask(dow,i){
   state.sched[dow].splice(i,1);
   const newDone={};
@@ -1063,70 +1040,115 @@ function deleteTask(dow,i){
     if(d===dow&&idx>i) newDone[d+'_'+(idx-1)]=state.doneTasks[k];
     else newDone[k]=state.doneTasks[k];
   });
-  state.doneTasks=newDone; saveState(); render(); renderConfig();
+  state.doneTasks=newDone;
+  saveState(); render(); renderConfig();
 }
+
 function addTask(){
-  const name=document.getElementById('new-task-name').value.trim(); if(!name) return;
+  const name=document.getElementById('new-task-name').value.trim();
+  if(!name) return;
   const cat=document.getElementById('new-task-cat').value;
   const dur=document.getElementById('new-task-dur').value;
   const dow=state.viewDow;
   const period=cat==='trabalho'?'expediente':cat==='melhoria'?'melhorias':'estudos';
-  state.sched[dow].push({s:dur==='diario'?'Diário':dur+'min',t:name,cat,dur:dur==='diario'?300:parseInt(dur),period});
-  document.getElementById('new-task-name').value=''; saveState(); render(); renderConfig();
+  state.sched[dow].push({s:dur==='diario'?'Diário':dur+'min', t:name, cat, dur:dur==='diario'?300:parseInt(dur), period});
+  document.getElementById('new-task-name').value='';
+  saveState(); render(); renderConfig();
 }
 
-// ── Relatório ─────────────────────────────────────────────────────────────────
-let reportView='done';
+// REPORT
+let reportView = 'done';
+
 function setReportView(v){
-  reportView=v;
+  reportView = v;
   document.getElementById('rep-tab-done').className='tab-btn'+(v==='done'?' active':'');
   document.getElementById('rep-tab-plan').className='tab-btn'+(v==='plan'?' active':'');
   renderReport();
 }
-function renderReport(){ if(reportView==='plan') renderPlanned(); else renderDone(); }
+
+function renderReport(){
+  if(reportView==='plan') renderPlanned();
+  else renderDone();
+}
+
 function renderDone(){
-  const today=new Date(); const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
-  let html=''; const catTotals={};
+  const today=new Date();
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  let html='';
+  const catTotals={};
   [1,2,3,4,5,6,0].forEach(dow=>{
-    const tasks=state.sched[dow]||[]; const doneTasks=tasks.filter((_,i)=>state.doneTasks[dow+'_'+i]);
+    const tasks=state.sched[dow]||[];
+    const doneTasks=tasks.filter((_,i)=>state.doneTasks[dow+'_'+i]);
     if(doneTasks.length===0) return;
-    const off=dow===0?6:dow-1; const d=new Date(mon); d.setDate(mon.getDate()+off);
-    html+='<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:600;color:var(--nf2);margin-bottom:6px;padding-bottom:4px;border-bottom:.5px solid var(--brd)">'+DAY_FULL[dow]+' — '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+'</div>';
-    html+='<table class="report-table"><tr><th>Tarefa</th><th>Categoria</th><th>Tempo</th></tr>';
-    doneTasks.forEach(tk=>{ const c=CATS[tk.cat]||CATS.estudo; const mins=tk.dur||40; catTotals[c.lbl]=(catTotals[c.lbl]||0)+mins;
-      html+='<tr><td>'+tk.t+'</td><td><span class="pill" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</span></td><td>'+(mins>=60?Math.round(mins/60)+'h':mins+'min')+'</td></tr>'; });
+    const off=dow===0?6:dow-1;
+    const d=new Date(mon); d.setDate(mon.getDate()+off);
+    html+=`<div style="margin-bottom:12px">`;
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--nf2);margin-bottom:6px;padding-bottom:4px;border-bottom:.5px solid var(--brd)">${DAY_FULL[dow]} — ${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}</div>`;
+    html+=`<table class="report-table"><tr><th>Tarefa</th><th>Categoria</th><th>Tempo</th></tr>`;
+    doneTasks.forEach(tk=>{
+      const c=CATS[tk.cat]||CATS.estudo;
+      const mins=tk.dur||40;
+      catTotals[c.lbl]=(catTotals[c.lbl]||0)+mins;
+      html+=`<tr><td>${tk.t}</td><td><span class="pill" style="background:${c.bg};color:${c.fg}">${c.lbl}</span></td><td>${mins>=60?Math.round(mins/60)+'h':mins+'min'}</td></tr>`;
+    });
     html+='</table></div>';
   });
-  if(!html){ html='<div style="font-size:13px;color:var(--nf3);padding:16px 0;text-align:center">Nenhuma tarefa concluída esta semana.</div>'; }
-  else {
-    html+='<div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--brd)"><div style="font-size:10px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Total por categoria</div>';
-    html+='<table class="report-table"><tr><th>Categoria</th><th>Tempo total</th></tr>';
+  if(!html){
+    html='<div style="font-size:13px;color:var(--nf3);padding:16px 0;text-align:center">Nenhuma tarefa concluída esta semana.</div>';
+  } else {
+    html+=`<div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--brd)">`;
+    html+=`<div style="font-size:10px;font-weight:600;color:var(--nf3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Total por categoria</div>`;
+    html+=`<table class="report-table"><tr><th>Categoria</th><th>Tempo total</th></tr>`;
     Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).forEach(([lbl,mins])=>{
-      html+='<tr><td>'+lbl+'</td><td><strong>'+(mins>=60?(mins/60).toFixed(1)+'h':mins+'min')+'</strong></td></tr>'; });
+      html+=`<tr><td>${lbl}</td><td><strong>${mins>=60?(mins/60).toFixed(1)+'h':mins+'min'}</strong></td></tr>`;
+    });
     html+='</table></div>';
   }
   document.getElementById('report-content').innerHTML=html;
 }
+
 function renderPlanned(){
-  const today=new Date(); const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
-  let html=''; let totalMins=0;
+  const today=new Date();
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  let html='';
+  let totalMins=0;
   [1,2,3,4,5,6,0].forEach(dow=>{
-    const tasks=state.sched[dow]||[]; if(tasks.length===0) return;
-    const off=dow===0?6:dow-1; const d=new Date(mon); d.setDate(mon.getDate()+off);
+    const tasks=state.sched[dow]||[];
+    if(tasks.length===0) return;
+    const off=dow===0?6:dow-1;
+    const d=new Date(mon); d.setDate(mon.getDate()+off);
     const isToday=d.toDateString()===today.toDateString();
-    html+='<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:600;color:var(--nf2);margin-bottom:6px;padding-bottom:4px;border-bottom:.5px solid var(--brd);display:flex;align-items:center;gap:6px">'+DAY_FULL[dow]+' — '+d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+(isToday?'<span class="pill" style="background:var(--active-bg);color:var(--active-fg)">Hoje</span>':'')+'</div>';
-    html+='<table class="report-table"><tr><th>Tarefa</th><th>Categoria</th><th>Tempo</th><th>Status</th></tr>';
-    tasks.forEach((tk,i)=>{ const done=!!state.doneTasks[dow+'_'+i]; const c=CATS[tk.cat]||CATS.estudo; const mins=tk.dur||40; totalMins+=mins;
-      html+='<tr style="'+(done?'opacity:.5':'')+'"><td>'+tk.t+'</td><td><span class="pill" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</span></td><td>'+(mins>=60?Math.round(mins/60)+'h':mins+'min')+'</td><td>'+(done?'<span style="color:#107c10;font-weight:600">✓</span>':'<span style="color:var(--nf3)">—</span>')+'</td></tr>'; });
+    html+=`<div style="margin-bottom:12px">`;
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--nf2);margin-bottom:6px;padding-bottom:4px;border-bottom:.5px solid var(--brd);display:flex;align-items:center;gap:6px">`;
+    html+=`${DAY_FULL[dow]} — ${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}`;
+    if(isToday) html+=`<span class="pill" style="background:var(--active-bg);color:var(--active-fg)">Hoje</span>`;
+    html+=`</div>`;
+    html+=`<table class="report-table"><tr><th>Tarefa</th><th>Categoria</th><th>Tempo</th><th>Status</th></tr>`;
+    tasks.forEach((tk,i)=>{
+      const done=!!state.doneTasks[dow+'_'+i];
+      const c=CATS[tk.cat]||CATS.estudo;
+      const mins=tk.dur||40;
+      totalMins+=mins;
+      const status=done
+        ? `<span style="color:#107c10;font-weight:600">✓</span>`
+        : `<span style="color:var(--nf3)">—</span>`;
+      html+=`<tr style="${done?'opacity:.5':''}"><td>${tk.t}</td><td><span class="pill" style="background:${c.bg};color:${c.fg}">${c.lbl}</span></td><td>${mins>=60?Math.round(mins/60)+'h':mins+'min'}</td><td>${status}</td></tr>`;
+    });
     html+='</table></div>';
   });
-  if(!html) html='<div style="font-size:13px;color:var(--nf3);padding:16px 0;text-align:center">Nenhuma tarefa planejada.</div>';
-  else html+='<div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--brd);font-size:12px;color:var(--nf3)">Total planejado na semana: <strong style="color:var(--nf1)">'+(totalMins/60).toFixed(1)+'h ('+totalMins+'min)</strong></div>';
+  if(!html){
+    html='<div style="font-size:13px;color:var(--nf3);padding:16px 0;text-align:center">Nenhuma tarefa planejada.</div>';
+  } else {
+    const totalH=(totalMins/60).toFixed(1);
+    html+=`<div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--brd);font-size:12px;color:var(--nf3)">Total planejado na semana: <strong style="color:var(--nf1)">${totalH}h (${totalMins}min)</strong></div>`;
+  }
   document.getElementById('report-content').innerHTML=html;
 }
 
 function showScreen(s){
-  ['agenda','config','report','expediente'].forEach(id=>{ document.getElementById('tab-'+id).className='tab-btn'+(id===s?' active':''); });
+  ['agenda','config','report','expediente'].forEach(id=>{
+    document.getElementById('tab-'+id).className='tab-btn'+(id===s?' active':'');
+  });
   document.getElementById('main-screen').className='main-screen'+(s==='agenda'?'':' hide');
   document.getElementById('config-screen').className='config-screen'+(s==='config'?' show':'');
   document.getElementById('report-screen').className='report-screen'+(s==='report'?' show':'');
@@ -1136,337 +1158,591 @@ function showScreen(s){
   if(s==='expediente') expRender();
 }
 
-document.getElementById('notes-ta').addEventListener('input',e=>{ state.notes['n_'+state.viewDow]=e.target.value; saveState(); });
+document.getElementById('notes-ta').addEventListener('input',e=>{
+  state.notes['n_'+state.viewDow]=e.target.value; saveState();
+});
 
-window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredInstall=e; document.getElementById('install-banner').classList.add('show'); });
-function installPWA(){ if(!deferredInstall) return; deferredInstall.prompt(); deferredInstall.userChoice.then(()=>{ deferredInstall=null; document.getElementById('install-banner').classList.remove('show'); }); }
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredInstall=e;
+  document.getElementById('install-banner').classList.add('show');
+});
+function installPWA(){
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(()=>{deferredInstall=null;document.getElementById('install-banner').classList.remove('show');});
+}
 window.addEventListener('appinstalled',()=>document.getElementById('install-banner').classList.remove('show'));
 
-// ── Compact mode ──────────────────────────────────────────────────────────────
-let compactMode=false, pinned=false;
+// ── Compact mode ───────────────────────────────────────
+let compactMode = false;
+let pinned = false;
+
 function toggleCompact(){
-  compactMode=!compactMode; document.body.classList.toggle('compact-mode',compactMode);
-  if(compactMode){ window._prevW=window.outerWidth; window._prevH=window.outerHeight; window._prevX=window.screenX; window._prevY=window.screenY;
-    setTimeout(()=>{ window.resizeTo(240,320); window.moveTo(window.screen.availWidth-260,window.screen.availHeight-340); },50);
-  } else { document.getElementById('root').style.display=''; showScreen('agenda');
-    setTimeout(()=>{ window.resizeTo(window._prevW||900,window._prevH||650); window.moveTo(window._prevX||100,window._prevY||100); },50); }
+  compactMode = !compactMode;
+  document.body.classList.toggle('compact-mode', compactMode);
+  if(compactMode){
+    window._prevW = window.outerWidth;
+    window._prevH = window.outerHeight;
+    window._prevX = window.screenX;
+    window._prevY = window.screenY;
+    setTimeout(()=>{
+      window.resizeTo(240, 320);
+      window.moveTo(window.screen.availWidth - 260, window.screen.availHeight - 340);
+    }, 50);
+  } else {
+    document.getElementById('root').style.display='';
+    showScreen('agenda');
+    setTimeout(()=>{
+      window.resizeTo(window._prevW||900, window._prevH||650);
+      window.moveTo(window._prevX||100, window._prevY||100);
+    }, 50);
+  }
   updateWidget();
 }
-function togglePin(e){ e.stopPropagation(); pinned=!pinned; const btn=document.getElementById('widget-pin'); btn.classList.toggle('on',pinned); document.getElementById('widget').style.opacity=pinned?'1':'0.92'; }
+
+function togglePin(e){
+  e.stopPropagation();
+  pinned = !pinned;
+  const btn = document.getElementById('widget-pin');
+  btn.classList.toggle('on', pinned);
+  const widget = document.getElementById('widget');
+  widget.classList.toggle('pinned', pinned);
+  widget.style.opacity = pinned ? '1' : '0.92';
+}
+
 function updateWidget(){
-  const acc=getAcc(); const bPct=timerLeft/timerTotal;
-  const warc=document.getElementById('warc'); if(warc){ warc.setAttribute('d',ap(60,60,55,bPct*360)); warc.setAttribute('fill',acc); }
-  const wmin=document.getElementById('w-min'); if(wmin) wmin.textContent=Math.ceil(timerLeft/60);
-  const wtime=document.getElementById('widget-time'); if(wtime) wtime.textContent=fmtTimer(timerLeft);
-  const wtask=document.getElementById('widget-task'); if(wtask) wtask.textContent=nextTask();
-  const wgo=document.getElementById('widget-go'); if(wgo){ wgo.textContent=timerRunning?'⏸':'▶'; wgo.style.background=acc; }
+  const acc = getAcc();
+  const bPct = timerLeft / timerTotal;
+  const warc = document.getElementById('warc');
+  if(warc){ warc.setAttribute('d', ap(60,60,55,bPct*360)); warc.setAttribute('fill',acc); }
+  const wmin = document.getElementById('w-min');
+  if(wmin) wmin.textContent = Math.ceil(timerLeft/60);
+  const wtime = document.getElementById('widget-time');
+  if(wtime){ wtime.textContent=fmtTimer(timerLeft); }
+  const wtask = document.getElementById('widget-task');
+  if(wtask) wtask.textContent = nextTask();
+  const wgo = document.getElementById('widget-go');
+  if(wgo){ wgo.textContent = timerRunning ? '⏸' : '▶'; wgo.style.background = acc; }
   renderCompactBtn();
 }
+
 function renderCompactBtn(){
-  const existing=document.getElementById('compact-btn'); if(compactMode) return;
-  if(!existing){ const nav=document.querySelector('.hdr-row'); if(!nav) return;
-    const btn=document.createElement('button'); btn.id='compact-btn'; btn.className='nav-btn';
-    btn.title='Modo compacto'; btn.textContent='⊙'; btn.style.fontSize='16px'; btn.onclick=toggleCompact; nav.appendChild(btn); }
+  const existing = document.getElementById('compact-btn');
+  if(compactMode) return;
+  if(!existing){
+    const nav = document.querySelector('.hdr-row');
+    if(!nav) return;
+    const btn = document.createElement('button');
+    btn.id = 'compact-btn';
+    btn.className = 'nav-btn';
+    btn.title = 'Modo compacto (duplo clique no disco para voltar)';
+    btn.textContent = '⊙';
+    btn.style.fontSize = '16px';
+    btn.onclick = toggleCompact;
+    nav.appendChild(btn);
+  }
 }
-setInterval(()=>{ if(compactMode) updateWidget(); },1000);
-setTimeout(renderCompactBtn,100);
+
+setInterval(()=>{ if(compactMode) updateWidget(); }, 1000);
+setTimeout(renderCompactBtn, 100);
 navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-// ── Expediente ────────────────────────────────────────────────────────────────
-const EXP_TOTAL=300;
-// EXP_DEFAULTS: sem fixo:true — todos vão para a fila, usuário decide o que vai para hoje
-const EXP_DEFAULTS=[
-  {id:'ef1', nome:'E-mails e comunicações',         dur:30,  tipo:'variavel', favorito:true},
-  {id:'ef2', nome:'IRPF — maio',                    dur:60,  tipo:'prazo',    favorito:false},
-  {id:'ef3', nome:'Retificações (2 meses)',         dur:60,  tipo:'prazo',    favorito:false},
-  {id:'ef4', nome:'Reunião / atendimento',          dur:60,  tipo:'variavel', favorito:true},
-  {id:'ef5', nome:'Execução processos rotineiros',  dur:60,  tipo:'variavel', favorito:true},
+// ── Expediente / Despachante ─────────────────────────────
+const EXP_TOTAL = 300;
+const EXP_DEFAULTS = [
+  {id:'ef1', nome:'E-mails e comunicações',    dur:30,  tipo:'fixo',    fixo:true},
+  {id:'ef2', nome:'IRPF — maio',               dur:60,  tipo:'prazo',   fixo:false},
+  {id:'ef3', nome:'Retificações (2 meses)',    dur:60,  tipo:'prazo',   fixo:false},
+  {id:'ef4', nome:'Reunião / atendimento',     dur:60,  tipo:'fixo',    fixo:true},
+  {id:'ef5', nome:'Execução processos rotineiros', dur:60, tipo:'fixo', fixo:true},
 ];
-let expNextId=100;
+let expNextId = 100;
 
 function expLoad(){
-  const raw=localStorage.getItem('agenda_exp_v1');
-  if(raw){ try{ const s=JSON.parse(raw); state.expFila=s.fila||JSON.parse(JSON.stringify(EXP_DEFAULTS)); state.expHoje=s.hoje||[]; state.expHojeDate=s.hojeDate||''; expNextId=s.nextId||100; }catch(e){ expReset(); } }
-  else expReset();
-  const today=new Date().toISOString().slice(0,10);
-  if(state.expHojeDate!==today){
-    // virada de dia: tudo de volta para a fila, sem auto-alocação
+  const raw = localStorage.getItem('agenda_exp_v1');
+  if(raw){
+    try{
+      const s = JSON.parse(raw);
+      state.expFila = s.fila || JSON.parse(JSON.stringify(EXP_DEFAULTS));
+      state.expHoje = s.hoje || [];
+      state.expHojeDate = s.hojeDate || '';
+      expNextId = s.nextId || 100;
+    }catch(e){ expReset(); }
+  } else {
+    expReset();
+  }
+  const today = new Date().toISOString().slice(0,10);
+  if(state.expHojeDate !== today){
     state.expHoje.forEach(i=>{ if(!state.expFila.find(f=>f.id===i.id)) state.expFila.push(i); });
-    state.expHoje=[]; state.expHojeDate=today;
-    // zera contadores de período ao virar o dia
-    periodTimerMins={expediente:0,melhorias:0,estudos:0};
+    state.expHoje = [];
+    state.expFila.filter(i=>i.fixo).forEach(i=>expAlocar(i.id, true));
+    state.expHojeDate = today;
     expSave();
   }
 }
-function expReset(){ state.expFila=JSON.parse(JSON.stringify(EXP_DEFAULTS)); state.expHoje=[]; state.expHojeDate=''; expNextId=100; }
-function expSave(){ localStorage.setItem('agenda_exp_v1',JSON.stringify({fila:state.expFila,hoje:state.expHoje,hojeDate:state.expHojeDate,nextId:expNextId})); }
-function expFmtMin(m){ const h=Math.floor(m/60),mn=m%60; if(h===0) return mn+'min'; if(mn===0) return h+'h'; return h+'h'+String(mn).padStart(2,'0'); }
-function expTotalHoje(){ return(state.expHoje||[]).reduce((a,i)=>a+i.dur,0); }
+
+function expReset(){
+  state.expFila = JSON.parse(JSON.stringify(EXP_DEFAULTS));
+  state.expHoje = [];
+  state.expHojeDate = '';
+  expNextId = 100;
+}
+
+function expSave(){
+  localStorage.setItem('agenda_exp_v1', JSON.stringify({
+    fila: state.expFila,
+    hoje: state.expHoje,
+    hojeDate: state.expHojeDate,
+    nextId: expNextId
+  }));
+}
+
+function expFmtMin(m){
+  const h=Math.floor(m/60), mn=m%60;
+  if(h===0) return mn+'min';
+  if(mn===0) return h+'h';
+  return h+'h'+String(mn).padStart(2,'0');
+}
+
+function expTotalHoje(){ return (state.expHoje||[]).reduce((a,i)=>a+i.dur,0); }
 
 function expUpdateSaldo(){
-  const al=expTotalHoje(); const liv=Math.max(EXP_TOTAL-al,0);
-  const pct=Math.min(Math.round(al/EXP_TOTAL*100),100);
-  const barColor=pct>100?'#c4314b':pct>85?'var(--cat-melhoria-acc)':'var(--cat-trabalho-acc)';
-  const avTxt=al>EXP_TOTAL?'⚠ excede em '+expFmtMin(al-EXP_TOTAL):'';
+  const al = expTotalHoje();
+  const liv = Math.max(EXP_TOTAL-al,0);
+  const pct = Math.min(Math.round(al/EXP_TOTAL*100),100);
+  const barColor = pct>100?'#c4314b':pct>85?'var(--cat-melhoria-acc)':'var(--cat-trabalho-acc)';
+  const avTxt = al>EXP_TOTAL ? '⚠ excede em '+expFmtMin(al-EXP_TOTAL) : '';
+  // atualiza drawer (ids primários) e tela separada (ids exp2-)
   [['exp-m-al','exp-m-liv','exp-barra','exp-bl-pct','exp-bl-av'],
    ['exp2-m-al','exp2-m-liv','exp2-barra','exp2-bl-pct','exp2-bl-av']].forEach(([idAl,idLiv,idBar,idPct,idAv])=>{
-    const eAl=document.getElementById(idAl); if(!eAl) return;
-    eAl.textContent=expFmtMin(al); document.getElementById(idLiv).textContent=expFmtMin(liv);
-    const bar=document.getElementById(idBar); bar.style.width=pct+'%'; bar.style.background=barColor;
-    document.getElementById(idPct).textContent=pct+'% ocupado'; document.getElementById(idAv).textContent=avTxt;
+    const eAl=document.getElementById(idAl);
+    if(!eAl) return;
+    eAl.textContent=expFmtMin(al);
+    document.getElementById(idLiv).textContent=expFmtMin(liv);
+    const bar=document.getElementById(idBar);
+    bar.style.width=pct+'%'; bar.style.background=barColor;
+    document.getElementById(idPct).textContent=pct+'% ocupado';
+    document.getElementById(idAv).textContent=avTxt;
   });
 }
 
-function expStartEdit(span,lista,id){
-  if(span.querySelector('input')) return;
-  const ref=lista==='hoje'?state.expHoje:state.expFila;
-  const item=ref.find(i=>String(i.id)===String(id)); if(!item) return;
-  const input=document.createElement('input'); input.value=item.nome;
-  input.style.cssText='font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
-  span.textContent=''; span.appendChild(input); input.focus(); input.select();
-  let committed=false;
-  const commit=()=>{ if(committed) return; committed=true; const val=input.value.trim(); if(val) item.nome=val; expSave(); expRender(); };
-  input.addEventListener('blur',commit);
-  input.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;expRender();} });
+// ── Edição inline (delegação de evento no container) ──────
+function expStartEdit(span, lista, id){
+  if(span.querySelector('input')) return; // já editando
+  const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
+  const item = lista_ref.find(i=>String(i.id)===String(id));
+  if(!item) return;
+  const input = document.createElement('input');
+  input.value = item.nome;
+  input.setAttribute('data-editing','1');
+  input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
+  // substituir conteúdo do span (não o span em si, para manter delegação)
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = input.value.trim();
+    if(val) item.nome = val;
+    expSave(); expRender();
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
+  });
 }
 
+// ── Tick de conclusão ─────────────────────────────────────
 function expToggleConcluido(id){
-  const item=(state.expHoje||[]).find(i=>String(i.id)===String(id))||(state.expFila||[]).find(i=>String(i.id)===String(id));
+  // procura em hoje e fila
+  const item = (state.expHoje||[]).find(i=>String(i.id)===String(id))
+            || (state.expFila||[]).find(i=>String(i.id)===String(id));
   if(!item) return;
-  item.concluido=!item.concluido;
-  if(item.concluido) item.concluidoEm=new Date().toISOString(); else delete item.concluidoEm;
+  item.concluido = !item.concluido;
+  // registra timestamp se concluindo
+  if(item.concluido){
+    item.concluidoEm = new Date().toISOString();
+  } else {
+    delete item.concluidoEm;
+  }
   expSave(); expRender();
 }
 
-function expEditDur(span,lista,id){
-  const ref=lista==='hoje'?state.expHoje:state.expFila;
-  const item=ref.find(i=>String(i.id)===String(id)); if(!item) return;
-  const curH=Math.floor(item.dur/60),curM=item.dur%60;
-  const curVal=curH>0?(curM>0?curH+'h'+String(curM).padStart(2,'0'):curH+'h'):String(curM);
-  const input=document.createElement('input'); input.value=curVal; input.title='Ex: 30, 1h, 1h30';
-  input.style.cssText='font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
-  span.textContent=''; span.appendChild(input); input.focus(); input.select();
-  let committed=false;
-  const commit=()=>{ if(committed) return; committed=true; const val=parseDurStr(input.value); if(val&&val>0) item.dur=val; expSave(); expRender(); };
-  input.addEventListener('blur',commit);
-  input.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;expRender();} });
+function expEditDur(span, lista, id){
+  const lista_ref = lista==='hoje' ? state.expHoje : state.expFila;
+  const item = lista_ref.find(i=>String(i.id)===String(id));
+  if(!item) return;
+  // montar input compacto "1h30" ou "40"
+  const curH = Math.floor(item.dur/60);
+  const curM = item.dur%60;
+  const curVal = curH>0 ? (curM>0 ? curH+'h'+String(curM).padStart(2,'0') : curH+'h') : String(curM);
+
+  const input = document.createElement('input');
+  input.value = curVal;
+  input.title = 'Ex: 30, 1h, 1h30';
+  input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+
+  const parseDur = parseDurStr;
+
+  let committed = false;
+  const commit = ()=>{
+    if(committed) return; committed=true;
+    const val = parseDur(input.value);
+    if(val && val>0) item.dur = val;
+    expSave(); expRender();
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ e.preventDefault(); input.blur(); }
+    if(e.key==='Escape'){ committed=true; expRender(); }
+  });
 }
 
 function expRenderFila(){
-  const fila=state.expFila||[];
-  const html=fila.length===0?'<div class="exp-vazio">Fila vazia</div>'
-    :fila.map(i=>'<div class="exp-item '+i.tipo+(i.concluido?' concluido':'')+'" data-id="'+i.id+'" data-lista="fila">'
-      +'<div class="exp-tick" data-action="tick">'+(i.concluido?'✓':'')+'</div>'
-      +'<span class="exp-item-nome" data-action="edit" title="Duplo clique para editar">'+i.nome+'</span>'
-      +(i.favorito?'<span style="font-size:10px;color:var(--nf3);flex-shrink:0" title="Favorito — aparece na fila todo dia">⭐</span>':'')
-      +'<span class="exp-dur '+i.tipo+'" data-action="dur" style="cursor:pointer">'+expFmtMin(i.dur)+'</span>'
-      +'<button class="exp-act-btn alocar" onclick="expAlocar(\''+i.id+'\')">+ hoje</button>'
-      +'<button class="exp-act-btn danger" onclick="expDelFila(\''+i.id+'\')">×</button>'
-      +'</div>').join('');
-  ['exp-fila','exp2-fila'].forEach(id=>{ const el=document.getElementById(id); if(!el) return; el.innerHTML=html; expBindContainer(el,'fila'); });
+  const fila = state.expFila||[];
+  const html = fila.length===0
+    ? '<div class="exp-vazio">Fila vazia</div>'
+    : fila.map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="fila">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
+      <button class="exp-act-btn alocar" onclick="expAlocar('${i.id}')">+ hoje</button>
+      <button class="exp-act-btn danger" onclick="expDelFila('${i.id}')">×</button>
+    </div>`).join('');
+  ['exp-fila','exp2-fila'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'fila');
+  });
 }
 
 function expRenderHoje(){
-  const html=(state.expHoje||[]).length===0?'<div class="exp-vazio">Nenhum trabalho alocado — use a fila abaixo</div>'
-    :(state.expHoje||[]).map(i=>'<div class="exp-item '+i.tipo+(i.concluido?' concluido':'')+'" data-id="'+i.id+'" data-lista="hoje">'
-      +'<div class="exp-tick" data-action="tick">'+(i.concluido?'✓':'')+'</div>'
-      +'<span class="exp-item-nome" data-action="edit">'+i.nome+'</span>'
-      +'<span class="exp-dur '+i.tipo+'" data-action="dur" style="cursor:pointer">'+expFmtMin(i.dur)+'</span>'
-      +'<button class="exp-act-btn" onclick="expDevolver(\''+i.id+'\')">← fila</button>'
-      +'<button class="exp-act-btn danger" onclick="expDelHoje(\''+i.id+'\')">×</button>'
-      +'</div>').join('');
-  ['exp-hoje','exp2-hoje'].forEach(id=>{ const el=document.getElementById(id); if(!el) return; el.innerHTML=html; expBindContainer(el,'hoje'); });
+  const html = (state.expHoje||[]).length===0
+    ? '<div class="exp-vazio">Nenhum trabalho alocado — use a fila abaixo</div>'
+    : (state.expHoje||[]).map(i=>`
+    <div class="exp-item ${i.tipo}${i.concluido?' concluido':''}" data-id="${i.id}" data-lista="hoje">
+      <div class="exp-tick" data-action="tick" title="Marcar como concluído">${i.concluido?'✓':''}</div>
+      <span class="exp-item-nome" data-action="edit" title="Clique duplo para editar">${i.nome}</span>
+      <span class="exp-dur ${i.tipo}" data-action="dur" title="Duplo clique para editar tempo" style="cursor:pointer">${expFmtMin(i.dur)}</span>
+      <button class="exp-act-btn" onclick="expDevolver('${i.id}')">← fila</button>
+      <button class="exp-act-btn danger" onclick="expDelHoje('${i.id}')">×</button>
+    </div>`).join('');
+  ['exp-hoje','exp2-hoje'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML=html;
+    expBindContainer(el,'hoje');
+  });
 }
 
-const _expAbort={};
-function expBindContainer(container,lista){
-  const key=container.id||lista; if(_expAbort[key]) _expAbort[key].abort();
-  const ctrl=new AbortController(); _expAbort[key]=ctrl; const sig={signal:ctrl.signal};
-  container.addEventListener('click',e=>{
-    const tick=e.target.closest('[data-action="tick"]');
-    if(tick){ e.stopPropagation(); const row=tick.closest('[data-id]'); if(row) expToggleConcluido(row.dataset.id); return; }
-  },sig);
-  container.addEventListener('dblclick',e=>{
-    const nome=e.target.closest('[data-action="edit"]');
-    if(nome){ e.preventDefault(); const row=nome.closest('[data-id]'); if(row) expStartEdit(nome,lista,row.dataset.id); return; }
-    const dur=e.target.closest('[data-action="dur"]');
-    if(dur){ e.preventDefault(); const row=dur.closest('[data-id]'); if(row) expEditDur(dur,lista,row.dataset.id); }
-  },sig);
+// delegação de evento — um listener por container (AbortController limpa o anterior)
+const _expAbort = {};
+function expBindContainer(container, lista){
+  // cancela listeners anteriores deste container
+  const key = container.id || lista;
+  if(_expAbort[key]) _expAbort[key].abort();
+  const ctrl = new AbortController();
+  _expAbort[key] = ctrl;
+  const sig = {signal: ctrl.signal};
+
+  container.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="tick"]');
+    if(tick){
+      e.stopPropagation();
+      const row = tick.closest('[data-id]');
+      if(row) expToggleConcluido(row.dataset.id);
+      return;
+    }
+  }, sig);
+
+  container.addEventListener('dblclick', e=>{
+    const nome = e.target.closest('[data-action="edit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-id]');
+      if(row) expStartEdit(nome, lista, row.dataset.id);
+      return;
+    }
+    const dur = e.target.closest('[data-action="dur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-id]');
+      if(row) expEditDur(dur, lista, row.dataset.id);
+    }
+  }, sig);
 }
 
-// ── Drawers Melhorias e Estudos ───────────────────────────────────────────────
-const _perAbort={};
-function togglePerDrawer(key,open){
-  const drawer=document.getElementById(key+'-drawer'); if(!drawer) return;
-  const show=open!==undefined?open:!drawer.classList.contains('show');
-  drawer.classList.toggle('show',show);
-  if(show){ renderPerDrawer(key); setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50); }
+// ── Drawers de Melhorias e Estudos ───────────────────────────────────────────
+const _perAbort = {};
+
+function toggleDrawer(key){
+  const ALL_KEYS = ['exp','mel','est'];
+  const drawer = document.getElementById(key+'-drawer');
+  if(!drawer) return;
+  const willShow = !drawer.classList.contains('show');
+  // fecha todos
+  ALL_KEYS.forEach(k=>{
+    const d = document.getElementById(k+'-drawer');
+    if(d){ d.classList.remove('show'); }
+    const btn = document.getElementById('drawer-btn-'+k);
+    if(btn){ btn.textContent = '↗ abrir'; }
+  });
+  // abre o solicitado se estava fechado
+  if(willShow){
+    drawer.classList.add('show');
+    const btn = document.getElementById('drawer-btn-'+key);
+    if(btn){ btn.textContent = '↙ fechar'; }
+    if(key==='exp'){ expRender(); }
+    else { renderPerDrawer(key); }
+    setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
 }
+
+
 function renderPerDrawer(key){
-  const period=key==='mel'?'melhorias':'estudos'; const dow=state.viewDow;
-  const tasks=(state.sched[dow]||[]).map((tk,i)=>({tk,i})).filter(({tk})=>tk.period===period);
-  const el=document.getElementById(key+'-list'); if(!el) return;
+  const period = key==='mel'?'melhorias':'estudos';
+  const dow = state.viewDow;
+  const tasks = (state.sched[dow]||[]).map((tk,i)=>({tk,i})).filter(({tk})=>tk.period===period);
+  const el = document.getElementById(key+'-list');
+  if(!el) return;
   if(tasks.length===0){ el.innerHTML='<div style="font-size:12px;color:var(--nf3);padding:8px 0;text-align:center">Sem tarefas neste período</div>'; return; }
-  const html=tasks.map(({tk,i})=>{
-    const dkey=dow+'_'+i; const done=!!state.doneTasks[dkey]; const c=CATS[tk.cat]||CATS.estudo;
-    return '<div class="per-item'+(done?' concluido':'')+'" data-dow="'+dow+'" data-idx="'+i+'">'
-      +'<div class="per-tick" data-action="pertick">'+(done?'✓':'')+'</div>'
-      +'<span class="per-nome" data-action="peredit" title="Duplo clique para editar">'+tk.t+'</span>'
-      +'<span class="per-dur" data-action="perdur" style="background:'+c.bg+';color:'+c.fg+';cursor:pointer">'+expFmtMin(tk.dur||40)+'</span>'
-      +'<button class="exp-act-btn danger" data-action="perdel" style="margin-left:4px">×</button></div>';
+  const acBg = key==='mel'?'var(--cat-melhoria-bg)':'var(--cat-estudo-bg)';
+  const acFg = key==='mel'?'var(--cat-melhoria-fg)':'var(--cat-estudo-fg)';
+  const html = tasks.map(({tk,i})=>{
+    const dkey = dow+'_'+i;
+    const done = !!state.doneTasks[dkey];
+    const c = CATS[tk.cat]||CATS.estudo;
+    return `<div class="per-item${done?' concluido':''}" data-dow="${dow}" data-idx="${i}">
+      <div class="per-tick" data-action="pertick" title="Concluído">${done?'✓':''}</div>
+      <span class="per-nome" data-action="peredit" title="Duplo clique para editar">${tk.t}</span>
+      <span class="per-dur" data-action="perdur" title="Duplo clique para editar tempo" style="background:${c.bg};color:${c.fg};cursor:pointer">${expFmtMin(tk.dur||40)}</span>
+      <button class="exp-act-btn danger" data-action="perdel" style="margin-left:4px" title="Remover">×</button>
+    </div>`;
   }).join('');
-  el.innerHTML=html;
-  const abKey=key+'-list'; if(_perAbort[abKey]) _perAbort[abKey].abort();
-  const ctrl=new AbortController(); _perAbort[abKey]=ctrl; const sig={signal:ctrl.signal};
-  el.addEventListener('click',e=>{
-    const tick=e.target.closest('[data-action="pertick"]');
-    if(tick){ e.stopPropagation(); const row=tick.closest('[data-dow]'); if(!row) return;
-      const d=parseInt(row.dataset.dow),idx=parseInt(row.dataset.idx); const k=d+'_'+idx;
+  el.innerHTML = html;
+
+  // AbortController
+  const abKey = key+'-list';
+  if(_perAbort[abKey]) _perAbort[abKey].abort();
+  const ctrl = new AbortController();
+  _perAbort[abKey] = ctrl;
+  const sig = {signal:ctrl.signal};
+
+  el.addEventListener('click', e=>{
+    const tick = e.target.closest('[data-action="pertick"]');
+    if(tick){
+      e.stopPropagation();
+      const row = tick.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const k=d+'_'+idx;
       state.doneTasks[k]=!state.doneTasks[k];
       const today=new Date().toISOString().slice(0,10);
-      if(Object.keys(state.doneTasks).some(x=>x.startsWith(d+'_')&&state.doneTasks[x])) if(!state.doneDays.includes(today)) state.doneDays.push(today);
-      saveState(); renderTasks(); renderPerDrawer(key); updateDiscs(); }
-    const del=e.target.closest('[data-action="perdel"]');
-    if(del){ e.stopPropagation(); const row=del.closest('[data-dow]'); if(!row) return;
-      const d=parseInt(row.dataset.dow),idx=parseInt(row.dataset.idx);
+      if(Object.keys(state.doneTasks).some(x=>x.startsWith(d+'_')&&state.doneTasks[x]))
+        if(!state.doneDays.includes(today)) state.doneDays.push(today);
+      saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
+    }
+    const del = e.target.closest('[data-action="perdel"]');
+    if(del){
+      e.stopPropagation();
+      const row = del.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
       state.sched[d].splice(idx,1);
       const newDone={};
-      Object.keys(state.doneTasks).forEach(k=>{ const [kd,ki]=k.split('_').map(Number);
+      Object.keys(state.doneTasks).forEach(k=>{
+        const [kd,ki]=k.split('_').map(Number);
         if(kd===d){ if(ki<idx) newDone[k]=state.doneTasks[k]; else if(ki>idx) newDone[kd+'_'+(ki-1)]=state.doneTasks[k]; }
-        else newDone[k]=state.doneTasks[k]; });
-      state.doneTasks=newDone; saveState(); renderTasks(); renderPerDrawer(key); updateDiscs(); }
-  },sig);
-  el.addEventListener('dblclick',e=>{
-    const nome=e.target.closest('[data-action="peredit"]');
-    if(nome){ e.preventDefault(); const row=nome.closest('[data-dow]'); if(!row) return;
-      const d=parseInt(row.dataset.dow),idx=parseInt(row.dataset.idx); const item=state.sched[d]&&state.sched[d][idx]; if(!item) return;
-      const input=document.createElement('input'); input.value=item.t;
-      input.style.cssText='font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
-      nome.textContent=''; nome.appendChild(input); input.focus(); input.select();
-      let committed=false;
-      const commit=()=>{ if(committed)return; committed=true; const v=input.value.trim(); if(v) item.t=v; saveState(); renderTasks(); renderPerDrawer(key); };
-      input.addEventListener('blur',commit); input.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} }); return; }
-    const dur=e.target.closest('[data-action="perdur"]');
-    if(dur){ e.preventDefault(); const row=dur.closest('[data-dow]'); if(!row) return;
-      const d=parseInt(row.dataset.dow),idx=parseInt(row.dataset.idx); const item=state.sched[d]&&state.sched[d][idx]; if(!item) return;
-      const curH=Math.floor((item.dur||40)/60),curM=(item.dur||40)%60;
-      const curVal=curH>0?(curM>0?curH+'h'+String(curM).padStart(2,'0'):curH+'h'):String(curM||40);
-      const input=document.createElement('input'); input.value=curVal;
-      input.style.cssText='font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
-      dur.textContent=''; dur.appendChild(input); input.focus(); input.select();
-      let committed=false;
-      const commit=()=>{ if(committed)return; committed=true; const val=parseDurStr(input.value); if(val&&val>0){ item.dur=val; item.s=expFmtMin(val); } saveState(); renderTasks(); renderPerDrawer(key); };
-      input.addEventListener('blur',commit); input.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} }); }
-  },sig);
-}
+        else { newDone[k]=state.doneTasks[k]; }
+      });
+      state.doneTasks=newDone;
+      saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
+    }
+  }, sig);
 
-function toggleExpDrawer(open){
-  const drawer=document.getElementById('exp-drawer'); if(!drawer) return;
-  const show=open!==undefined?open:!drawer.classList.contains('show');
-  drawer.classList.toggle('show',show);
-  if(show){ expRender(); setTimeout(()=>drawer.scrollIntoView({behavior:'smooth',block:'nearest'}),50); }
+  el.addEventListener('dblclick', e=>{
+    // editar nome
+    const nome = e.target.closest('[data-action="peredit"]');
+    if(nome){
+      e.preventDefault();
+      const row = nome.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const input = document.createElement('input');
+      input.value = item.t;
+      input.style.cssText = 'font-family:var(--ff);font-size:13px;font-weight:500;color:var(--nf1);flex:1;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);min-width:80px;width:100%';
+      nome.textContent=''; nome.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{ if(committed)return; committed=true; const v=input.value.trim(); if(v){item.t=v;} saveState(); renderTasks(); renderPerDrawer(key); };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
+      return;
+    }
+    // editar duração
+    const dur = e.target.closest('[data-action="perdur"]');
+    if(dur){
+      e.preventDefault();
+      const row = dur.closest('[data-dow]');
+      if(!row) return;
+      const d=parseInt(row.dataset.dow), idx=parseInt(row.dataset.idx);
+      const item = state.sched[d]&&state.sched[d][idx];
+      if(!item) return;
+      const curH=Math.floor((item.dur||40)/60), curM=(item.dur||40)%60;
+      const curVal=curH>0?(curM>0?curH+'h'+String(curM).padStart(2,'0'):curH+'h'):String(curM||40);
+      const input = document.createElement('input');
+      input.value = curVal;
+      input.title = 'Ex: 40, 1h, 1h30';
+      input.style.cssText = 'font-family:var(--ff);font-size:10px;font-weight:600;width:52px;text-align:center;border:none;background:transparent;outline:none;border-bottom:1.5px solid var(--active-acc);color:inherit;padding:0';
+      dur.textContent=''; dur.appendChild(input);
+      input.focus(); input.select();
+      let committed=false;
+      const commit=()=>{
+        if(committed)return; committed=true;
+        const val=parseDurStr(input.value);
+        if(val&&val>0){ item.dur=val; item.s=expFmtMin(val); }
+        saveState(); renderTasks(); renderPerDrawer(key);
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault();input.blur();} if(e.key==='Escape'){committed=true;renderPerDrawer(key);} });
+    }
+  }, sig);
 }
 
 function perAddItem(key){
-  const period=key==='mel'?'melhorias':'estudos'; const cat=key==='mel'?'melhoria':'estudo';
-  const nomeEl=document.getElementById(key+'-new-nome'); const durEl=document.getElementById(key+'-new-dur');
-  const nome=nomeEl.value.trim(); if(!nome) return;
-  const dur=parseDurStr(durEl.value)||(key==='mel'?60:40); const dow=state.viewDow;
+  const period = key==='mel'?'melhorias':'estudos';
+  const cat     = key==='mel'?'melhoria':'estudo';
+  const nomeEl  = document.getElementById(key+'-new-nome');
+  const durEl   = document.getElementById(key+'-new-dur');
+  const nome = nomeEl.value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(durEl.value) || (key==='mel'?60:40);
+  const dow = state.viewDow;
   if(!state.sched[dow]) state.sched[dow]=[];
-  state.sched[dow].push({s:expFmtMin(dur),t:nome,cat,dur,period});
-  nomeEl.value=''; durEl.value=''; saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
+  state.sched[dow].push({s:expFmtMin(dur), t:nome, cat, dur, period});
+  nomeEl.value=''; durEl.value='';
+  saveState(); renderTasks(); renderPerDrawer(key); updateDiscs();
 }
 
 function expRender(){ expRenderFila(); expRenderHoje(); expUpdateSaldo(); }
-function expAlocar(id,silent){
-  const idx=(state.expFila||[]).findIndex(i=>String(i.id)===String(id)); if(idx===-1) return;
+
+function expAlocar(id, silent){
+  const idx = (state.expFila||[]).findIndex(i=>String(i.id)===String(id));
+  if(idx===-1) return;
   if(!state.expHoje) state.expHoje=[];
   state.expHoje.push(state.expFila.splice(idx,1)[0]);
-  if(!silent){ expSave(); expRender(); renderTasks(); updateDiscs(); }
+  if(!silent){ expSave(); expRender(); }
 }
+
 function expDevolver(id){
-  const idx=(state.expHoje||[]).findIndex(i=>String(i.id)===String(id)); if(idx===-1) return;
+  const idx = (state.expHoje||[]).findIndex(i=>String(i.id)===String(id));
+  if(idx===-1) return;
   if(!state.expFila) state.expFila=[];
   state.expFila.push(state.expHoje.splice(idx,1)[0]);
-  expSave(); expRender(); renderTasks(); updateDiscs();
+  expSave(); expRender();
 }
-function expDelFila(id){ state.expFila=(state.expFila||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
-function expDelHoje(id){ state.expHoje=(state.expHoje||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); renderTasks(); updateDiscs(); }
 
-// ── Parser de duração ─────────────────────────────────────────────────────────
+function expDelFila(id){ state.expFila=(state.expFila||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
+function expDelHoje(id){ state.expHoje=(state.expHoje||[]).filter(i=>String(i.id)!==String(id)); expSave(); expRender(); }
+
+// ── parser de duração livre ───────────────────────────────────────────────────
 function parseDurStr(s){
-  if(!s) return null; s=s.trim().toLowerCase().replace(',','.');
-  let m=s.match(/^(\d+(?:\.\d+)?)h(\d+)?(?:min)?$/); if(m) return Math.round(parseFloat(m[1])*60)+(parseInt(m[2])||0);
-  m=s.match(/^(\d+(?:\.\d+)?)h$/); if(m) return Math.round(parseFloat(m[1])*60);
-  m=s.match(/^(\d+(?:\.\d+)?)(?:min)?$/); if(m) return Math.round(parseFloat(m[1]));
+  if(!s) return null;
+  s = s.trim().toLowerCase().replace(',','.');
+  // "1h30" ou "1h30min"
+  let m = s.match(/^(\d+(?:\.\d+)?)h(\d+)?(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1])*60) + (parseInt(m[2])||0);
+  // "1h"
+  m = s.match(/^(\d+(?:\.\d+)?)h$/);
+  if(m) return Math.round(parseFloat(m[1])*60);
+  // "40min" ou "40"
+  m = s.match(/^(\d+(?:\.\d+)?)(?:min)?$/);
+  if(m) return Math.round(parseFloat(m[1]));
   return null;
 }
-function expCheckParcela(durId,rowId,parcelaId,previewId){
-  const durVal=parseDurStr(document.getElementById(durId).value);
-  const parcelaEl=document.getElementById(parcelaId); const parcelaVal=parseDurStr(parcelaEl.value)||40;
-  const row=document.getElementById(rowId);
-  if(durVal&&durVal>parcelaVal){ row.style.display='flex';
-    const n=Math.ceil(durVal/parcelaVal); document.getElementById(previewId).textContent=n+' parcela'+(n>1?'s':'')+' de '+expFmtMin(parcelaVal)+' (total '+expFmtMin(durVal)+')'; }
-  else{ row.style.display='none'; document.getElementById(previewId).textContent=''; }
-}
-function expCriarItens(nome,dur,parcela,tipo){
+
+// cria item na fila (sem divisão automática)
+function expCriarItens(nome, dur, tipo){
+  const fixo = tipo==='fixo';
   if(!state.expFila) state.expFila=[];
-  if(parcela&&parcela<dur){ const n=Math.ceil(dur/parcela);
-    for(let k=1;k<=n;k++){ const thisDur=k<n?parcela:dur-(parcela*(n-1));
-      state.expFila.push({id:'eu'+(expNextId++),nome:n>1?nome+' · '+k+'/'+n:nome,dur:thisDur,tipo,favorito:false}); }
-  } else state.expFila.push({id:'eu'+(expNextId++),nome,dur,tipo,favorito:false});
+  state.expFila.push({id:'eu'+(expNextId++), nome, dur, tipo, fixo});
 }
+
 function expAddItem(){
-  const nome=document.getElementById('exp-new-nome').value.trim(); if(!nome) return;
-  const dur=parseDurStr(document.getElementById('exp-new-dur').value)||40;
-  const tipo=document.getElementById('exp-new-tipo').value;
-  const parcelaRow=document.getElementById('exp-new-parcela-row');
-  const parcela=parcelaRow.style.display!=='none'?(parseDurStr(document.getElementById('exp-new-parcela').value)||40):null;
-  expCriarItens(nome,dur,parcela,tipo);
-  document.getElementById('exp-new-nome').value=''; document.getElementById('exp-new-dur').value='';
-  document.getElementById('exp-new-parcela-row').style.display='none'; expSave(); expRender();
+  const nome = document.getElementById('exp-new-nome').value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(document.getElementById('exp-new-dur').value) || 40;
+  const tipo = document.getElementById('exp-new-tipo').value;
+  expCriarItens(nome, dur, tipo);
+  document.getElementById('exp-new-nome').value='';
+  document.getElementById('exp-new-dur').value='';
+  expSave(); expRender();
 }
+
 function expAddItem2(){
-  const nome=document.getElementById('exp2-new-nome').value.trim(); if(!nome) return;
-  const dur=parseDurStr(document.getElementById('exp2-new-dur').value)||40;
-  const tipo=document.getElementById('exp2-new-tipo').value;
-  const parcelaRow=document.getElementById('exp2-new-parcela-row');
-  const parcela=parcelaRow.style.display!=='none'?(parseDurStr(document.getElementById('exp2-new-parcela').value)||40):null;
-  expCriarItens(nome,dur,parcela,tipo);
-  document.getElementById('exp2-new-nome').value=''; document.getElementById('exp2-new-dur').value='';
-  document.getElementById('exp2-new-parcela-row').style.display='none'; expSave(); expRender();
+  const nome = document.getElementById('exp2-new-nome').value.trim();
+  if(!nome) return;
+  const dur = parseDurStr(document.getElementById('exp2-new-dur').value) || 40;
+  const tipo = document.getElementById('exp2-new-tipo').value;
+  expCriarItens(nome, dur, tipo);
+  document.getElementById('exp2-new-nome').value='';
+  document.getElementById('exp2-new-dur').value='';
+  expSave(); expRender();
 }
+
 document.getElementById('exp-new-nome').addEventListener('keydown',e=>{ if(e.key==='Enter') expAddItem(); });
 
-// ── Backup ────────────────────────────────────────────────────────────────────
 function backupExportar(){
-  const data={versao:'1.5.8',exportadoEm:new Date().toISOString(),agenda_pwa_v2:JSON.parse(localStorage.getItem('agenda_pwa_v2')||'{}'),agenda_exp_v1:JSON.parse(localStorage.getItem('agenda_exp_v1')||'{}')};
+  const data={
+    versao:'1.5.2',
+    exportadoEm:new Date().toISOString(),
+    agenda_pwa_v2: JSON.parse(localStorage.getItem('agenda_pwa_v2')||'{}'),
+    agenda_exp_v1: JSON.parse(localStorage.getItem('agenda_exp_v1')||'{}')
+  };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
   const ts=new Date().toISOString().slice(0,16).replace('T','_').replace(':','-');
-  a.href=url; a.download='agenda_backup_'+ts+'.json'; a.click(); URL.revokeObjectURL(url);
+  a.href=url; a.download='agenda_backup_'+ts+'.json';
+  a.click(); URL.revokeObjectURL(url);
 }
+
 function backupImportar(evt){
   const file=evt.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=function(e){
-    try{ const data=JSON.parse(e.target.result);
-      if(!data.agenda_pwa_v2&&!data.agenda_exp_v1){ alert('Arquivo inválido.'); return; }
-      if(!confirm('Isso vai substituir todos os dados atuais.\n\nContinuar?')) return;
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.agenda_pwa_v2 && !data.agenda_exp_v1){ alert('Arquivo inválido — não parece ser um backup da Agenda.'); return; }
+      if(!confirm('Isso vai substituir todos os dados atuais (tarefas, histórico, expediente).\n\nContinuar?')) return;
       if(data.agenda_pwa_v2) localStorage.setItem('agenda_pwa_v2',JSON.stringify(data.agenda_pwa_v2));
       if(data.agenda_exp_v1) localStorage.setItem('agenda_exp_v1',JSON.stringify(data.agenda_exp_v1));
       loadState(); state.viewDow=new Date().getDay(); expLoad(); render(); updateTimerDisplay(); updateDiscs(); expRender();
       alert('Backup restaurado com sucesso.');
     }catch(err){ alert('Erro ao ler o arquivo: '+err.message); }
   };
-  reader.readAsText(file); evt.target.value='';
+  reader.readAsText(file);
+  evt.target.value='';
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
 setInterval(()=>updateDiscs(),60000);
 loadState(); state.viewDow=new Date().getDay(); expLoad(); render(); updateTimerDisplay(); updateDiscs(); expRender();
+// inicializa pill customizável (input inline)
+initCustomPill();
 ['mel','est'].forEach(key=>{
-  const n=document.getElementById(key+'-new-nome'); const d=document.getElementById(key+'-new-dur');
+  const n=document.getElementById(key+'-new-nome');
+  const d=document.getElementById(key+'-new-dur');
   if(n) n.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();perAddItem(key);} });
   if(d) d.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();perAddItem(key);} });
 });
